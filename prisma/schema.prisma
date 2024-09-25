@@ -1,0 +1,96 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Group {
+  id    Int    @id @default(autoincrement())
+  name  String
+  type  String
+  sections Section[]
+}
+
+model Section {
+  id      Int    @id @default(autoincrement())
+  name    String
+  groupId Int
+  group   Group  @relation(fields: [groupId], references: [id])
+  items   Item[]
+
+  // Add this to link Section back to Task
+  taskId  Int?
+  task    Task?   @relation(fields: [taskId], references: [id])
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  name      String
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id])
+  attachments String[] @default([])
+}
+
+model Task {
+  id                   Int       @id @default(autoincrement())
+  establishmentName    String
+  image                String?
+  address              String
+  ownerName            String
+  idNumber             String?
+  startDate            DateTime
+  endDate              DateTime
+  inspectorId          Int?
+  reviewerId           Int?
+  qualityControllerId  Int?
+  status               String
+  notes                Note[]
+  reviewDates          DateRange? @relation("ReviewDates", fields: [reviewDatesId], references: [id], map: "ReviewDates_fkey")
+  inspectionDates      DateRange? @relation("InspectionDates", fields: [inspectionDatesId], references: [id], map: "InspectionDates_fkey")
+  qualityControlDates  DateRange? @relation("QualityControlDates", fields: [qualityControlDatesId], references: [id], map: "QualityControlDates_fkey")
+  sections             Section[]  // Relation field to Section
+  reviewDatesId        Int?
+  inspectionDatesId    Int?
+  qualityControlDatesId Int?
+}
+
+model User {
+  id                Int      @id @default(autoincrement())
+  phoneNumber       String
+  email             String   @unique
+  name              String
+  password          String
+  resetToken        String?  // Nullable
+  resetTokenExpiry  DateTime? // Nullable
+  profile           String?  // Nullable
+  role              String
+  completedTasks    Int      @default(0)
+  rejectedTasks     Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Add this to link User back to Note
+  notes             Note[]
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  taskId    Int
+  userId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])  // Relation field to User
+}
+
+model DateRange {
+  id                   Int       @id @default(autoincrement())
+  startDate            DateTime
+  endDate              DateTime
+  reviewTasks          Task[]    @relation("ReviewDates")
+  inspectionTasks      Task[]    @relation("InspectionDates")
+  qualityControlTasks  Task[]    @relation("QualityControlDates")
+}
