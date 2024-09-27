@@ -2,13 +2,14 @@
 
 
 export const siteConfig = {
-  name: "DashTail Next js Admin Template",
-  description: null,
+  name: "رصد",
+  description: "منصى رصد",
   theme: "violet",
   layout: "vertical",
   // semi-box, horizontal, vertical
   hideSideBar: false,
-  sidebarType: "module",
+  direction: "rtl",
+  sidebarType: "popover",
   // popover, classic, module
   sidebarColor: null,
   navbarType: "sticky",

@@ -28,6 +28,7 @@ import {
   PretentionChartLine,
   PretentionChartLine2,
   Google,
+    UserPlus,
   Pointer,
   Map2,
   MenuBar,
@@ -2125,6 +2126,12 @@ export const menusConfig = {
         role : ["inspector","reviewer"],
         href: "/my-tasks",
       },
+      {
+        title: "المستخدمين",
+        icon: UserPlus,
+        role : "admin",
+        href: "/users",
+        },
       {
         isHeader: true,
         title: "Application",

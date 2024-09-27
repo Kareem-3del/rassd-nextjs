@@ -66,7 +66,7 @@ const UserTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((item: User) => (
+          {[...users].map((item: User) => (
             <TableRow key={item.email}>
               <TableCell className="font-medium  text-card-foreground/80">
                 <Avatar>

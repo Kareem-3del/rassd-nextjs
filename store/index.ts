@@ -46,7 +46,7 @@ export const useThemeStore = create<ThemeStoreState>()(
       setNavbarType: (value) => set({ navbarType: value }),
       footerType: siteConfig.footerType,
       setFooterType: (value) => set({ footerType: value }),
-      isRtl: false,
+      isRtl: true,
       setRtl: (value) => set({ isRtl: value }),
         
       }),
