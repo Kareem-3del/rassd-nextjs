@@ -49,7 +49,7 @@ const TaskPage = async () => {
                     شـــاهد الكل
                     <ArrowLeft className="h-3 w-3" />
                 </Link>
-                <Button color="dark" className="items-center gap-[10px] hidden md:flex">
+                <Button color="dark" className="h-12 items-center gap-[10px] hidden md:flex rounded-2xl">
                     تصفية الزيارات
                     <ChevronDown className="w-[18px] h-[18px]" />
                 </Button>
