@@ -7,6 +7,7 @@ import { ArrowLeft, ChevronDown } from "lucide-react"
 import { AuditDepartmentSendedForms } from "./_components/audit-department-sended-forms"
 import { QualityDepartmentSendedForms } from "./_components/quality-department-sended-forms"
 import Link from "next/link"
+import { ApprovedForms } from "./_components/approved-forms"
 
 const IdCard = (props: React.SVGProps<SVGSVGElement>) => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" {...props}>
@@ -68,6 +69,24 @@ const TaskPage = async () => {
                 </Link>
             </div>
             <QualityDepartmentSendedForms />
+            <div className="flex justify-between items-center">
+                <SectionHeader>
+                    <SectionIcon Icon={IdCard} className="hidden md:block"/>
+                    <SectionTitle>
+                    "الاستمارات المعتمدة"
+                    </SectionTitle>
+                </SectionHeader>
+                <Link href="#" className="text-black text-[10px] flex items-center gap-2 font-extrabold md:hidden">
+                    شـــاهد الكل
+                    <ArrowLeft className="h-3 w-3" />
+                </Link>
+                <Button color="dark" className="h-12 items-center gap-[10px] hidden md:flex rounded-2xl">
+                    تصفية الزيارات
+                    <ChevronDown className="w-[18px] h-[18px]" />
+                </Button>
+            </div>
+                    <ApprovedForms />
+
         </div>
     )
 }
