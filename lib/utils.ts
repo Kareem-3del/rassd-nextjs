@@ -171,3 +171,10 @@ export const translate = (title: string, trans: Translations): string => {
   return title;
 };
 
+export const isImageFileUrl = (url: string): boolean => {
+  const imageFileExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+
+  const fileExtension = url.split(".").pop() ?? "";
+
+  return imageFileExtensions.includes(fileExtension);
+};
