@@ -22,7 +22,7 @@ interface FallbackSignatureProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function FallbackSignature(props: FallbackSignatureProps) {
     return (
-        <h3 className="text-xl font-semibold text-gray-600 h-12 flex items-center">
+        <h3 className="text-xs font-semibold text-gray-600 h-[50px] flex items-center">
             {props.children}
         </h3>
     )

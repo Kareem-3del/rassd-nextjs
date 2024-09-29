@@ -15,11 +15,15 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
 interface AddSignatureDialogProps {
     signature?: string
     setSignature: (signature: string | undefined) => void
+    fallback?: React.FC
+    title?: string
 }
 
 export default function AddSignatureDialog({
     signature,
     setSignature,
+    fallback: Fallback,
+    title = "التوقيع",
 }: AddSignatureDialogProps) {
     const signaturePad = useRef<SignatureCanvas>(null)
     const parent = useRef<HTMLDivElement>(null)
@@ -60,7 +64,6 @@ export default function AddSignatureDialog({
             window.removeEventListener("resize", handleResize)
         }
     }, [])
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -74,13 +77,17 @@ export default function AddSignatureDialog({
                             className="h-[47px] w-[64px] object-cover"
                         />
                     ) : (
-                        <FallbackSignature>توقيع</FallbackSignature>
-                    )}
+
+                        Fallback ? (
+                            <Fallback />
+                        ) : (
+                            <FallbackSignature>اضغط للتوقيع</FallbackSignature>
+                        ))}
                 </button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle dir="rtl">التوقيع</DialogTitle>
+                    <DialogTitle dir="rtl">{title}</DialogTitle>
                 </DialogHeader>
                 <div
                     ref={parent}
@@ -104,6 +111,7 @@ export default function AddSignatureDialog({
                         إضافة التوقيع
                     </Button>
                     <Button
+                         variant={"outline"}
                         onClick={() => signaturePad.current?.clear()}
                         className="w-full"
                     >
