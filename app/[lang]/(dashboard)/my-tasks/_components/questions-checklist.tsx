@@ -73,11 +73,11 @@ export const QuestionsChecklist = ({ questions, formVisitType,
             <div className="flex items-center gap-[10px] mt-8 justify-center">
                 <div className="space-y-2">
                     <div className="text-xs text-black font-extrabold">
-                        توقيع المنشأة
+                    توقيع صاحب المنشاة
                     </div>
 
                     <div className="px-[50px] py-5 bg-[#F1F1F1] rounded-2xl">
-                        <AddSignatureDialog setSignature={(signature) => setFacilitySignature(signature)} signature={facilitySignature} title="توقيع المنشأة" />
+                        <AddSignatureDialog setSignature={(signature) => setFacilitySignature(signature)} signature={facilitySignature} title="توقيع صاحب المنشاة" />
                     </div>
                 </div>
                 <div className="space-y-2">
