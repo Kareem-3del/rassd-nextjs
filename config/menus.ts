@@ -2133,6 +2133,18 @@ export const menusConfig = {
         href: "/users",
         },
       {
+        title: "المجموعات",
+        icon: UserPlus,
+        role : "admin",
+        href: "/groups",
+      },
+      {
+        title: "الاقسام",
+        icon: UserPlus,
+        role : "admin",
+        href: "/departments",
+      },
+      {
         isHeader: true,
         title: "Application",
       },

@@ -13,14 +13,14 @@ const Blank = ({ mblChatHandler }: {
         <div className="text-center flex flex-col items-center">
           <Icon icon="uiw:message" className="text-7xl text-default-300" />
           <div className="mt-4 text-lg font-medium text-default-500">
-            No message yet...
+            لا توجد رسائل حتى الآن
           </div>
           <p className="mt-1 text-sm font-medium text-default-400">
-            don't worry, just take a deep breath & say "Hello"
+            لا تقلق، فقط خذ نفسًا عميقًا وقل "مرحبًا"
           </p>
           {isLg && (
             <Button onClick={mblChatHandler} className="mt-2">
-              Start Conversation
+                ابدأ محادثة
             </Button>
           )}
         </div>
