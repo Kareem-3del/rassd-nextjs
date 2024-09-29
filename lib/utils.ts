@@ -174,7 +174,11 @@ export const translate = (title: string, trans: Translations): string => {
 export const isImageFileUrl = (url: string): boolean => {
   const imageFileExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
 
-  const fileExtension = url.split(".").pop() ?? "";
+  const fileExtension = url.split(".").pop();
+  console.log()
+  if (!fileExtension) {
+    return false;
+  }
 
   return imageFileExtensions.includes(fileExtension);
 };

@@ -13,17 +13,15 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 interface AddSignatureDialogProps {
-    signature?: string
     setSignature: (signature: string | undefined) => void
-    fallback?: React.FC
     title?: string
+    children: React.ReactNode
 }
 
 export default function AddSignatureDialog({
-    signature,
     setSignature,
-    fallback: Fallback,
     title = "التوقيع",
+    children
 }: AddSignatureDialogProps) {
     const signaturePad = useRef<SignatureCanvas>(null)
     const parent = useRef<HTMLDivElement>(null)
@@ -67,23 +65,7 @@ export default function AddSignatureDialog({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <button>
-                    {signature ? (
-                        <Image
-                            src={signature}
-                            alt="signature"
-                            width={64}
-                            height={47}
-                            className="h-[47px] w-[64px] object-cover"
-                        />
-                    ) : (
-
-                        Fallback ? (
-                            <Fallback />
-                        ) : (
-                            <FallbackSignature>اضغط للتوقيع</FallbackSignature>
-                        ))}
-                </button>
+               {children}
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

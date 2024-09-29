@@ -2,20 +2,22 @@ import { FormCardEntries } from "@/types";
 import { Card, CardTitle } from "@/components/ui/card";
 import { UserBadge } from "@/components/user-badge";
 import { DotSperator } from "@/components/dot-sperator";
-import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { AcceptFormButton } from "./accept-form-button";
-import { RejectFormButton } from "./reject-form-button";
 import { FormQuestions } from "@/components/form-questions";
 import Link from "next/link";
+import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
+import { RedoFormButton } from "./redo-form-button";
 
-interface FormCardProps extends FormCardEntries {
+export type RejectedFormProps = Omit<FormCardEntries, "user" | "progress"> &  {
+    rejectReson: string
 }
 
-export const FormCard = ({
+interface FormCardProps extends RejectedFormProps {
+}
+
+export const RejectedFormCard = ({
     id,
-    user,
     resumeNumber,
     resumeTitle,
     resumeArea,
@@ -23,14 +25,12 @@ export const FormCard = ({
     formStatus,
     formVisitType,
     items,
-    progress,
     facilityOwnerSignature,
-    inspectorSignature
+    inspectorSignature,
+    rejectReson
 }: FormCardProps) => {
     return (
         <Card className="px-10 py-[26px] rounded-[30px]">
-            <UserBadge user={user} />
-            <Separator className="md:hidden my-5" />
             <FormVisitTypeBadge type={formVisitType} className="mx-auto md:hidden" />
 
             <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-4 pt-5">
@@ -38,7 +38,7 @@ export const FormCard = ({
                 {/* Right Side */}
                 <div>
                     <Link href={`/my-tasks/${id}`} className="text-base text-black font-extrabold pb-5 text-center md:text-start hover:text-success max-w-max block">{resumeNumber} #</Link>
-                    <Link href={`/my-tasks/${id}`} className="text-base text-primary font-extrabold text-center md:text-start hover:text-success max-w-max block">{resumeTitle}</Link>
+                    <Link href={`/my-tasks/${id}`} className="text-base text-black font-extrabold text-center md:text-start hover:text-success max-w-max block">{resumeTitle}</Link>
                     <div className="flex flex-wrap items-center gap-[10px] md:gap-4 pt-5 justify-center md:justify-start">
                         <div className="text-[#B1B1B1] text-xs font-extrabold">{
                             resumeArea
@@ -73,9 +73,6 @@ export const FormCard = ({
                 {/* Left Side */}
                 <div className="w-full md:w-[initial]">
                     <FormVisitTypeBadge type={formVisitType} className="mr-auto hidden md:flex" />
-
-                    {
-                        formStatus === "in-review" &&
                         <FormActions 
                             formStatus={formStatus} 
                             formVisitType={formVisitType} 
@@ -86,13 +83,12 @@ export const FormCard = ({
                             facilityOwnerSignature={facilityOwnerSignature}
                             inspectorSignature={inspectorSignature} 
                         />
-                    }
-                    {
-                        formStatus === "in-progress" && <FormProgress progress={progress} />
-                    }
                 </div>
 
             </div>
+            <Separator className="my-2" />
+            <div className="text-xs text-primary font-extrabold">سبب الرفض :</div>
+            <p className="mt-1 text-sm font-bold text-[#5C5C5C]">{rejectReson}</p>
         </Card>
     )
 }
@@ -161,24 +157,10 @@ const FormActions = ({
         <div className="flex flex-1 items-center gap-[10px]">
             <FormQuestions formVisitType={formVisitType} resumeArea={resumeArea} resumeTime={resumeTime} resumeTitle={resumeTitle} resumeNumber={resumeNumber} questions={quesiotns} facilityOwnerSignature={facilityOwnerSignature}
                 inspectorSignature={inspectorSignature} />
-            <AcceptFormButton resumeNumber={resumeNumber} />
-
+            <RedoFormButton resumeNumber={resumeNumber} />
         </div>
-        <RejectFormButton resumeNumber={resumeNumber} />
     </div>)
 }
 
-interface FormProgressProps {
-    progress: number;
-}
 
-const FormProgress = ({ progress }: FormProgressProps) => {
-    return <div className="space-y-1.5 mt-3">
-        <div className="flex items-center justify-between text-[10px] text-[#6BACA1] font-extrabold">
-            <span>نسبة الإنجاز</span>
-            <span>{progress}%</span>
-        </div>
-        <Progress value={progress} className=" [&>div]:bg-[#00866F] h-2 rounded-[20px]" />
-    </div>
-}
 

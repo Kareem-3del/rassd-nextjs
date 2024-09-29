@@ -1,15 +1,15 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import AnimatedButton from "@/components/ainmated-button"
 import { Success } from "@/components/svg"
+import AnimatedButton from "@/components/ainmated-button"
 
-interface AcceptFormButtonProps
+interface RedoFormButtonProps
  {resumeNumber: string }
 
-export const AcceptFormButton = ({resumeNumber }: AcceptFormButtonProps) => {
+export const RedoFormButton = ({resumeNumber }: RedoFormButtonProps) => {
 
     return <Dialog >
         <DialogTrigger asChild>
-        <AnimatedButton text="قبول الاستمارة" className="flex-1"/>
+        <AnimatedButton text="اعادة تنفيذ المهمة" className="flex-1"/>
         </DialogTrigger>
         <DialogContent size="lg">
             <div className="flex justify-center">

@@ -15,4 +15,15 @@ export type FormCardEntries = {
     formVisitType: FormVisitType
     items: number
     progress: number
+    facilityOwnerSignature: string
+    inspectorSignature: string
+}
+
+export type Question = {
+    id: string
+    value: boolean
+    label: string
+    isAcceptFiles?: boolean
+    files?: string[]
+    disabled?: boolean
 }

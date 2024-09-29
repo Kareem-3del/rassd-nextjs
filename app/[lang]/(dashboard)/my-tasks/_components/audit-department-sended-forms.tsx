@@ -18,6 +18,8 @@ const sendedForms: FormCardEntries[] = [
     formVisitType: "field-visit",
     items: 14,
     progress: 50,
+    facilityOwnerSignature : "/images/signature.png",
+    inspectorSignature : "/images/signature.png"
 },
 {
     id: "1",
@@ -34,6 +36,8 @@ const sendedForms: FormCardEntries[] = [
     formVisitType: "secret-visit",
     items: 14,
     progress: 50,
+    facilityOwnerSignature : "/images/signature.png",
+    inspectorSignature : "/images/signature.png"
 }
 
 ]

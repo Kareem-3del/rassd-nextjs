@@ -1,7 +1,7 @@
 interface SendedFormsPops { }
-import { FormCard } from "./form-card"
 import { FormCardEntries } from "@/types"
-const sendedForms: FormCardEntries[] = [
+import { FormCard } from "../../_components/form-card"
+const completedForms: FormCardEntries[] = [
     
     {
     id: "1",
@@ -14,7 +14,7 @@ const sendedForms: FormCardEntries[] = [
     resumeTitle: "مستشفى الرعاية المتقدمة",
     resumeArea: "المنطة الشمالية , الرياض",
     resumeTime: new Date(),
-    formStatus: "in-progress",
+    formStatus: "in-review",
     formVisitType: "field-visit",
     items: 14,
     progress: 50,
@@ -32,8 +32,8 @@ const sendedForms: FormCardEntries[] = [
     resumeTitle: "مستشفى الرعاية المتقدمة",
     resumeArea: "المنطة الشمالية , الرياض",
     resumeTime: new Date(),
-    formStatus: "in-progress",
-    formVisitType: "field-visit",
+    formStatus: "in-review",
+    formVisitType: "secret-visit",
     items: 14,
     progress: 50,
     facilityOwnerSignature : "/images/signature.png",
@@ -42,9 +42,9 @@ const sendedForms: FormCardEntries[] = [
 
 ]
 
-export const QualityDepartmentSendedForms = () => {
+export const CompletedForms = () => {
     return <div className="space-y-[10px] rounded-[35px] p-5 bg-[#F5F5F5] mt-9">
-         { sendedForms.map(form => (
+         { completedForms.map(form => (
         <FormCard key={form.id}
             {...form}
             />
