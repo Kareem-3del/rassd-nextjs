@@ -79,7 +79,7 @@ const CreateDepartmentDialog = () => {
                                             className={cn("min-w-[156px] min-h-[145px] bg-default-100 dark:bg-default-200 flex flex-col justify-center items-center rounded-md relative border border-none", {
                                                 "border-solid border-primary": selected === "rtg_1"
                                             })}>
-                                            <RadioGroupItem value="rtg_1" id="rtg_1"
+                                        <RadioGroupItem value="rtg_1" id="rtg_1"
                                                             className={cn("absolute top-3 left-3 opacity-0 invisible", {
                                                                 "visible opacity-100": selected === "rtg_1"
                                                             })}> </RadioGroupItem>
