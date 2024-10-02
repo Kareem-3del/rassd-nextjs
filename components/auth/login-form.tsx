@@ -68,33 +68,17 @@ const LogInForm = () => {
   const onSubmit = async (data: { email: string; password: string }) => {
     startTransition(async ()=> {
       try {
-        // const res = await fetch(`https://api-docs.almasaalswda.com/auth/sign-in`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     email: data.email,
-        //     password: data.password,
-        //   }),
-        // });
-        // const response = await res.json();
-        // console.log({
-        //   status: response.status,
-        //   data: response.data,
-        //   message: response.message,
-        // })
-
         const response = await api.post("auth/sign-in/",{
           email: data.email,
           password: data.password,
         });
 
         if (response.status === 201 || response.status === 200 || response.status === undefined) {
-          const { accessToken } = response.data;
+          const { accessToken } = response.data.data;
           dispatchEvent(new CustomEvent("login", { detail: { token: accessToken } }));
           // Store the JWT token in localStorage or cookies
-          localStorage.setItem("token", accessToken);
+          // localStorage.setItem("token", accessToken);
+          document.cookie = `token=${accessToken}; path=/; max-age=3600; SameSite=Lax`;
 
           // Optionally navigate to dashboard or home after login
           router.push("/dashboard");
