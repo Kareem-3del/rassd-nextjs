@@ -18,12 +18,6 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 
 import {Icon} from "@iconify/react";
 const CreateDepartmentDialog = () => {
-    const types = [
-        //  ميدانية ،  سرية
-        { value: "field", label: "ميدانية" },
-        { value: "secret", label: "سرية" },
-
-    ];
     const [selected, setSelected] = useState<string>("rtg_1");
     const handleValueChange = (value: string) => setSelected(value)
     return (
@@ -36,7 +30,7 @@ const CreateDepartmentDialog = () => {
             <DialogContent size="2xl">
                 <DialogHeader className="p-0">
                     <DialogTitle className="text-base font-medium text-default-700 ">
-                        إنشاء مجموعة جديدة
+                        إنشاء قسم جديد
                     </DialogTitle>
                 </DialogHeader>
                 <div>
@@ -45,25 +39,9 @@ const CreateDepartmentDialog = () => {
                             <div className="sm:grid  sm:grid-cols-2 sm:gap-5 space-y-4 sm:space-y-0 ">
                                 <div className="flex flex-col gap-2 col-span-2">
                                     <Label>
-                                        الاسم
+                                       اسم/عنوان القسم
                                     </Label>
                                     <Input type="text" placeholder="ادخل الاسم المجموعة"/>
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    {/*     <Label>
-                                        الوظيفة
-                                    </Label>
-                                    <Select
-                                        className="react-select"
-                                        classNamePrefix="select"
-                                        placeholder={"اختر الوظيفة"}
-                                        onChange={(value: any) => {
-                                            setSelectedType(
-                                                value
-                                            )
-                                        }}
-                                        options={types}
-                                    />*/}
                                 </div>
                                 <h3 className=" col-span-2">
                                     اختر نوع المجموعة
