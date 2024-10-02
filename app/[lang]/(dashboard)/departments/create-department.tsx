@@ -1,6 +1,6 @@
 "use client";
 // @ts-ignore
-import { Button } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -8,13 +8,13 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/dialog";
-import { Input } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/input";
-import { Label } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/label";
-import { ScrollArea } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/scroll-area";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { useState } from "react";
-import {cn} from "../../../../../../WebstormProjects/rassd-nextjs/lib/utils";
-import {RadioGroup, RadioGroupItem} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/radio-group";
+import {cn} from "@/lib/utils";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 
 import {Icon} from "@iconify/react";
 const CreateDepartmentDialog = () => {

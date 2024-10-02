@@ -6,10 +6,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/table";
+} from "@//components/ui/table";
 import { DataRows, users } from "./data";
 import { Icon } from "@iconify/react";
-import { Button } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/button";
+import { Button } from "@//components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,16 +17,16 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/dialog";
-import { Input } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/input";
-import { Label } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/label";
+} from "@//components/ui/dialog";
+import { Input } from "@//components/ui/input";
+import { Label } from "@//components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/select";
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 const GroupsTable = () => {
   return (
     <Table>

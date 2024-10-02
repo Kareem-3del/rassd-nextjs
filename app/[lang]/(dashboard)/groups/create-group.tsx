@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/button";
-import { Checkbox } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
     DialogClose,
@@ -8,20 +8,20 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/dialog";
-import { Input } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/input";
-import { Label } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/label";
-import { ScrollArea } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/scroll-area";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import React, { useState } from "react";
 import Flatpickr from "react-flatpickr";
 import Select from "react-select";
-import Saudi from "../../../../../../WebstormProjects/rassd-nextjs/lib/cities-saudi";
-import {cn} from "../../../../../../WebstormProjects/rassd-nextjs/lib/utils";
-import {RadioGroup, RadioGroupItem} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/radio-group";
+import Saudi from "@/lib/cities-saudi";
+import {cn} from "@/lib/utils";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import Image from "next/image";
-import book1 from "../../../../../../WebstormProjects/rassd-nextjs/public/images/all-img/book-1.png";
-import book2 from "../../../../../../WebstormProjects/rassd-nextjs/public/images/all-img/book-2.png";
+import book1 from "/public/images/all-img/book-1.png";
+import book2 from "/public/images/all-img/book-2.png";
 import {Icon} from "@iconify/react";
 const CreateGroupDialog = () => {
     const types = [

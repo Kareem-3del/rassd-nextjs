@@ -1,6 +1,6 @@
 "use strict";
 import GroupsTable from "./groups-table";
-import { Card } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/card";
+import { Card } from "@/components/ui/card";
 import CreateGroupDialog from "./create-group";
 
 const TaskPage = async () => {
