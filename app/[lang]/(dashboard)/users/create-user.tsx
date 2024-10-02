@@ -12,13 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
 import React, { useState } from "react";
-import Flatpickr from "react-flatpickr";
 import Select from "react-select";
-import Saudi from "@/lib/cities-saudi";
 const CreateUserDialog = () => {
-    const [picker, setPicker] = useState<Date>(new Date());
     const roles = [
         // مدير ، مفتش ، مراجع ، مراقب جودة ، مشرف عام
         { value: "admin", label: "مدير" },
