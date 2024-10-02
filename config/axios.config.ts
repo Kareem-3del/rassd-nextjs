@@ -6,17 +6,6 @@ export const api = axios.create({
   baseURL,
 });
 
-async function getToken() {
-  if (typeof window === 'undefined') {
-    const { cookies } = (await import('next/headers'))
-    return cookies().get('token')?.value
-  }
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; token=`);
-  // @ts-ignore
-  if (parts.length === 2) return parts?.pop().split(';').shift();
-}
-
 api.interceptors.request.use(
   async (config) => {
     // Get the token from cookies
@@ -32,3 +21,41 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const { response } = error;
+    if (!response || response.status !== 401) {
+      return Promise.reject(error)
+    }
+
+    return redirectToLogin()    
+  }
+);
+
+async function getToken() {
+  if (typeof window === 'undefined') {
+    const { cookies } = (await import('next/headers'))
+    return cookies().get('token')?.value
+  }
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; token=`);
+  // @ts-ignore
+  if (parts.length === 2) return parts?.pop().split(';').shift();
+}
+
+async function redirectToLogin() {
+  const path = "/auth/login"
+  if (typeof window !== 'undefined') {
+    window.location.href = path;
+  }
+
+  const redirect = (await import('next/navigation')).redirect
+  redirect(path) 
+
+  return 
+}
+
