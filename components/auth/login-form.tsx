@@ -21,13 +21,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 // import GithubIcon from "@/public/images/auth/github.png";
 
 const schema = z.object({
-  email: z.string().email({ message: "Your email is invalid." }),
-  password: z.string().min(4),
+  email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
+  password: z.string().min(4,{
+    message: "قم يكتابة كلمة مرور صالحة",
+  }),
 });
 import { useMediaQuery } from "@/hooks/use-media-query";
 import axios from "axios";
 import {useRouter} from "next/navigation";
 import SiteLogo from "@/components/logo/SiteLogo";
+import { api } from "@/config/axios.config";
 
 const LogInForm = () => {
   const [isPending, startTransition] = React.useTransition();
@@ -65,13 +68,33 @@ const LogInForm = () => {
   const onSubmit = async (data: { email: string; password: string }) => {
     startTransition(async ()=> {
       try {
-        const response = await axios.post(apiUrl, data);
+        // const res = await fetch(`https://api-docs.almasaalswda.com/auth/sign-in`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     email: data.email,
+        //     password: data.password,
+        //   }),
+        // });
+        // const response = await res.json();
+        // console.log({
+        //   status: response.status,
+        //   data: response.data,
+        //   message: response.message,
+        // })
 
-        if (response.status === 201 || response.status === 200) {
-          const { access_token } = response.data;
-          dispatchEvent(new CustomEvent("login", { detail: { token: access_token } }));
+        const response = await api.post("auth/sign-in/",{
+          email: data.email,
+          password: data.password,
+        });
+
+        if (response.status === 201 || response.status === 200 || response.status === undefined) {
+          const { accessToken } = response.data;
+          dispatchEvent(new CustomEvent("login", { detail: { token: accessToken } }));
           // Store the JWT token in localStorage or cookies
-          localStorage.setItem("token", access_token);
+          localStorage.setItem("token", accessToken);
 
           // Optionally navigate to dashboard or home after login
           router.push("/dashboard");
