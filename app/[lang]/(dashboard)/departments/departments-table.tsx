@@ -38,8 +38,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useEffect, useState } from "react";
+import { useDepartments } from "@/rassd/hooks/useDepartments";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import DepartmentFormDialog from "./department-form";
-const DepartmentsTable = () => {
+const DepartmentsTable = ({fetchDepartments,deleteDepartment, updateDepartment, departments }: ReturnType<typeof useDepartments>) => {
+
+  useEffect(()=> {
+    fetchDepartments()
+  }, [])
+
+  console.log(departments)
   return (
     <Table>
       <TableHeader>
@@ -56,15 +67,15 @@ const DepartmentsTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((item: DataRows) => (
-          <TableRow key={item.email}>
-            <TableCell>{item.title}</TableCell>
+        {departments.map((item) => (
+          <TableRow key={item.name}>
+            <TableCell>{item.name}</TableCell>
             <TableCell>
-              {item.completed_tasks}
+              {item.terms.length}
             </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog />
+                <EditingDialog name={item.name} groupId={item.groupId} id={item.id} terms={item.terms} updateDepartment={updateDepartment}/>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -106,8 +117,42 @@ const DepartmentsTable = () => {
 
 export default DepartmentsTable;
 
-const EditingDialog = () => {
+
+interface EditingDialogProps {
+  id: number
+  name: string
+  groupId: string
+  terms: {
+    id: string;
+    name: string
+    files: boolean
+  }[]
+  updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"]
+
+}
+const EditingDialog = ({updateDepartment, groupId,name, terms}: EditingDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const router = useRouter()
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateDepartment,
+    onSuccess: () => {
+      toast.success("تم إنشاء مجموعة جديدة")
+      setOpen(false)
+      router.refresh()
+    }
+  })
   return (
-    <DepartmentFormDialog/>
+    <DepartmentFormDialog group={groupId} groupType="field" terms={terms} title={name} isPending={isPending} open={open} setOpen={setOpen} onSubmit={(data) => {
+      // mutate()
+    }}>
+      <Button
+        size="icon"
+        variant="outline"
+        color="secondary"
+        className=" h-7 w-7"
+      >
+        <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
+      </Button>
+    </DepartmentFormDialog>
   );
 };

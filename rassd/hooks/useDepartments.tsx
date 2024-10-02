@@ -14,7 +14,12 @@ interface UpdateDepartmentDto {
 }
 
 export const useDepartments = () => {
-    const [departments, setDepartments] = useState<any[]>([]);
+    const [departments, setDepartments] = useState<{
+        id: number;
+        name: string;
+        groupId: string;
+        terms: any[]
+    }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +29,12 @@ export const useDepartments = () => {
         setError(null);
         try {
             const response = await api.get('/departments', { params: { page, limit } });
-            setDepartments(response.data); // Adjust this based on your API response structure
+            setDepartments(response.data.elements?.map((dept: any) => ({
+                id: dept.id,
+                name: dept.name,
+                groupId: dept.group.id,
+                terms: dept.terms
+            }))); // Adjust this based on your API response structure
         } catch (err) {
             toast.error("حدث مشكلة ما");
             setError("حدث مشكلة ما");
@@ -49,7 +59,7 @@ export const useDepartments = () => {
     };
 
     // Update a department
-    const updateDepartment = async (id: string, departmentData: UpdateDepartmentDto) => {
+    const updateDepartment = async ({ id, departmentData }: { id: number, departmentData: UpdateDepartmentDto }) => {
         setLoading(true);
         setError(null);
         try {
@@ -64,7 +74,7 @@ export const useDepartments = () => {
     };
 
     // Delete a department
-    const deleteDepartment = async (id: string) => {
+    const deleteDepartment = async (id: number) => {
         setLoading(true);
         setError(null);
         try {

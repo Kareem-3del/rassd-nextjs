@@ -1,5 +1,4 @@
 "use client";
-// @ts-ignore
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -12,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import React, { useRef, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { z } from "zod";
@@ -20,33 +19,74 @@ import { z } from "zod";
 import { Icon } from "@iconify/react";
 import { GroupSelector } from "@/components/group-selector";
 import { Checkbox } from "@/components/ui/checkbox";
-const DepartmentFormDialog = () => {
-    const [selected, setSelected] = useState<string>("field");
-    const [groupType, setGroupType] = useState<string>();
+import { GroupType } from "@/types";
+type DepartmentFormDialogData = {
+    groupType: "secret" | "field"
+    title: string
+    terms: {
+        id: string;
+        name: string
+        files: boolean
+    }[]
+    group: string
+}
+interface DepartmentFormDialogProps extends Partial<DepartmentFormDialogData> {
+    children: ReactNode
+    onSubmit: (data: DepartmentFormDialogData) => void;
+    isPending?: boolean
+    open:boolean
+    setOpen: Dispatch<SetStateAction<boolean>>
+}
+const DepartmentFormDialog = ({
+    onSubmit,
+    groupType: defaultGroupType = "field",
+    title,
+    terms: defaultTerms = [],
+    group ="",
+    children,
+    isPending,
+    open,
+    setOpen
+} : DepartmentFormDialogProps) => {
+    const [selected, setSelected] = useState<string>(group);
+    const [groupType, setGroupType] = useState<"secret" | "field">(defaultGroupType);
     const departmentNameRef = useRef<HTMLInputElement>(null);
-    const [items, setItems] = useState<{
+    const [terms, setTerms] = useState<{
         id: string;
         name: string;
-        isAcceptFile: boolean;
-    }[]>([]);
+        files: boolean;
+    }[]>(defaultTerms)
 
-    const handleValueChange = (value: string) => setSelected(value)
+
+    useEffect(() => {
+        if (departmentNameRef.current) {
+            departmentNameRef.current.focus();
+        }
+    }, []);
+
+    const handleValueChange = (value: "secret" | "field") => setGroupType(value)
 
     const handleSubmit = () => {
+        if (!departmentNameRef.current || !departmentNameRef.current.value || !selected) {
+            return 
+        }
         console.log({
             selected,
-            name: departmentNameRef.current?.value,
             groupType,
-            items,
+            terms,
+        })
+        onSubmit({
+            groupType,
+            group: selected,
+            title: departmentNameRef.current?.value,
+            terms,
         })
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>
-                    إنشاء قسم جديد
-                </Button>
+                {children}
             </DialogTrigger>
             <DialogContent size="2xl" className="max-h-[80vh] overflow-y-auto">
                 <DialogHeader className="p-0">
@@ -61,14 +101,14 @@ const DepartmentFormDialog = () => {
                                     <Label>
                                         اسم/عنوان القسم
                                     </Label>
-                                    <Input type="text" placeholder="ادخل الاسم المجموعة" ref={departmentNameRef} />
+                                    <Input type="text" placeholder="ادخل الاسم المجموعة" ref={departmentNameRef} defaultValue={title}/>
                                 </div>
                                 <div className="flex flex-col gap-4 col-span-2">
 
                                     <h3 className="col-span-2">
                                         اختر المجموعة
                                     </h3>
-                                    <GroupSelector value={groupType} onChange={(value) => setGroupType(value)} />
+                                    <GroupSelector value={groupType} onChange={(value) => setSelected(value)} />
                                 </div>
                                 <div className="flex flex-col gap-4 col-span-2">
 
@@ -78,18 +118,18 @@ const DepartmentFormDialog = () => {
 
                                     <div className="grid gap-2">
                                         {
-                                            items.map(item => (
+                                            terms.map(item => (
                                                 <div className="flex gap-2 items-center flex-wrap" key={item.id}>
                                                     <div className="flex items-center gap-2">
                                                     <Checkbox
                                                         size="sm"
                                                         className="border-default-300 mt-[1px]"
                                                         id={item.id}
-                                                        checked={item.isAcceptFile}
+                                                        checked={item.files}
                                                         onCheckedChange={(value) => {
-                                                            const newItems = [...items];
-                                                            newItems[items.findIndex(i => i.id === item.id)].isAcceptFile = !!value;
-                                                            setItems(newItems);
+                                                            const newItems = [...terms];
+                                                            newItems[terms.findIndex(i => i.id === item.id)].files = !!value;
+                                                            setTerms(newItems);
                                                         }}
                                                     />
                                                         <Label htmlFor={item.id}>
@@ -98,9 +138,9 @@ const DepartmentFormDialog = () => {
 
                                                     </div>
                                                     <Input type="text" placeholder="بند" value={item.name} onChange={(e) => {
-                                                        const newItems = [...items];
-                                                        newItems[items.findIndex(i => i.id === item.id)].name = e.target.value;
-                                                        setItems(newItems);
+                                                        const newItems = [...terms];
+                                                        newItems[terms.findIndex(i => i.id === item.id)].name = e.target.value;
+                                                        setTerms(newItems);
                                                     }} />
                                                 </div>
                                             ))
@@ -108,10 +148,10 @@ const DepartmentFormDialog = () => {
                                     </div>
 
                                     <Button onClick={() => {
-                                        setItems([...items, {
+                                        setTerms([...terms, {
                                             id: Math.random().toString(36).substring(2, 15),
                                             name: "",
-                                            isAcceptFile: false
+                                            files: false
                                         }])
                                     }}>اضافة بند</Button>
                                 </div>
@@ -128,11 +168,11 @@ const DepartmentFormDialog = () => {
                                     <Label htmlFor="field">
                                         <div
                                             className={cn("min-w-[156px] min-h-[145px] bg-default-100 dark:bg-default-200 flex flex-col justify-center items-center rounded-md relative border border-none", {
-                                                "border-solid border-primary": selected === "field"
+                                                "border-solid border-primary": groupType === "field"
                                             })}>
                                             <RadioGroupItem value="field" id="field"
                                                 className={cn("absolute top-3 left-3 opacity-0 invisible", {
-                                                    "visible opacity-100": selected === "field"
+                                                    "visible opacity-100": groupType === "field"
                                                 })}> </RadioGroupItem>
                                             <div className="h-16 w-16">
                                                 <Icon icon="mdi:briefcase-eye-outline"
@@ -148,11 +188,11 @@ const DepartmentFormDialog = () => {
                                     <Label htmlFor="secret">
                                         <div
                                             className={cn("min-w-[156px] min-h-[145px] bg-default-100 dark:bg-default-200 flex flex-col justify-center items-center rounded-md relative border border-none", {
-                                                "border-solid border-primary": selected === "secret"
+                                                "border-solid border-primary": groupType === "secret"
                                             })}>
                                             <RadioGroupItem value="secret" id="secret"
                                                 className={cn("absolute top-3 left-3 opacity-0 invisible", {
-                                                    "visible opacity-100": selected === "secret"
+                                                    "visible opacity-100": groupType === "secret"
                                                 })}> </RadioGroupItem>
                                             <div className="h-16 w-16">
                                                 <Icon icon="dashicons:hidden"
@@ -176,7 +216,7 @@ const DepartmentFormDialog = () => {
                                 إلغاء
                             </Button>
                         </DialogClose>
-                        <Button type="button" onClick={handleSubmit}>
+                        <Button type="button" onClick={handleSubmit} disabled={isPending}>
                             إنشاء مجموعة
                         </Button>
                     </div>
