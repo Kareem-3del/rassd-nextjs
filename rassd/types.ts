@@ -99,3 +99,24 @@ export interface Note {
     content: string;
     task: Task;
 }
+
+
+export interface CreateDepartmentDto {
+    name: string;
+    groupId?: number;
+    terms?: Term[];
+}
+
+// src/interfaces/update-department.interface.ts
+export interface UpdateDepartmentDto {
+    name?: string;
+    groupId?: number;
+    terms?: Term[];
+}
+
+
+export interface CreateTermDto {
+    name: string;
+    requiredFiles?: boolean;
+    description?: string;
+}
