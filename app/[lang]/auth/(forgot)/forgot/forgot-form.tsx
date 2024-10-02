@@ -13,8 +13,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { SiteLogo } from "@/components/svg";
+import { api } from "@/config/axios.config";
 const schema = z.object({
-  email: z.string().email({ message: "Your email is invalid." }),
+  email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
 });
 const ForgotForm = () => {
   const [isPending, startTransition] = React.useTransition();
@@ -35,9 +36,21 @@ const ForgotForm = () => {
 
   const onSubmit = (data: any) => {
     startTransition(async () => {
-      toast.success("Password Reset code has been sent to your email");
-      reset();
-      router.push("/auth/create-password");
+      try {
+        const response = await api.post("auth/forgot/", {
+          email: data.email,
+        });
+
+        if (!(response.status === 201 || response.status === 200)) {
+          toast.error("حدث خطأ ما");
+          return 
+        }
+        toast.success("تم ارسال رسالة الاسترداد بنجاح!");
+        reset();
+
+      } catch (error) {
+        toast.error("حدث خطأ ما");
+      }
     });
   };
   return (
@@ -46,15 +59,15 @@ const ForgotForm = () => {
         <SiteLogo className="h-10 w-10 2xl:w-14 2xl:h-14 text-primary" />
       </Link>
       <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-default-900">
-        Forget Your Password?
+        هل نسيت كلمة السر؟
       </div>
       <div className="2xl:text-lg text-base text-default-600 mt-2 leading-6">
-        Enter your email & instructions will be sent to you!
+        أدخل عنوان البريد الإلكتروني وسوف تتلقى رسالة إلكترونية لإعادة تعيين كلمة المرور الخاصة بك.
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-5 xl:mt-7">
         <div>
           <Label htmlFor="email" className="mb-2 font-medium text-default-600">
-            Email{" "}
+            البريد الإلكتروني{" "}
           </Label>
           <Input
             disabled={isPending}
@@ -73,13 +86,13 @@ const ForgotForm = () => {
 
         <Button className="w-full mt-6" size={!isDesktop2xl ? "lg" : "md"}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isPending ? "sending..." : "Send Recovery Email"}
+          {isPending ? "جاري الإرسال ..." : "إرسال رسالة الاسترداد"}
         </Button>
       </form>
       <div className="mt-5 2xl:mt-8 text-center text-base text-default-600">
-        Forget it. Send me back to{" "}
+        انسى ذلك. أرسلني إلى{" "}
         <Link href="/auth/login" className="text-primary">
-          Sign In
+          تسجيل الدخول
         </Link>
       </div>
     </div>
