@@ -1,14 +1,14 @@
 "use client";
 import React, {useCallback, useEffect} from "react";
-import { Stepper, Step, StepLabel } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/steps";
-import { toast } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/use-toast";
-import { Button } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/button";
-import { Input } from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/input";
+import { Stepper, Step, StepLabel } from "@/components/ui/steps";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import { cn } from "../../../../../../WebstormProjects/rassd-nextjs/lib/utils";
-import { useMediaQuery } from "../../../../../../WebstormProjects/rassd-nextjs/hooks/use-media-query";
+import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { faker } from "@faker-js/faker";
-import {Textarea} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/textarea";
+import {Textarea} from "@/components/ui/textarea";
 import Select from "react-select";
 import {
     Dialog,
@@ -18,10 +18,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/dialog";
-import useAddressSearch from "../../../../../../WebstormProjects/rassd-nextjs/hooks/useAddress";
-import Saudi from "../../../../../../WebstormProjects/rassd-nextjs/lib/cities-saudi";
-import {CircularProgress} from "../../../../../../WebstormProjects/rassd-nextjs/components/ui/progress";
+} from "@/components/ui/dialog";
+import useAddressSearch from "@/hooks/useAddress";
+import Saudi from "@/lib/cities-saudi";
+import {CircularProgress} from "@/components/ui/progress";
 import { City, District, Region } from "@/app/api/address";
 const CreateTaskForm = () => {
     const [activeStep, setActiveStep] = React.useState<number>(0);
