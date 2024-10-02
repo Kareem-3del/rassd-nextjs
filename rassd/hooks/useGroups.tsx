@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import {api} from "@/config/axios.config";
-import {GroupType} from "@/rassd/types";
-import {toast} from "sonner";
+import { api } from "@/config/axios.config";
+import { GroupType } from "@/rassd/types";
+import { toast } from "sonner";
+import { Group } from '@/types';
 
 
 interface CreateGroupDto {
@@ -16,7 +17,7 @@ interface UpdateGroupDto {
 
 
 export const useGroups = () => {
-    const [groups, setGroups] = useState<any[]>([]); // Replace 'any' with the appropriate type
+    const [groups, setGroups] = useState<Group[]>([]); // Replace 'any' with the appropriate type
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +27,7 @@ export const useGroups = () => {
         setError(null);
         try {
             const response = await api.get('/groups', { params: { page, limit } });
-            setGroups(response.data); // Adjust this based on your API response structure
+            setGroups(response.data.elements); // Adjust this based on your API response structure
         } catch (err) {
             toast.error("حدث مشكلة ما");
         } finally {
@@ -40,7 +41,14 @@ export const useGroups = () => {
         setError(null);
         try {
             const response = await api.post('/groups', groupData);
-            setGroups((prev) => [...prev, response.data]);
+            setGroups((prev) => {
+                // console.log('Previous groups:', prev);
+                console.log('New group:', response.data);
+                const updatedGroups = [...prev, response.data];
+                console.log('New groups:', updatedGroups);
+
+                return updatedGroups;
+            });
         } catch (err) {
             setError("حدث مشكلة ما");
         } finally {
@@ -49,12 +57,15 @@ export const useGroups = () => {
     };
 
     // Update a group
-    const updateGroup = async (id: string, groupData: UpdateGroupDto) => {
+    const updateGroup = async ({ id, groupData }: {
+        id: number;
+        groupData: UpdateGroupDto;
+    }) => {
         setLoading(true);
         setError(null);
         try {
             const response = await api.patch(`/groups/${id}`, groupData);
-            setGroups((prev) => prev.map((group) => (group.id === id ? response.data : group)));
+            setGroups((prev) => prev.map((group) => (group.id === id ? response.data.data : group)));
         } catch (err) {
             setError("حدث مشكلة ما");
         } finally {
@@ -63,12 +74,16 @@ export const useGroups = () => {
     };
 
     // Delete a group
-    const deleteGroup = async (id: string) => {
+    const deleteGroup = async (id: number) => {
         setLoading(true);
         setError(null);
         try {
             await api.delete(`/groups/${id}`);
-            setGroups((prev) => prev.filter((group) => group.id !== id));
+
+            setGroups((prev) => {
+                const updatedGroups = prev.filter((group) => group.id !== id);
+                return updatedGroups
+            });
         } catch (err) {
             setError("حدث مشكلة ما");
         } finally {

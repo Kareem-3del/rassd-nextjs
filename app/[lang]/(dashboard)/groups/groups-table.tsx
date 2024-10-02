@@ -11,23 +11,6 @@ import { DataRows, users } from "./data";
 import { Icon } from "@iconify/react";
 import { Button } from "@//components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@//components/ui/dialog";
-import { Input } from "@//components/ui/input";
-import { Label } from "@//components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -38,7 +21,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-const GroupsTable = () => {
+import GroupFormDialog from "./group-form";
+import { useEffect, useState } from "react";
+import { useGroups } from "@/rassd/hooks/useGroups";
+import { Group, GroupType } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+const GroupsTable = ({fetchGroups,deleteGroup, updateGroup , createGroup ,groups}: ReturnType<typeof useGroups>) => {
+
+  useEffect(() => {
+    fetchGroups()
+  }, [])
+
+  console.log(groups)
+
   return (
     <Table>
       <TableHeader>
@@ -47,7 +44,7 @@ const GroupsTable = () => {
             اسم المجموعة
           </TableHead>
           <TableHead>
-            عدد الاقسام الفرعية
+            نوع المجموعة
           </TableHead>
           <TableHead>
             الاجراءات
@@ -55,16 +52,16 @@ const GroupsTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((item: DataRows) => (
-          <TableRow key={item.email}>
-            <TableCell>{item.title}</TableCell>
+        {groups?.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.name}</TableCell>
             <TableCell>
-              {item.completed_tasks}
+              {item.type}
             </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog />
-                <AlertDialog>
+                <EditingDialog id={item.id} name={item.name} type={item.type} updateGroup={updateGroup}/>
+                <AlertDialog >
                   <AlertDialogTrigger asChild>
                     <Button
                       size="icon"
@@ -88,7 +85,7 @@ const GroupsTable = () => {
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80">
+                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80" onClick={() => deleteGroup(item.id)}>
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -105,67 +102,36 @@ const GroupsTable = () => {
 
 export default GroupsTable;
 
-const EditingDialog = () => {
+interface EditingDialogProps extends Group {
+  updateGroup: ReturnType<typeof useGroups>["updateGroup"]
+
+}
+const EditingDialog = ({ id, name, type, updateGroup }: EditingDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const router = useRouter()
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateGroup,
+    onSuccess: () => {
+      toast.success("تم إنشاء مجموعة جديدة")
+      setOpen(false)
+      router.refresh()
+    }
+  })
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          color="secondary"
-          className=" h-7 w-7"
-        >
-          <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            تعديل المستخدم
-          </DialogTitle>
-          <form action="#" className=" space-y-5 pt-4">
-            <div>
-              <Label className="mb-2">Name</Label>
-              <Input placeholder="Name" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Title</Label>
-              <Input placeholder="Title" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Input placeholder="Email" type="email" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Admin</SelectItem>
-                  <SelectItem value="dark">Owner</SelectItem>
-                  <SelectItem value="system">Member</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {/* end single */}
-            <div className="flex justify-end space-x-3">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" color="destructive">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button color="success">Save</Button>
-              </DialogClose>
-            </div>
-          </form>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+    <GroupFormDialog isPending={isPending} open={open} setOpen={setOpen} groupType={type === "سرية" ? "secret" : "field"} title={name} onSubmit={({ name, groupType }) => {
+      mutate({ id: id, groupData: {
+        name,
+        type: groupType == "field" ? GroupType.FIELD_VISIT : GroupType.SECRET_VISIT
+      } })
+    }}>
+      <Button
+        size="icon"
+        variant="outline"
+        color="secondary"
+        className=" h-7 w-7"
+      >
+        <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
+      </Button>
+    </GroupFormDialog>
   );
 };

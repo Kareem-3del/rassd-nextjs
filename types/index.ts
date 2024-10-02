@@ -27,3 +27,23 @@ export type Question = {
     files?: string[]
     disabled?: boolean
 }
+
+export enum UserRoles {
+    SUPER = 'super',
+    ADMIN = 'admin',  // مدير
+    INSPECTOR = 'inspector', // مفتش
+    REVIEWER = 'reviewer', // مراجع
+    QUALITY_CONTROLLER = 'quality_controller', // مراقب جودة
+    GENERAL_SUPERVISOR = 'general_supervisor', // مشرف عام
+}
+
+export enum GroupType {
+    SECRET_VISIT = 'سرية',
+    FIELD_VISIT = 'ميدانية',
+}
+
+export type Group =  {
+    id: number;
+    name: string;
+    type: "سرية" | "ميدانية"
+};

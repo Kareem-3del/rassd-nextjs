@@ -16,12 +16,13 @@ export const GroupSelector = ({
     useEffect(() => {
         fetchGroups()
     }, [])
+
     return <Select
         className="react-select"
         classNamePrefix="select"
         defaultValue={value}
         // @ts-ignore
-        options={groups?.elements?.map(group => ({
+        options={groups.map(group => ({
             value: group.id,
             label: group.name
         })) || []}
