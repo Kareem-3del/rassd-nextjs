@@ -22,8 +22,13 @@ export const GroupSelector = ({
     }, [type]);
 
     useEffect(() => {
+        console.log(type)
         // Map groups to options whenever groups are fetched or changed
-        const options = groups.map((group) => ({
+        const options = groups.filter(
+            (group) => group.type ===
+                (type === "field" ? "ميدانية" : "سرية" )
+
+        ).map((group) => ({
             value: String(group.id), // Convert id to string
             label: group.name,
         }));
@@ -35,7 +40,11 @@ export const GroupSelector = ({
     }, [groups, value]);
 
     // This variable contains the available options for the select component
-    const options = groups.map((group) => ({
+    const options = groups.filter(
+        (group) => group.type ===
+            (type === "field" ? "ميدانية" : "سرية" )
+
+    ).map((group) => ({
         value: String(group.id), // Convert id to string
         label: group.name,
     }));
