@@ -4,7 +4,7 @@ import SectionHeader, {
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { VisitsFilter } from "@/components/visits-filter"
-import { CompletedForms } from "./_components/completed-forms"
+import { CompletedForms } from "./_components/completed-tasks"
 
 const CompletedFormsPage = async () => {
     return (

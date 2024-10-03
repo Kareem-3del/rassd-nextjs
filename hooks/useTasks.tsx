@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import {Paginated, Task} from "@/interfaces";
-import api from "@/lib/api";
+import { api } from '@/config/axios.config';
+import { Task } from '@/rassd/types';
 
 // Base API URL (replace with your actual API endpoint)
 const API_URL = '/tasks';
 
 const useTasks = () => {
-    const [tasks, setTasks] = useState<Paginated<Task> | null>(null);
+    const [tasks, setTasks] = useState<Task[] | null>(null);
     const [task, setTask] = useState<Task | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -15,8 +15,9 @@ const useTasks = () => {
     const fetchTasks = async (query: any = {}): Promise<void> => {
         setLoading(true);
         try {
-            const response = await api.get<Paginated<Task>>(API_URL, { params: query });
-            setTasks(response.data);
+            const response = await api.get(API_URL, query);
+            console.log(response)
+            setTasks(response.data.elements);
         } catch (err) {
             setError("An error occurred while fetching tasks.");
         } finally {

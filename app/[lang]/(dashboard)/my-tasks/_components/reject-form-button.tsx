@@ -29,9 +29,9 @@ const rejectFormSchema = z.object({
 type FormData = z.infer<typeof rejectFormSchema>
 
 
-interface RejectFormButtonProps { resumeNumber: string }
+interface RejectFormButtonProps { id: number }
 
-export const RejectFormButton = ({ resumeNumber }: RejectFormButtonProps) => {
+export const RejectFormButton = ({ id }: RejectFormButtonProps) => {
     const [open, setOpen] = useState(false)
 
     const form = useForm<FormData>({
@@ -54,8 +54,8 @@ export const RejectFormButton = ({ resumeNumber }: RejectFormButtonProps) => {
             <div className="w-12 h-12 rounded-[13px] bg-primary flex items-center justify-center mx-auto">
                 <RemoveIcon />
             </div>
-            <p className="text-base text-primary font-bold text-center mt-4">اضافة ملاحظة - # {resumeNumber}</p>
-            <p className="text-[#737373] font-bold text-xs text-center">تم ارسال قبول الاستمارة رقم {resumeNumber} لقسم الجودة</p>
+            <p className="text-base text-primary font-bold text-center mt-4">اضافة ملاحظة - # {id}</p>
+            <p className="text-[#737373] font-bold text-xs text-center">تم ارسال قبول الاستمارة رقم {id} لقسم الجودة</p>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                     <FormField

@@ -1,3 +1,4 @@
+import { TaskStatusEnum } from "@/rassd/types";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge";
 
@@ -182,3 +183,11 @@ export const isImageFileUrl = (url: string): boolean => {
 
   return imageFileExtensions.includes(fileExtension);
 };
+
+export const getTaskStautsWord = (status: TaskStatusEnum) =>  {
+  if (status === TaskStatusEnum.Completed) {
+     return "مكتملة"
+  }
+
+  return "قيد التنفيذ"
+}

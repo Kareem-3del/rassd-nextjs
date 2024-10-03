@@ -1,6 +1,6 @@
 "use client"
 import { DotSperator } from "@/components/dot-sperator";
-import { FormQuestion, RenderEditableFile } from "@/components/task-form/form-question";
+import { FormQuestion, RenderEditableFile } from "@/components/task-form/task-term";
 import { Separator } from "@/components/ui/separator";
 import { FormCardEntries, Question } from "@/types";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";

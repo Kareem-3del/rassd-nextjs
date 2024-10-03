@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { AcceptFormButton } from "./accept-form-button";
 import { RejectFormButton } from "./reject-form-button";
-import { FormQuestions } from "@/components/form-questions";
+import { FormQuestions } from "@/components/task-form/task-terms";
 import Link from "next/link";
 
 interface FormCardProps extends FormCardEntries {

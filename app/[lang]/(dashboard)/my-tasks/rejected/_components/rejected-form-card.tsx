@@ -4,7 +4,7 @@ import { UserBadge } from "@/components/user-badge";
 import { DotSperator } from "@/components/dot-sperator";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { FormQuestions } from "@/components/form-questions";
+import { FormQuestions } from "@/components/task-form/task-terms";
 import Link from "next/link";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
 import { RedoFormButton } from "./redo-form-button";
