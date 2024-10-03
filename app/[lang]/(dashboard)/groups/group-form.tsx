@@ -32,9 +32,11 @@ interface GroupFormDialogProps {
         name: string;
         groupType: "secret" | "field";
     }) => void
+
+    type?: "edit" | "add"
 }
 
-const GroupFormDialog = ({title, groupType = "secret",isPending, open,children, setOpen,onSubmit}: GroupFormDialogProps) => {
+const GroupFormDialog = ({title, groupType = "secret",isPending, open,children, setOpen,onSubmit ,type= "add"}: GroupFormDialogProps) => {
     console.log(title, groupType)
     const inputRef = React.useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -63,7 +65,9 @@ const GroupFormDialog = ({title, groupType = "secret",isPending, open,children, 
             <DialogContent size="2xl">
                 <DialogHeader className="p-0">
                     <DialogTitle className="text-base font-medium text-default-700 ">
-                        إنشاء مجموعة جديدة
+                        {
+                            type === "add" ? "إنشاء مجموعة" : "تعديل المجموعة"
+                        }
                     </DialogTitle>
                 </DialogHeader>
                 <div>
@@ -137,7 +141,9 @@ const GroupFormDialog = ({title, groupType = "secret",isPending, open,children, 
                             </Button>
                         </DialogClose>
                         <Button type="button" onClick={handleSubmit} disabled={isPending}>
-                            إنشاء مجموعة
+                            {
+                                type === "add" ? "إنشاء مجموعة" : "تعديل المجموعة"
+                            }
                         </Button>
                     </div>
                 </div>

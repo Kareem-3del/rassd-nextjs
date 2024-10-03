@@ -2,15 +2,18 @@ import { useState, useEffect } from 'react';
 import { api } from "@/config/axios.config";
 import { GroupType } from "@/rassd/types"; // You can change this import based on your project structure
 import { toast } from "sonner";
+import { Term } from '@/types';
 
 interface CreateDepartmentDto {
     name: string;
-    groupId: string; // Assuming you want to associate it with a group
+    groupId: string; 
+    terms: Omit<Term, "id">[]
 }
 
 interface UpdateDepartmentDto {
     name?: string;
     groupId?: string;
+    terms?: Term[]
 }
 
 export const useDepartments = () => {
