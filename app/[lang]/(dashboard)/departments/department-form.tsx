@@ -40,6 +40,7 @@ interface DepartmentFormProps extends Partial<DepartmentFormData> {
   children: ReactNode;
   onSubmit: (data: DepartmentFormData) => void;
   type?: "edit" | "create";
+  departmentId: number;
   updateTerm?: ReturnType<typeof useDepartments>["updateTerm"];
   deleteTerm?: ReturnType<typeof useDepartments>["deleteTerm"];
 }
@@ -47,6 +48,7 @@ const DepartmentForm = ({
   onSubmit,
   type: formType ="create",
   groupType: defaultGroupType = "ميدانية",
+  departmentId,
   title,
   terms: defaultTerms = [],
   groupId,
@@ -192,7 +194,7 @@ const DepartmentForm = ({
           <div className="grid gap-2">
             {terms.map((item) => (
               <TermItem item={item} terms={terms} setTerms={setTerms} formType={formType}
-              updateTerm={updateTerm} deleteTerm={deleteTerm}/>
+              updateTerm={updateTerm} deleteTerm={deleteTerm} departmentId={departmentId}/>
               // <div className="flex gap-2 items-center flex-wrap" key={item.id}>
               //   <Button
               //     variant={"outline"}
@@ -264,11 +266,12 @@ interface TermItemProps {
     React.SetStateAction<Term[]>
   >;
   formType: "create" | "edit";
+  departmentId?: number;
   updateTerm?: ReturnType<typeof useDepartments>["updateTerm"];
   deleteTerm?: ReturnType<typeof useDepartments>["deleteTerm"];
 }
 
-function TermItem({ item, terms,formType, updateTerm, setTerms,deleteTerm }: TermItemProps)  {
+function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,deleteTerm }: TermItemProps)  {
   const [isModified, setIsModified] = useState(false); // Track if the item is modified
   const [localItem, setLocalItem] = useState(item); // Local state to manage the input and checkbox changes
 
@@ -280,7 +283,7 @@ function TermItem({ item, terms,formType, updateTerm, setTerms,deleteTerm }: Ter
   const handleDelete = async () => {
     if(formType === "edit") {
       console.log({formType})
-      await deleteTerm?.(parseInt(item.id))
+      await deleteTerm?.(departmentId!, parseInt(item.id))
     }
     const newItems = terms.filter((i) => i.id !== item.id);
     setTerms(newItems);

@@ -178,6 +178,7 @@ const EditingDialog = ({
           </DialogTitle>
         </DialogHeader>
         <DepartmentForm
+        departmentId={id}
           groupId={groupId}
           title={name}
           terms={terms}

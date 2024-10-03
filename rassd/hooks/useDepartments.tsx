@@ -116,12 +116,12 @@ export const useDepartments = () => {
         }
     }
 
-    const deleteTerm = async (termId: number) => {
+    const deleteTerm = async (departmentId: number, termId: number) => {
         setLoading(true);
         setError(null);
         try {
             await api.delete(`/terms/${termId}`);
-            // setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept,...response.data, groupId: response.data.group,} : dept)));
+            setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept, terms: dept.terms.filter((term) => term.id !== termId)} : dept)));
         } catch (err) {
             toast.error("حدث مشكلة ما");
             setError("حدث مشكلة ما");
