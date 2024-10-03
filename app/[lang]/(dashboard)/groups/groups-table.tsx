@@ -118,7 +118,7 @@ const EditingDialog = ({ id, name, type, updateGroup }: EditingDialogProps) => {
     }
   })
   return (
-    <GroupFormDialog isPending={isPending} open={open} setOpen={setOpen} groupType={type === "سرية" ? "secret" : "field"} title={name} onSubmit={({ name, groupType }) => {
+    <GroupFormDialog type="edit" isPending={isPending} open={open} setOpen={setOpen} groupType={type === "سرية" ? "secret" : "field"} title={name} onSubmit={({ name, groupType }) => {
       mutate({ id: id, groupData: {
         name,
         type: groupType == "field" ? GroupType.FIELD_VISIT : GroupType.SECRET_VISIT

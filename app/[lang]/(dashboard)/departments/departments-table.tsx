@@ -44,38 +44,42 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import DepartmentFormDialog from "./department-form";
-const DepartmentsTable = ({fetchDepartments,deleteDepartment, updateDepartment, departments }: ReturnType<typeof useDepartments>) => {
+import DepartmentForm from "./department-form";
+import { Term } from "@/types";
+const DepartmentsTable = ({
+  fetchDepartments,
+  deleteDepartment,
+  updateDepartment,
+  departments,
+}: ReturnType<typeof useDepartments>) => {
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
 
-  useEffect(()=> {
-    fetchDepartments()
-  }, [])
-
-  console.log(departments)
+  console.log(departments);
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="font-semibold">
-            اسم القسم
-          </TableHead>
-          <TableHead>
-            البنود
-          </TableHead>
-          <TableHead>
-            الاجراءات
-          </TableHead>
+          <TableHead className="font-semibold">اسم القسم</TableHead>
+          <TableHead>البنود</TableHead>
+          <TableHead>الاجراءات</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {departments.map((item) => (
-          <TableRow key={item.name}>
+          <TableRow key={item.id}>
             <TableCell>{item.name}</TableCell>
-            <TableCell>
-              {item.terms.length}
-            </TableCell>
+            <TableCell>{item.terms.length}</TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog name={item.name} groupId={item.groupId} id={item.id} terms={item.terms} updateDepartment={updateDepartment}/>
+                <EditingDialog
+                  name={item.name}
+                  groupId={item.groupId}
+                  id={item.id}
+                  terms={item.terms}
+                  updateDepartment={updateDepartment}
+                />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -89,18 +93,17 @@ const DepartmentsTable = ({fetchDepartments,deleteDepartment, updateDepartment, 
                   </AlertDialogTrigger>
                   <AlertDialogContent dir="ltr">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        هل أنت متأكد تمامًا؟
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>هل أنت متأكد تمامًا؟</AlertDialogTitle>
                       <AlertDialogDescription>
-                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا وإزالة بياناته من خوادمنا.
+                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا
+                        وإزالة بياناته من خوادمنا.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80">
+                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80" onClick={() => deleteDepartment(item.id)}>
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -117,34 +120,31 @@ const DepartmentsTable = ({fetchDepartments,deleteDepartment, updateDepartment, 
 
 export default DepartmentsTable;
 
-
 interface EditingDialogProps {
-  id: number
-  name: string
-  groupId: string
-  terms: {
-    id: string;
-    name: string
-    files: boolean
-  }[]
-  updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"]
-
+  id: number;
+  name: string;
+  groupId: string;
+  terms: Term[];
+  updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"];
 }
-const EditingDialog = ({updateDepartment, groupId,name, terms}: EditingDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const router = useRouter()
+const EditingDialog = ({
+  id,
+  updateDepartment,
+  groupId,
+  name,
+  terms,
+}: EditingDialogProps) => {
   const { mutate, isPending } = useMutation({
     mutationFn: updateDepartment,
     onSuccess: () => {
-      toast.success("تم إنشاء مجموعة جديدة")
-      setOpen(false)
-      router.refresh()
-    }
-  })
+      toast.success("تم إنشاء قسم جديد");
+    },
+  });
+  const [open, setOpen] = useState(false);
+
   return (
-    <DepartmentFormDialog group={groupId} groupType="field" terms={terms} title={name} isPending={isPending} open={open} setOpen={setOpen} onSubmit={(data) => {
-      // mutate()
-    }}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
       <Button
         size="icon"
         variant="outline"
@@ -153,6 +153,38 @@ const EditingDialog = ({updateDepartment, groupId,name, terms}: EditingDialogPro
       >
         <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
       </Button>
-    </DepartmentFormDialog>
+      </DialogTrigger>
+      <DialogContent size="2xl" className="max-h-[80vh] overflow-y-auto">
+        <DialogHeader className="p-0">
+          <DialogTitle className="text-base font-medium text-default-700 ">
+            تعديل القسم
+          </DialogTitle>
+        </DialogHeader>
+        <DepartmentForm
+          group={groupId}
+          title={name}
+          terms={terms}
+          onSubmit={(data) => {
+            mutate({
+              departmentData: {
+                name: data.title,
+                groupId: data.group,
+                terms: data.terms,
+              },
+              id
+            });
+          }}
+        >
+          <div className=" flex justify-center gap-3 mt-4">
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                إلغاء
+              </Button>
+            </DialogClose>
+            <Button disabled={isPending}>تعديل القسم</Button>
+          </div>
+        </DepartmentForm>
+      </DialogContent>
+    </Dialog>
   );
 };
