@@ -6,13 +6,13 @@ import { Term } from '@/types';
 
 interface CreateDepartmentDto {
     name: string;
-    groupId: string; 
+    groupId: number; 
     terms: Omit<Term, "id">[]
 }
 
 interface UpdateDepartmentDto {
     name?: string;
-    groupId?: string;
+    groupId?: number;
     terms?: Term[]
 }
 
@@ -20,7 +20,7 @@ export const useDepartments = () => {
     const [departments, setDepartments] = useState<{
         id: number;
         name: string;
-        groupId: string;
+        groupId: number;
         terms: any[]
     }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);

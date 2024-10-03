@@ -123,7 +123,7 @@ export default DepartmentsTable;
 interface EditingDialogProps {
   id: number;
   name: string;
-  groupId: string;
+  groupId: number;
   terms: Term[];
   updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"];
 }

@@ -32,7 +32,7 @@ type DepartmentFormData = {
   groupType: "secret" | "field";
   title: string;
   terms: Term[];
-  group: string;
+  group: number;
 };
 interface DepartmentFormProps extends Partial<DepartmentFormData> {
   children: ReactNode;
@@ -43,14 +43,13 @@ const DepartmentForm = ({
   groupType: defaultGroupType = "field",
   title,
   terms: defaultTerms = [],
-  group = "",
+  group,
   children,
 }: DepartmentFormProps) => {
-  const [selected, setSelected] = useState<string>(group);
+  const [selected, setSelected] = useState<number | undefined>(group);
   const [groupType, setGroupType] = useState<"secret" | "field">(
     defaultGroupType
   );
-  console.log(selected, group)
   const departmentNameRef = useRef<HTMLInputElement>(null);
   const [terms, setTerms] = useState<Term[]>(defaultTerms);
 
