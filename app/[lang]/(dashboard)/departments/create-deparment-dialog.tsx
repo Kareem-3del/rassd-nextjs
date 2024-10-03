@@ -42,7 +42,7 @@ export const CreateDepartmentDialog = ({
           onSubmit={(data) => {
             mutate({
               name: data.title,
-              groupId: data.group,
+              groupId: data.groupId,
               terms: data.terms.map((term) => ({
                 name: term.name,
                 requiredFiles: term.requiredFiles,

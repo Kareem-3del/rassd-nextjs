@@ -47,16 +47,12 @@ import DepartmentFormDialog from "./department-form";
 import DepartmentForm from "./department-form";
 import { Term } from "@/types";
 const DepartmentsTable = ({
-  fetchDepartments,
   deleteDepartment,
   updateDepartment,
+  updateTerm,
   departments,
+  deleteTerm
 }: ReturnType<typeof useDepartments>) => {
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
-
-  console.log(departments);
   return (
     <Table>
       <TableHeader>
@@ -78,7 +74,10 @@ const DepartmentsTable = ({
                   groupId={item.groupId}
                   id={item.id}
                   terms={item.terms}
+                  groupType={item.groupType}
                   updateDepartment={updateDepartment}
+                  updateTerm={updateTerm}
+                  deleteTerm={deleteTerm}
                 />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -103,7 +102,10 @@ const DepartmentsTable = ({
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80" onClick={() => deleteDepartment(item.id)}>
+                      <AlertDialogAction
+                        className="bg-destructive hover:bg-destructive/80"
+                        onClick={() => deleteDepartment(item.id)}
+                      >
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -124,8 +126,11 @@ interface EditingDialogProps {
   id: number;
   name: string;
   groupId: number;
+  groupType: string;
   terms: Term[];
   updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"];
+  updateTerm: ReturnType<typeof useDepartments>["updateTerm"];
+  deleteTerm: ReturnType<typeof useDepartments>["deleteTerm"];
 }
 const EditingDialog = ({
   id,
@@ -133,26 +138,38 @@ const EditingDialog = ({
   groupId,
   name,
   terms,
+  groupType,
+  deleteTerm,
+  updateTerm,
 }: EditingDialogProps) => {
+  const [open, setOpen] = useState(false);
   const { mutate, isPending } = useMutation({
-    mutationFn: updateDepartment,
+    mutationFn: async (data: any) => {
+      await updateDepartment({
+        id,
+        departmentData: {
+          name: data.departmentData.name,
+          groupId: data.departmentData.groupId,
+        },
+      });
+    },
     onSuccess: () => {
-      toast.success("تم إنشاء قسم جديد");
+      setOpen(false);
+      toast.success("تم تعديل القسم");
     },
   });
-  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      <Button
-        size="icon"
-        variant="outline"
-        color="secondary"
-        className=" h-7 w-7"
-      >
-        <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
-      </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          color="secondary"
+          className=" h-7 w-7"
+        >
+          <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
+        </Button>
       </DialogTrigger>
       <DialogContent size="2xl" className="max-h-[80vh] overflow-y-auto">
         <DialogHeader className="p-0">
@@ -161,17 +178,25 @@ const EditingDialog = ({
           </DialogTitle>
         </DialogHeader>
         <DepartmentForm
-          group={groupId}
+          groupId={groupId}
           title={name}
           terms={terms}
+          groupType={groupType}
+          type="edit"
+          updateTerm={updateTerm}
+          deleteTerm={deleteTerm}
           onSubmit={(data) => {
+            console.log(data);
             mutate({
               departmentData: {
                 name: data.title,
-                groupId: data.group,
-                terms: data.terms,
+                group: data.groupId,
+                terms: data.terms.map((term) => ({
+                  name: term.name,
+                  requiredFiles: term.requiredFiles,
+                })),
               },
-              id
+              id,
             });
           }}
         >

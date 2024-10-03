@@ -13,7 +13,10 @@ interface CreateDepartmentDto {
 interface UpdateDepartmentDto {
     name?: string;
     groupId?: number;
-    terms?: Term[]
+    // terms?: Omit<Term, "id">[]
+}
+
+interface UpdateTermDto  extends Term {
 }
 
 export const useDepartments = () => {
@@ -22,6 +25,7 @@ export const useDepartments = () => {
         name: string;
         groupId: number;
         terms: any[]
+        groupType: string
     }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -36,7 +40,8 @@ export const useDepartments = () => {
                 id: dept.id,
                 name: dept.name,
                 groupId: dept.group.id,
-                terms: dept.terms
+                terms: dept.terms,
+                groupType: dept.group.type
             }))); // Adjust this based on your API response structure
         } catch (err) {
             toast.error("حدث مشكلة ما");
@@ -52,7 +57,7 @@ export const useDepartments = () => {
         setError(null);
         try {
             const response = await api.post('/departments', departmentData);
-            setDepartments((prev) => [...prev, response.data]);
+            setDepartments((prev) => [...prev, {...response.data, groupId: response.data.group}]);
         } catch (err) {
             toast.error("حدث مشكلة ما");
             setError("حدث مشكلة ما");
@@ -66,8 +71,10 @@ export const useDepartments = () => {
         setLoading(true);
         setError(null);
         try {
+            console.log({departmentData})
             const response = await api.patch(`/departments/${id}`, departmentData);
-            setDepartments((prev) => prev.map((dept) => (dept.id === id ? response.data : dept)));
+            console.log({dRe: response})
+            setDepartments((prev) => prev.map((dept) => (dept.id === id ? {...dept,...response.data.data, groupId: response.data.group,} : dept)));
         } catch (err) {
             toast.error("حدث مشكلة ما");
             setError("حدث مشكلة ما");
@@ -91,6 +98,38 @@ export const useDepartments = () => {
         }
     };
 
+    const updateTerm = async ({ departmentId, termData }: { departmentId: number ,termData: UpdateTermDto }) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.patch(`/terms/${termData.id}`, {
+                // name: termData.name,
+                requiredFiles: termData.requiredFiles,
+            });
+            console.log(response)
+            // setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept,...response.data, groupId: response.data.group,} : dept)));
+        } catch (err) {
+            toast.error("حدث مشكلة ما");
+            setError("حدث مشكلة ما");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const deleteTerm = async (termId: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            await api.delete(`/terms/${termId}`);
+            // setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept,...response.data, groupId: response.data.group,} : dept)));
+        } catch (err) {
+            toast.error("حدث مشكلة ما");
+            setError("حدث مشكلة ما");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchDepartments(); // Fetch departments when the hook is first used
     }, []);
@@ -99,6 +138,8 @@ export const useDepartments = () => {
         departments,
         loading,
         error,
+        deleteTerm,
+        updateTerm,
         fetchDepartments,
         createDepartment,
         updateDepartment,
