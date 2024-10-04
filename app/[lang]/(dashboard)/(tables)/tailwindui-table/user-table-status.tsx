@@ -62,6 +62,15 @@ const UsersTable = () => {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button color="primary">إضافة مستخدم جديد</Button>
+              <span>
+                {
+                    open ? (
+                        <Icon icon="heroicons-solid:chevron-up" className="w-5 h-5" />
+                    ) : (
+                        <Icon icon="heroicons-solid:chevron-down" className="w-5 h-5" />
+                    )
+                }
+              </span>
             </DialogTrigger>
             <DialogContent>
               <h3 className="text-lg font-semibold mb-4">إضافة مستخدم جديد</h3>

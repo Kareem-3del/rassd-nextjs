@@ -8,7 +8,7 @@ const Blank = ({ mblChatHandler }: {
 }) => {
   const isLg = useMediaQuery("(max-width: 1024px)");
   return (
-    <Card className="flex-1">
+    <Card className="flex-1 rounded-2xl">
       <CardContent className="h-full flex justify-center items-center">
         <div className="text-center flex flex-col items-center">
           <Icon icon="uiw:message" className="text-7xl text-default-300" />
