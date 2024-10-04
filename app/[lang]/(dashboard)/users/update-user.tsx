@@ -27,8 +27,8 @@ import { Input } from "@/components/ui/input";
 import Select, { SingleValue } from "react-select";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Icon } from "@iconify/react";
 
-interface CreateUserDialogProps extends ReturnType<typeof useUsers> {}
 
 const formSchema = z.object({
   firstName: z.string().min(1, "الاسم الأول مطلوب"),
@@ -41,10 +41,13 @@ const formSchema = z.object({
     .min(7, "يجب أن يتكون رقم الهوية من 7 أرقام")
     .max(7, "يجب أن يتكون رقم الهوية من 7 أرقام"),
   role: z.string().min(1, "الوظيفة مطلوبة"),
-  sendLoginInfo: z.boolean().optional(),
 });
+interface UpdateUserDialogProps extends Partial<z.infer<typeof formSchema>> {
+updateUser: ReturnType<typeof useUsers>["updateUser"]
+id: number
+}
 
-const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
+const UpdateUserDialog = ({ updateUser,id, ... defaultValues}: UpdateUserDialogProps) => {
   const [open, setOpen] = useState(false)
   const roles = [
     { value: "admin", label: "مدير" },
@@ -55,20 +58,11 @@ const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
   ];
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      nationalId: "",
-      role: "",
-      sendLoginInfo: false,
-    },
+    defaultValues,
   });
 
   const {mutate,isPending} = useMutation({
-    mutationFn: createUser,
+    mutationFn: updateUser,
     onSuccess: () => {
       setOpen(false)
       toast.success("تم اضافة مستخدم جديد")
@@ -76,13 +70,20 @@ const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
   })
 
   function onSubmit(values: any) {
-    mutate(values);
+    mutate({id, values});
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>إضافة مستخدم جديد</Button>
+      <Button
+          size="icon"
+          variant="outline"
+          color="secondary"
+          className=" h-7 w-7"
+        >
+          <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
+        </Button>
       </DialogTrigger>
       <DialogContent size="2xl">
         <DialogHeader>
@@ -133,6 +134,7 @@ const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
                         <Select
                           className="react-select"
                           classNamePrefix="select"
+                          defaultValue={roles.find(r => r.value === defaultValues.role)}
                           onChange={(
                             value: SingleValue<{ value: string; label: string }>
                           ) => {
@@ -236,33 +238,13 @@ const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
                     </FormItem>
                   )}
                 />
-
-                {/* Send login info */}
-                <FormField
-                  control={form.control}
-                  name="sendLoginInfo"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2 flex items-center gap-2 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormLabel>
-                        ارسال معلومات تسجيل الدخول إلى البريد الإلكتروني و رقم
-                        الهاتف
-                      </FormLabel>
-                    </FormItem>
-                  )}
-                />
               </div>
 
               <div className="flex justify-center gap-3">
                 <Button type="button" variant="outline">
                   إلغاء
                 </Button>
-                <Button type="submit" disabled={isPending}>إنشاء حساب</Button>
+                <Button type="submit" disabled={isPending}>تعديل الحساب</Button>
               </div>
             </form>
           </Form>
@@ -272,4 +254,4 @@ const CreateUserDialog = ({ createUser }: CreateUserDialogProps) => {
   );
 };
 
-export default CreateUserDialog;
+export default UpdateUserDialog;

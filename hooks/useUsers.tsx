@@ -70,12 +70,9 @@ export const useUsers = () => {
   const createUser = async (createUserDto: CreateUserDto) => {
     setLoading(true);
     try {
-      const response = await api.post<User>(API_URL, createUserDto);
-      console.log({
-        response
-      })
+      const response = await api.post(API_URL, createUserDto);
       if (users) {
-        setUsers([...users, response.data]);
+        setUsers([...users, response.data.data]);
       }
     } catch (err) {
       setError("حدث مشكلة الرجاء المحاولة لاحقاً");
@@ -85,13 +82,13 @@ export const useUsers = () => {
   };
 
   // Update an existing user
-  const updateUser = async (id: string, updateUserDto: UpdateUserDto) => {
+  const updateUser = async ({id,values }:{id: number, values: UpdateUserDto}) => {
     setLoading(true);
     try {
-      const response = await api.patch<User>(`${API_URL}/${id}`, updateUserDto);
+      const response = await api.patch(`${API_URL}/${id}`, values);
       if (users) {
         setUsers(
-          users.map((user) => (+user.id === +id ? response.data : user))
+          users.map((user) => (user.id === id ? response.data.data : user))
         );
       }
       setUser(response.data); // Optional, if you want to set the updated user as the current one
