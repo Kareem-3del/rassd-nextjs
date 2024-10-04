@@ -30,7 +30,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             console.log(response)
 
             if (response.status === 401) {
-               router.push( '/auth/login');
+            //    router.push( '/auth/login');
                 return;
             }
 
@@ -40,7 +40,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
             console.error('Error fetching user:', error);
             setError(error instanceof Error ? error.message : 'An error occurred');
-            router.push( '/auth/login');
+            // router.push( '/auth/login');
         } finally {
             setIsLoading(false);
         }
