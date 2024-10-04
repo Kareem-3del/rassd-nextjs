@@ -8,8 +8,6 @@ import { CompletedTaskCard } from "./task-card"
 import { useUser } from "@/components/user-provider"
 
 export const CompletedForms = () => {
-    const {user} = useUser()
-    console.log({user})
     const {tasks , fetchTasks} = useTasks()
     useEffect(() =>  {
         fetchTasks()

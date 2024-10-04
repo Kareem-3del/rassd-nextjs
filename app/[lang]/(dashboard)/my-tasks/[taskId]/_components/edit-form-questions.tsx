@@ -1,6 +1,6 @@
 "use client"
 import { DotSperator } from "@/components/dot-sperator";
-import { FormQuestion, RenderEditableFile } from "@/components/task-form/task-term";
+import { TaskTerm, RenderEditableFile } from "@/components/task-form/task-term";
 import { Separator } from "@/components/ui/separator";
 import { FormCardEntries, Question } from "@/types";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
@@ -74,7 +74,7 @@ export const EditFormsQesutions = ({
     return <div className="rounded-[35px] p-5 bg-white md:bg-[#F5F5F5] mt-9">
         <div className="bg-white md:p-4 md:rounded-[30px]">
             <div>
-                <FormVisitTypeBadge type={formVisitType} className="mx-auto" />
+                {/* <FormVisitTypeBadge type={formVisitType} className="mx-auto" /> */}
                 <p className="text-base font-extrabold text-primary text-center mt-5">
                     {resumeTitle} - {resumeNumber}
                 </p>
@@ -150,7 +150,7 @@ function EditFormQuestion({ question, onQuestionChanged }: EditFormQuestionProps
     return <div className="flex gap-2">
 
         <div className="flex-1">
-            <FormQuestion {...question} onChekedChange={(value) => onQuestionChanged({
+            <TaskTerm {...question} onChekedChange={(value) => onQuestionChanged({
                 ...question,
                 value
             })} />
