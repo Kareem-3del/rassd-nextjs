@@ -77,7 +77,9 @@ export const CompletedTaskCard = (task: CompletedTaskCardProps) => {
             className="mr-auto hidden md:flex"
           />
 
-          {<TaskProgress progress={100} />}
+          <TaskActions {...task}/>
+
+          <TaskProgress progress={100} />
         </div>
       </div>
     </Card>
@@ -88,12 +90,8 @@ interface TaskActionsProps extends Task {}
 
 const TaskActions = (task: TaskActionsProps) => {
   return (
-    <div className="mt-[10px] flex flex-wrap lg:flex-nowrap gap-[10px]">
-      <div className="flex flex-1 items-center gap-[10px]">
+    <div className="mt-[10px] mx-auto flex justify-center">
         <TaskTerms facilityOwnerSignature="" inspectorSignature="" {...task} />
-        <AcceptFormButton id={task.id} />
-      </div>
-      <RejectFormButton id={task.id} />
     </div>
   );
 };

@@ -98,16 +98,36 @@ export const useDepartments = () => {
         }
     };
 
+    const addTerm = async (departmentId: number, termData: Omit<Term, "id">) => {
+        console.log("addTerm")
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.post(`/departments/${departmentId}/add-term`, {
+                name: termData.name,
+                requiredFiles: termData.requiredFiles,
+            });
+            setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept, terms: [...dept.terms, response.data]} : dept)));
+            return response.data.data.terms
+        } catch (err) {
+            toast.error("حدث مشكلة ما");
+            setError("حدث مشكلة ما");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const updateTerm = async ({ departmentId, termData }: { departmentId: number ,termData: UpdateTermDto }) => {
+        console.log("updateTerm", termData)
         setLoading(true);
         setError(null);
         try {
             const response = await api.patch(`/terms/${termData.id}`, {
-                // name: termData.name,
+                name: termData.name,
                 requiredFiles: termData.requiredFiles,
             });
             console.log(response)
-            // setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept,...response.data, groupId: response.data.group,} : dept)));
+            setDepartments((prev) => prev.map((dept) => (dept.id === departmentId ? {...dept,...response.data, groupId: response.data.group,} : dept)));
         } catch (err) {
             toast.error("حدث مشكلة ما");
             setError("حدث مشكلة ما");
@@ -117,6 +137,7 @@ export const useDepartments = () => {
     }
 
     const deleteTerm = async (departmentId: number, termId: number) => {
+        console.log("deleteTerm")
         setLoading(true);
         setError(null);
         try {
@@ -138,6 +159,7 @@ export const useDepartments = () => {
         departments,
         loading,
         error,
+        addTerm,
         deleteTerm,
         updateTerm,
         fetchDepartments,

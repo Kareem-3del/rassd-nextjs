@@ -5,7 +5,7 @@ import SectionHeader, {
 import { VisitsFilter } from "@/components/visits-filter"
 import { CompletedForms } from "./_components/completed-tasks"
 
-const CompletedFormsPage = async () => {
+const CompletedFormsPage = () => {
     
     return (
         <div>

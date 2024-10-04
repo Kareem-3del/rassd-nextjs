@@ -51,7 +51,8 @@ const DepartmentsTable = ({
   updateDepartment,
   updateTerm,
   departments,
-  deleteTerm
+  deleteTerm,
+  addTerm
 }: ReturnType<typeof useDepartments>) => {
   return (
     <Table>
@@ -76,6 +77,7 @@ const DepartmentsTable = ({
                   terms={item.terms}
                   groupType={item.groupType}
                   updateDepartment={updateDepartment}
+                  addTerm={addTerm}
                   updateTerm={updateTerm}
                   deleteTerm={deleteTerm}
                 />
@@ -129,6 +131,7 @@ interface EditingDialogProps {
   groupType: string;
   terms: Term[];
   updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"];
+  addTerm: ReturnType<typeof useDepartments>["addTerm"];
   updateTerm: ReturnType<typeof useDepartments>["updateTerm"];
   deleteTerm: ReturnType<typeof useDepartments>["deleteTerm"];
 }
@@ -139,6 +142,7 @@ const EditingDialog = ({
   name,
   terms,
   groupType,
+  addTerm,
   deleteTerm,
   updateTerm,
 }: EditingDialogProps) => {
@@ -184,6 +188,7 @@ const EditingDialog = ({
           terms={terms}
           groupType={groupType}
           type="edit"
+          addTerm={addTerm}
           updateTerm={updateTerm}
           deleteTerm={deleteTerm}
           onSubmit={(data) => {

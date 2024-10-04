@@ -41,12 +41,13 @@ interface DepartmentFormProps extends Partial<DepartmentFormData> {
   onSubmit: (data: DepartmentFormData) => void;
   type?: "edit" | "create";
   departmentId: number;
+  addTerm?: ReturnType<typeof useDepartments>["addTerm"];
   updateTerm?: ReturnType<typeof useDepartments>["updateTerm"];
   deleteTerm?: ReturnType<typeof useDepartments>["deleteTerm"];
 }
 const DepartmentForm = ({
   onSubmit,
-  type: formType ="create",
+  type: formType = "create",
   groupType: defaultGroupType = "ميدانية",
   departmentId,
   title,
@@ -55,13 +56,19 @@ const DepartmentForm = ({
   updateTerm,
   deleteTerm,
   children,
+  addTerm,
 }: DepartmentFormProps) => {
   const [selected, setSelected] = useState<number | undefined>(groupId);
   const [groupType, setGroupType] = useState<"secret" | "field">(
     defaultGroupType === "ميدانية" ? "field" : "secret"
   );
   const departmentNameRef = useRef<HTMLInputElement>(null);
-  const [terms, setTerms] = useState<Term[]>(defaultTerms);
+  const [terms, setTerms] = useState<Term[]>(
+    defaultTerms.map((term) => ({
+      ...term,
+      disabled: formType === "edit",
+    }))
+  );
 
   useEffect(() => {
     if (departmentNameRef.current) {
@@ -193,58 +200,35 @@ const DepartmentForm = ({
 
           <div className="grid gap-2">
             {terms.map((item) => (
-              <TermItem item={item} terms={terms} setTerms={setTerms} formType={formType}
-              updateTerm={updateTerm} deleteTerm={deleteTerm} departmentId={departmentId}/>
-              // <div className="flex gap-2 items-center flex-wrap" key={item.id}>
-              //   <Button
-              //     variant={"outline"}
-              //     size={"icon"}
-              //     onClick={() => {
-              //       const newItems = terms.filter((i) => i.id !== item.id);
-              //       setTerms(newItems);
-              //     }}
-              //   >
-              //     <Trash className="h-4 w-4" />
-              //   </Button>
-              //   <Input
-              //     type="text"
-              //     placeholder="بند"
-              //     value={item.name}
-              //     onChange={(e) => {
-              //       const newItems = [...terms];
-              //       newItems[terms.findIndex((i) => i.id === item.id)].name =
-              //         e.target.value;
-              //       setTerms(newItems);
-              //     }}
-              //   />
-              //   <div className="flex items-center gap-2">
-              //     <Checkbox
-              //       size="sm"
-              //       className="border-default-300 mt-[1px]"
-              //       id={item.id}
-              //       checked={item.requiredFiles}
-              //       onCheckedChange={(value) => {
-              //         const newItems = [...terms];
-              //         newItems[
-              //           terms.findIndex((i) => i.id === item.id)
-              //         ].requiredFiles = !!value;
-              //         setTerms(newItems);
-              //       }}
-              //     />
-              //     <Label htmlFor={item.id}>قبول الملفات</Label>
-              //   </div>
-              // </div>
+              <TermItem
+                item={item}
+                terms={terms}
+                setTerms={setTerms}
+                formType={formType}
+                updateTerm={updateTerm}
+                deleteTerm={deleteTerm}
+                departmentId={departmentId}
+              />
             ))}
           </div>
 
           <Button
             type="button"
-            onClick={() => {
+            onClick={async () => {
+              if (formType === "edit") {
+                const newTerms = await addTerm?.(departmentId!, {
+                  name: "بند",
+                  requiredFiles: false,
+                });
+
+                setTerms([...newTerms]);
+                return;
+              }
               setTerms([
                 ...terms,
                 {
                   id: Math.random().toString(36).substring(2, 15),
-                  name: "",
+                  name: "بند",
                   requiredFiles: false,
                 },
               ]);
@@ -262,16 +246,22 @@ const DepartmentForm = ({
 interface TermItemProps {
   item: Term;
   terms: Term[];
-  setTerms: React.Dispatch<
-    React.SetStateAction<Term[]>
-  >;
+  setTerms: React.Dispatch<React.SetStateAction<Term[]>>;
   formType: "create" | "edit";
   departmentId?: number;
   updateTerm?: ReturnType<typeof useDepartments>["updateTerm"];
   deleteTerm?: ReturnType<typeof useDepartments>["deleteTerm"];
 }
 
-function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,deleteTerm }: TermItemProps)  {
+function TermItem({
+  item,
+  terms,
+  formType,
+  departmentId,
+  updateTerm,
+  setTerms,
+  deleteTerm,
+}: TermItemProps) {
   const [isModified, setIsModified] = useState(false); // Track if the item is modified
   const [localItem, setLocalItem] = useState(item); // Local state to manage the input and checkbox changes
 
@@ -281,9 +271,8 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
   }, [item]);
 
   const handleDelete = async () => {
-    if(formType === "edit") {
-      console.log({formType})
-      await deleteTerm?.(departmentId!, parseInt(item.id))
+    if (formType === "edit") {
+      await deleteTerm?.(departmentId!, parseInt(item.id));
     }
     const newItems = terms.filter((i) => i.id !== item.id);
     setTerms(newItems);
@@ -305,9 +294,9 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
     setIsModified(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (formType === "edit") {
-      updateTerm?.({
+      await updateTerm?.({
         departmentId: 1,
         termData: {
           id: item.id,
@@ -316,9 +305,7 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
         },
       });
     }
-    const updatedItems = terms.map((i) =>
-      i.id === item.id ? localItem : i
-    );
+    const updatedItems = terms.map((i) => (i.id === item.id ? localItem : i));
     setTerms(updatedItems);
     setIsModified(false);
   };
@@ -326,11 +313,21 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
   return (
     <div className="flex gap-2 items-center flex-wrap" key={item.id}>
       {isModified ? (
-        <Button variant="outline" type="button" size="icon" onClick={handleSave}>
+        <Button
+          variant="outline"
+          type="button"
+          size="icon"
+          onClick={handleSave}
+        >
           <Check className="h-4 w-4" />
         </Button>
       ) : (
-        <Button variant="outline"  type="button" size="icon" onClick={handleDelete}>
+        <Button
+          variant="outline"
+          type="button"
+          size="icon"
+          onClick={handleDelete}
+        >
           <Trash className="h-4 w-4" />
         </Button>
       )}
@@ -340,7 +337,6 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
         placeholder="بند"
         value={localItem.name}
         onChange={handleNameChange}
-        disabled={formType === "edit"}
       />
 
       <div className="flex items-center gap-2">
@@ -350,14 +346,11 @@ function TermItem({ item, terms,formType,departmentId, updateTerm, setTerms,dele
           id={item.id}
           checked={localItem.requiredFiles}
           onCheckedChange={handleCheckedChange}
-          disabled={formType === "edit"}
         />
         <Label htmlFor={item.id}>قبول الملفات</Label>
       </div>
     </div>
   );
-};
-
-
+}
 
 export default DepartmentForm;
