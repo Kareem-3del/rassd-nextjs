@@ -297,7 +297,7 @@ function TermItem({
   const handleSave = async () => {
     if (formType === "edit") {
       await updateTerm?.({
-        departmentId: 1,
+        departmentId,
         termData: {
           id: item.id,
           name: localItem.name,

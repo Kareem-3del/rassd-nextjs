@@ -41,16 +41,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-const UsersTable = () => {
+import { useUsers } from "@/hooks/useUsers";
+import { useEffect } from "react";
+import { User } from "@/interfaces";
+interface UsersTableProps extends ReturnType<typeof useUsers> {}
+const UsersTable = ({fetchUsers,users , deleteUser}: UsersTableProps) => {
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="font-semibold">
             المستخدم
-          </TableHead>
-          <TableHead>
-           العنوان الوظيفي
           </TableHead>
           <TableHead>
             البريد الإلكتروني
@@ -67,21 +72,20 @@ const UsersTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((item: DataRows) => (
+        {users?.map((item: User) => (
           <TableRow key={item.email}>
             <TableCell className=" font-medium  text-card-foreground/80">
               <div className="flex gap-3 items-center">
                 <Avatar className="rounded-full">
                   <AvatarImage src={item.avatar} />
-                  <AvatarFallback>AB</AvatarFallback>
+                  <AvatarFallback>{item.firstName?.charAt(0)} {item.lastName?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className=" text-sm   text-card-foreground">
-                  {item.name}
+                  {item.firstName} {item.lastName}
                 </span>
               </div>
             </TableCell>
 
-            <TableCell>{item.title}</TableCell>
             <TableCell>{item.email}</TableCell>
             <TableCell>
               <Badge
@@ -98,7 +102,7 @@ const UsersTable = () => {
               </Badge>
             </TableCell>
             <TableCell>
-              {item.completed_tasks}
+              {item.tasksCompleted}
             </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
@@ -127,7 +131,7 @@ const UsersTable = () => {
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80">
+                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80" onClick={() =>  deleteUser(item.id)}>
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
