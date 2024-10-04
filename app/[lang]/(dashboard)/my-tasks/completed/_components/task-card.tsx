@@ -1,6 +1,4 @@
-import { FormCardEntries } from "@/types";
-import { Card, CardTitle } from "@/components/ui/card";
-import { UserBadge } from "@/components/user-badge";
+import { Card } from "@/components/ui/card";
 import { DotSperator } from "@/components/dot-sperator";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
 import { Progress } from "@/components/ui/progress";
@@ -10,7 +8,6 @@ import { RejectFormButton } from "../../_components/reject-form-button";
 import Link from "next/link";
 import { getTaskStautsWord } from "@/lib/utils";
 import { Task } from "@/rassd/types";
-import { TaskTerm } from "@/components/task-form/task-term";
 import { TaskTerms } from "@/components/task-form/task-terms";
 
 interface CompletedTaskCardProps extends Task {}
@@ -18,9 +15,11 @@ interface CompletedTaskCardProps extends Task {}
 export const CompletedTaskCard = (task: CompletedTaskCardProps) => {
   return (
     <Card className="px-10 py-[26px] rounded-[30px]">
-      {/* <UserBadge user={user} /> */}
       <Separator className="md:hidden my-5" />
-      {/* <FormVisitTypeBadge type={formVisitType} className="mx-auto md:hidden" /> */}
+      <FormVisitTypeBadge
+        type={task.department.group.type}
+        className="mx-auto md:hidden"
+      />
 
       <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-4 pt-5">
         {/* Right Side */}
@@ -78,10 +77,6 @@ export const CompletedTaskCard = (task: CompletedTaskCardProps) => {
             className="mr-auto hidden md:flex"
           />
 
-          {/* <TaskActions
-            {...task}
-          /> */}
-
           {<TaskProgress progress={100} />}
         </div>
       </div>
@@ -90,55 +85,6 @@ export const CompletedTaskCard = (task: CompletedTaskCardProps) => {
 };
 
 interface TaskActionsProps extends Task {}
-
-// const quesiotns = [
-//   {
-//     id: "1",
-//     value: true,
-//     label: "هل انت متأكد من أن المستند موجود في المجلد الصحيح ؟",
-//     isAcceptFiles: true,
-//     files: ["/images/avatar/avatar-2.jpg", "/images/avatar/avatar-1.jpg"],
-//   },
-//   {
-//     id: "2",
-//     value: true,
-//     label: "هل جميع المعدات الطبية في حالة تشغيل جيدة؟",
-//     files: ["/images/avatar/avatar-2.jpg", "/images/avatar/avatar-1.jpg"],
-//     isAcceptFiles: true,
-//     diabled: true,
-//   },
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل يتم فحص الأدوية وتخزينها بشكل صحيح؟",
-//   },
-
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل يوجد سجل محدث لجميع المرضى؟",
-//   },
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل يتم توثيق إجراءات الفحص الدوري بشكل مناسب؟",
-//   },
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل يتلقى الموظفون التدريبات اللازمة بانتظام؟",
-//   },
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل تتوفر وسائل الأمان والسلامة في جميع أنحاء المنشأة؟",
-//   },
-//   {
-//     id: "2",
-//     value: false,
-//     label: "هل يوجد نظام إدارة نفايات فعال؟",
-//   },
-// ];
 
 const TaskActions = (task: TaskActionsProps) => {
   return (

@@ -1,46 +1,89 @@
-"use client"
-import { FormVisitType } from "@/types";
+"use client";
+
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
-const VISTI_TYPES = [{
+const VISIT_TYPES = [
+  {
     value: "field-visit",
     label: "زيارة ميدانية",
-}, 
-{
+    checked: false,
+  },
+  {
     value: "secret-visit",
     label: "زيارة سرية",
-}
-] as const 
+    checked: false,
+  },
+] as const;
 
 interface VisitsFilterProps {
+  onFilterChanged?: (value: typeof VISIT_TYPES) => void;
 }
 
-export const VisitsFilter = ({}: VisitsFilterProps) => {
-   return  <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-            <Button color="dark" className="h-12 items-center gap-[10px] hidden md:flex rounded-2xl">
-                تصفية الزيارات
-                <ChevronDown className="w-[18px] h-[18px]" />
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent color="dark" className="bg-black rounded-2xl">
-            {
-                VISTI_TYPES.map((item, index) => (
-                    <div key={item.value} className={cn("flex items-center gap-2 py-5 px-4", {
-                        "border-b border-b-white": index !== VISTI_TYPES.length - 1, 
-                    })}>
-                        <Checkbox
-                        size={"xs"} 
-                            />
-                            <Label className="text-xs font-bold text-white">{item.label}</Label>
-                    </div>
-                ))
-            }
-        </DropdownMenuContent>
+export const VisitsFilter = ({ onFilterChanged }: VisitsFilterProps) => {
+  const [filter, setFilter] = useState(VISIT_TYPES);
+
+  const handleCheckboxChange = (
+    value: (typeof VISIT_TYPES)[number]["value"],
+    checked: boolean
+  ) => {
+    // @ts-ignore
+    setFilter((prev) => {
+      const newFilters = prev.map((item) =>
+        item.value === value ? { ...item, checked } : item
+      );
+      // @ts-ignore
+      onFilterChanged?.(newFilters);
+      return newFilters;
+    });
+  };
+
+  console.log(filter);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          color="dark"
+          className="h-12 items-center gap-[10px] hidden md:flex rounded-2xl"
+        >
+          تصفية الزيارات
+          <ChevronDown className="w-[18px] h-[18px]" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-black rounded-2xl">
+        {filter.map((item, index) => (
+          <div
+            key={item.value}
+            className={cn("flex items-center gap-2 py-5 px-4", {
+              "border-b border-b-white": index !== filter.length - 1,
+            })}
+          >
+            <Checkbox
+            size={"sm"}
+              id={item.value}
+              checked={item.checked}
+              onCheckedChange={(checked) =>
+                handleCheckboxChange(item.value, checked as boolean)
+              }
+            />
+            <Label
+              htmlFor={item.value}
+              className="text-xs font-bold text-white cursor-pointer"
+            >
+              {item.label}
+            </Label>
+          </div>
+        ))}
+      </DropdownMenuContent>
     </DropdownMenu>
-}
+  );
+};

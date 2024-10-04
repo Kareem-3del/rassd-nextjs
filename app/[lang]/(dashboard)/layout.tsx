@@ -6,11 +6,13 @@ import { api } from "@/config/axios.config";
 const layout = async ({ children, params: { lang } }: { children: React.ReactNode; params: { lang: any } }) => {
   // try {
   //   const response =  await api.get("/auth/current-user");
+  //   console.log({userRes: response})
   //    if (response.status === 401) {
   //      redirect("/auth/login");
   //    }
 
   // } catch(error) {
+  //   console.log({error})
   //   redirect("/auth/login");
   // }
 
