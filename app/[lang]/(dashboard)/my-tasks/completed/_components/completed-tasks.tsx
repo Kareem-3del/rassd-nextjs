@@ -5,8 +5,11 @@ import { FormCard } from "../../_components/form-card"
 import useTasks from "@/hooks/useTasks"
 import { useEffect } from "react"
 import { CompletedTaskCard } from "./task-card"
+import { useUser } from "@/components/user-provider"
 
 export const CompletedForms = () => {
+    const {user} = useUser()
+    console.log({user})
     const {tasks , fetchTasks} = useTasks()
     useEffect(() =>  {
         fetchTasks()

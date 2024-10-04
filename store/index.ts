@@ -96,3 +96,4 @@ export const useSidebar = create<SidebarState>()(
       storage: createJSONStorage(() => localStorage), },
     ),
 )
+
