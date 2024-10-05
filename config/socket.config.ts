@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { getToken } from "@/config/axios.config"; // Ensure the path is correct
 
-const baseURL = "http://127.0.0.1:4000";
+const baseURL = "https://api-docs.almasaalswda.com";
 const socket = io(baseURL, {
     autoConnect: false,
     transports: ["websocket", "polling"],

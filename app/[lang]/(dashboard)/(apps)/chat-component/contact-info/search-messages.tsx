@@ -21,7 +21,7 @@ const SearchMessages = ({ handleSetIsOpenSearch }: {
           className="text-base absolute top-1/2 left-3.5 -translate-y-1/2 text-default-400"
         />
         <Input
-          type="text"
+          type="text Search...
           placeholder="Search"
           radius="xl"
           className="pl-10 pr-10 bg-default-200 "

@@ -194,7 +194,9 @@ const LayoutWrapper = ({ children, isMobile, setOpen, open, location, trans }: {
       </motion.div>
 
       <MobileSidebar trans={trans} className="left-[300px]" />
+{/*
       <HeaderSearch open={open} setOpen={setOpen} />
+*/}
     </>
   );
 };
