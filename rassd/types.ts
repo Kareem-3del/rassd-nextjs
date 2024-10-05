@@ -1,3 +1,5 @@
+import { TaskStatusEnum } from "@/interfaces";
+
 // Establishment Detail-related types
 export interface EstablishmentDetail {
     address: string;
@@ -43,14 +45,6 @@ export interface Term {
     requiredFiles: boolean;
     description: string;
     departments: Department[];
-}
-
-// Task Status Enum
-export enum TaskStatusEnum {
-    Pending = 'Pending',
-    InProgress = 'In Progress',
-    Completed = 'Completed',
-    Canceled = 'Canceled',
 }
 
 // Task-related types

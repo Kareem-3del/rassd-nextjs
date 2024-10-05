@@ -1,4 +1,4 @@
-import { TaskStatusEnum } from "@/rassd/types";
+import { TaskStatusEnum } from "@/interfaces";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge";
 

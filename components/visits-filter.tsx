@@ -26,7 +26,10 @@ const VISIT_TYPES = [
 ] as const;
 
 interface VisitsFilterProps {
-  onFilterChanged?: (value: typeof VISIT_TYPES) => void;
+  onFilterChanged?: (value: {
+    "field-visit": boolean;
+    "secret-visit": boolean;
+  }) => void;
 }
 
 export const VisitsFilter = ({ onFilterChanged }: VisitsFilterProps) => {
@@ -42,7 +45,10 @@ export const VisitsFilter = ({ onFilterChanged }: VisitsFilterProps) => {
         item.value === value ? { ...item, checked } : item
       );
       // @ts-ignore
-      onFilterChanged?.(newFilters);
+      onFilterChanged?.({
+        "field-visit": newFilters[0].checked,
+        "secret-visit": newFilters[1].checked,
+      });
       return newFilters;
     });
   };
