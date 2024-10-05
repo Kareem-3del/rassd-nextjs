@@ -3,8 +3,6 @@ import { DotSperator } from "@/components/dot-sperator";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { AcceptFormButton } from "../../_components/accept-form-button";
-import { RejectFormButton } from "../../_components/reject-form-button";
 import Link from "next/link";
 import { getTaskStautsWord } from "@/lib/utils";
 import { Task } from "@/rassd/types";
@@ -39,6 +37,10 @@ export const CompletedTaskCard = (task: CompletedTaskCardProps) => {
           <div className="flex flex-wrap items-center gap-[10px] md:gap-4 pt-5 justify-center md:justify-start">
             <div className="text-[#B1B1B1] text-xs font-extrabold">
               {task.establishmentDetail.address}
+            </div>
+            <DotSperator className="bg-[#D9D9D9]" />
+            <div className="text-[#B1B1B1] text-xs font-extrabold">
+              {/* {task.establishmentDetail.} */}
             </div>
             {task.startDate ? (
               <>

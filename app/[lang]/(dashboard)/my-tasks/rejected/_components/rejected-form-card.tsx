@@ -4,10 +4,11 @@ import { UserBadge } from "@/components/user-badge";
 import { DotSperator } from "@/components/dot-sperator";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { FormQuestions } from "@/components/task-form/task-terms";
+import { TaskTerms } from "@/components/task-form/task-terms";
 import Link from "next/link";
 import { FormVisitTypeBadge } from "@/components/form-visit-type-badge";
 import { RedoFormButton } from "./redo-form-button";
+import { GroupType } from "@/rassd/types";
 
 export type RejectedFormProps = Omit<FormCardEntries, "user" | "progress"> &  {
     rejectReson: string
@@ -31,7 +32,7 @@ export const RejectedFormCard = ({
 }: FormCardProps) => {
     return (
         <Card className="px-10 py-[26px] rounded-[30px]">
-            <FormVisitTypeBadge type={formVisitType} className="mx-auto md:hidden" />
+            <FormVisitTypeBadge type={GroupType.FIELD_VISIT} className="mx-auto md:hidden" />
 
             <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-4 pt-5">
 
@@ -72,7 +73,7 @@ export const RejectedFormCard = ({
 
                 {/* Left Side */}
                 <div className="w-full md:w-[initial]">
-                    <FormVisitTypeBadge type={formVisitType} className="mr-auto hidden md:flex" />
+                    <FormVisitTypeBadge type={GroupType.FIELD_VISIT} className="mr-auto hidden md:flex" />
                         <FormActions 
                             formStatus={formStatus} 
                             formVisitType={formVisitType} 
@@ -155,8 +156,8 @@ const FormActions = ({
 }: FormActionsProps) => {
     return (<div className="mt-[10px] flex flex-wrap lg:flex-nowrap gap-[10px]">
         <div className="flex flex-1 items-center gap-[10px]">
-            <FormQuestions formVisitType={formVisitType} resumeArea={resumeArea} resumeTime={resumeTime} resumeTitle={resumeTitle} resumeNumber={resumeNumber} questions={quesiotns} facilityOwnerSignature={facilityOwnerSignature}
-                inspectorSignature={inspectorSignature} />
+            {/* <TaskTerms formVisitType={formVisitType} resumeArea={resumeArea} resumeTime={resumeTime} resumeTitle={resumeTitle} resumeNumber={resumeNumber} questions={quesiotns} facilityOwnerSignature={facilityOwnerSignature} */}
+                {/* inspectorSignature={inspectorSignature} /> */}
             <RedoFormButton resumeNumber={resumeNumber} />
         </div>
     </div>)

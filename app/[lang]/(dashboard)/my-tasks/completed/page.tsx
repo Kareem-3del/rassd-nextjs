@@ -13,13 +13,13 @@ const CompletedFormsPage = () => {
     "secret-visit": false,
   });
 
-  const { tasks, fetchTasks } = useTasks();
+  const { tasks, fetchComplitedTasks } = useTasks();
 
   useEffect(() => {
-    fetchTasks();
+    fetchComplitedTasks();
   }, []);
 
-  console.log(tasks)
+  console.log(tasks);
   const completedTasks = tasks?.filter((task) => {
     return (
       task.status === TaskStatusEnum.Completed &&
@@ -31,9 +31,7 @@ const CompletedFormsPage = () => {
         : true)
     );
   });
-console.log({
-    completedTasks
-})
+console.log(tasks)
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -42,7 +40,11 @@ console.log({
         </SectionHeader>
         <VisitsFilter onFilterChanged={setFilter} />
       </div>
-      <CompletedForms tasks={completedTasks}/>
+      {tasks?.length && tasks?.length > 0 ? (
+        <CompletedForms tasks={completedTasks} />
+      ) : (
+        <div className="text-center">لا توجد استمارات مكتملة</div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { TaskStatusEnum } from "@/interfaces";
 // Establishment Detail-related types
 export interface EstablishmentDetail {
     address: string;
+    
 }
 
 // Client-related types

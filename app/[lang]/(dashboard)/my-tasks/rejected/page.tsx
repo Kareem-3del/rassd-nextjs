@@ -1,3 +1,4 @@
+"use client"
 import SectionHeader, {
     SectionIcon,
     SectionTitle,
@@ -5,7 +6,9 @@ import SectionHeader, {
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { VisitsFilter } from "@/components/visits-filter"
-import { RejectedForms } from "./_components/rejected-forms"
+import { RejectedTasks } from "./_components/rejected-tasks"
+import { useEffect, useState } from "react"
+import useTasks from "@/hooks/useTasks"
 
 const WarringIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -14,7 +17,16 @@ const WarringIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 )
 
-const RejectededFormsPage = async () => {
+const RejectededFormsPage = () => {
+    const [filter, setFilter] = useState({
+    "field-visit": false,
+    "secret-visit": false,
+  });
+  const {fetchRejectedTasks, tasks} = useTasks()
+  console.log(tasks);
+useEffect(() => {
+    fetchRejectedTasks();
+}, []);
     return (
         <div>
             <div className="flex justify-between items-center">
@@ -28,9 +40,10 @@ const RejectededFormsPage = async () => {
                     شـــاهد الكل
                     <ArrowLeft className="h-3 w-3" />
                 </Link>
-                <VisitsFilter/>
+                
+                 <VisitsFilter onFilterChanged={setFilter} />
             </div>
-            <RejectedForms />
+            <RejectedTasks />
         </div>
     )
 }
