@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "@/config/axios.config";
-import { Task } from "@/rassd/types";
+import {Client, EstablishmentDetail, Task} from "@/rassd/types";
 
 // Base API URL (replace with your actual API endpoint)
 const API_URL = "/tasks";
@@ -64,36 +64,41 @@ const useTasks = () => {
     }
   };
 
+  interface CreateTask {
+    title: string;
+    client: Client;
+    establishmentDetail: EstablishmentDetail;
+    departmentId: number;
+    inspectorId: number;
+  }
+
   // Create a new task
-  const createTask = async (newTask: Omit<Task, "id">): Promise<void> => {
+  const createTask = async (newTask: CreateTask): Promise<void> => {
     setLoading(true);
+    setError(null);
     try {
       const response = await api.post<Task>(API_URL, newTask);
       if (tasks) {
-        setTasks({ ...tasks, data: [...tasks.data, response.data] });
+        setTasks([...tasks, response.data]);
       }
     } catch (err) {
-      setError("An error occurred while creating the task.");
+      setError('An error occurred while creating the task.');
     } finally {
       setLoading(false);
     }
   };
-
   // Update an existing task by ID
   const updateTask = async (
-    id: number,
-    updatedTask: Partial<Task>
+      id: number,
+      updatedTask: Partial<Task>
   ): Promise<void> => {
     setLoading(true);
     try {
       const response = await api.put<Task>(`${API_URL}/${id}`, updatedTask);
       if (tasks) {
-        setTasks({
-          ...tasks,
-          data: tasks.data.map((task) =>
+        setTasks(tasks.map((task) =>
             task.id === id ? response.data : task
-          ),
-        });
+        ));
       }
     } catch (err) {
       setError("An error occurred while updating the task.");
@@ -108,10 +113,7 @@ const useTasks = () => {
     try {
       await api.delete(`${API_URL}/${id}`);
       if (tasks) {
-        setTasks({
-          ...tasks,
-          data: tasks.data.filter((task) => task.id !== id),
-        });
+        setTasks(tasks.filter((task) => task.id !== id));
       }
     } catch (err) {
       setError("An error occurred while deleting the task.");

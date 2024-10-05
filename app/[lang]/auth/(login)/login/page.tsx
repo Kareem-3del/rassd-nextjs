@@ -26,28 +26,19 @@ const LoginPage = () => {
             />
             <div className="relative z-10 backdrop-blur bg-primary-foreground/40 py-14 px-16 2xl:py-[84px] 2xl:pl-[50px] 2xl:pr-[136px] rounded max-w-[640px]">
               <div>
-                <Button
-                  className="bg-transparent hover:bg-transparent h-fit w-fit p-0"
-                  onClick={() => setOpenVideo(true)}
-                >
-                  <Icon
-                    icon="heroicons:play-solid"
-                    className="text-primary-foreground h-[78px] w-[78px] -ml-2"
-                  />
-                </Button>
 
                 <div className="text-4xl leading-[50px] 2xl:text-6xl 2xl:leading-[72px] font-semibold mt-2.5">
-                  <span className="text-default-600 dark:text-default-300 ">
-                    Unlock <br />
-                    Your Project <br />
+                  <span className="text-default-600 dark:text-default-300  font-bolder mb-8">
+                    مرحبًا بك!.<br/>
                   </span>
-                  <span className="text-default-900 dark:text-default-50">
-                    Performance
-                  </span>
+
                 </div>
-                <div className="mt-5 2xl:mt-8 text-default-900 dark:text-default-200  text-2xl font-medium">
-                  You will never know everything. <br />
-                  But you will know more...
+                <span className="text-default-900 leading-[30px] text-lg fon-bold mt-4 dark:text-default-50">
+                                      منصة "رصد" هي تطبيق ميداني رقابي يستخدم لمتابعة إجراءات الرعاية الصحية المغطاة بالتأمين. يتيح للمستفيدين مراقبة الجودة والدقة في الفحص، ويقدم تقارير مخصصة يومية وأسبوعية وشهرية حول التقدم والزيارات الميدانية والسرية <br/>
+
+                  </span>
+                <div className="mt-5 2xl:mt-8 text-default-900 dark:text-default-200  text-xs font-medium">
+                  "جميع الحقوق محفوظة © [منصة رصد] [2024]."
                 </div>
               </div>
             </div>
@@ -55,12 +46,12 @@ const LoginPage = () => {
 
           <div className=" min-h-screen basis-full md:basis-1/2 w-full px-4 py-5 flex justify-center items-center">
             <div className="lg:w-[480px] ">
-              <LogInForm />
+              <LogInForm/>
             </div>
           </div>
         </div>
       </div>
-      <Dialog open={openVideo} >
+      <Dialog open={openVideo}>
         <DialogContent size="lg" className="p-0" hiddenCloseIcon>
           <Button
             size="icon"

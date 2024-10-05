@@ -1,22 +1,33 @@
-import { contacts } from "@/app/api/chat/data";
 import { api } from "@/config/axios.config";
+import { socket , connectSocket } from "@/config/socket.config";
 
 export const getContacts = async () => {
-  return {contacts}
-  const response = await api.get("/chat");
-  return response.data;
-};
+  const response = await api.get("/users");
+  console.log("Response from getContacts:", response.data.elements);
+  return response.data.elements;
 
+};
+if(socket.disconnected){
+  connectSocket().then(
+      console.log
+  );
+}
 export const getMessages = async (id: any) => {
   try {
-    const response = await api.get(`/chat/messages/${id}`);
+    const response = await api.get(`/chat/${id}`);
     console.log("Response from getMessages:", response.data);
+
+    // subscribe to the chat room
+
     return response.data;
   } catch (error) {
     console.error("Error fetching messages:", error);
     throw error;
   }
+
 };
+
+
 export const deleteMessage = async (obj: any) => {
   console.log("Object to be sent:", obj); // Add this log statement
   try {
@@ -33,7 +44,14 @@ export const getProfile = async () => {
   return response.data;
 };
 
-export const sendMessage = async (msg: any) => {
+/*export const sendMessage = async (msg: any) => {
   const response = await api.post("/chat/messages", msg);
   return response.data;
+};*/
+
+export const sendMessage = async (msg: any) => {
+  socket.emit("sendMessage", msg);
+
+  console.log(socket, "socket");
+  console.log("Message sent:", msg);
 };

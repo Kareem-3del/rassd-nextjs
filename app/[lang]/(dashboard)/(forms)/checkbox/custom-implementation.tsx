@@ -53,7 +53,7 @@ const CustomImplementation = () => {
                     "bg-success": isSelected,
                   })}
                 ></span>
-                {isSelected ? "Active Now" : "Inactive"}
+                {isSelected ? "متصل الان" : "Inactive"}
               </Badge>
             </div>
           </div>
@@ -99,7 +99,7 @@ const CustomImplementation = () => {
                     "bg-success": isSelected1,
                   })}
                 ></span>
-                {isSelected1 ? "Active Now" : "Inactive"}
+                {isSelected1 ? "متصل الان" : "Inactive"}
               </Badge>
             </div>
           </div>

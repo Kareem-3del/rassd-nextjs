@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { formatTime } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import {
@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Undo2 } from "lucide-react";
 import { type ProfileUser as ProfileUser, type Contact as ContactType, type Chat as ChatType } from "@/app/api/chat/data";
-import Image from "next/image";
+import img from "next/image";
+import {User} from "@/rassd/types";
 const chatAction = [
   {
     label: "Remove",
@@ -22,11 +23,12 @@ const chatAction = [
     link: "#",
   },
 ];
+import { useUser } from "@/components/user-provider"
 
 interface MessagesProps {
   message: any;
-  contact: ContactType;
-  profile: ProfileUser;
+  contact: User;
+  profile: User;
   onDelete: (selectedChatId: any, index: number) => void;
   index: number;
   selectedChatId: string;
@@ -44,33 +46,34 @@ const Messages = ({
   onDelete,
   index,
   selectedChatId,
-  handleReply,
   replayData,
   handleForward,
 
   handlePinMessage,
   pinnedMessages,
 }: MessagesProps) => {
-  const { senderId, message: chatMessage, time, replayMetadata } = message;
-  const { avatar } = contact;
+  const { sender , content: chatMessage, time, replayMetadata , receiver } = message;
   // State to manage pin status
   const isMessagePinned = pinnedMessages.some(
     (pinnedMessage: any) => pinnedMessage.index === index
   );
-
+const { avatar, firstName } = contact || {
+  avatar : null,
+    firstName : ""
+};
   const handlePinMessageLocal = (note: any) => {
     const obj = {
       note,
-      avatar,
       index,
     };
     handlePinMessage(obj);
   };
+  const { user } = useUser();
 
   return (
     <>
       <div className="block md:px-6 px-0 ">
-        {senderId === 11 ? (
+        {sender?.id === user?.id ? (
           <>
             {replayMetadata === true && (
               <div className="w-max ml-auto -mb-2 mr-10">
@@ -79,7 +82,7 @@ const Messages = ({
                   <span className="text-xs text-default-700">
                     You replied to
                     <span className="ml-1 text-default-800">
-                      {replayData?.contact?.fullName}
+                      {replayData?.contact?.firstName + " " + replayData?.contact?.lastName}
                     </span>
                   </span>
                 </div>
@@ -91,31 +94,6 @@ const Messages = ({
             <div className="flex space-x-2 items-start justify-end group w-full rtl:space-x-reverse mb-4">
               <div className=" flex flex-col  gap-1">
                 <div className="flex items-center gap-1">
-                  <div className="opacity-0 invisible group-hover:opacity-100 group-hover:visible ">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <span className="w-7 h-7 rounded-full bg-default-200 flex items-center justify-center">
-                          <Icon
-                            icon="bi:three-dots-vertical"
-                            className="text-lg"
-                          />
-                        </span>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-20 p-0"
-                        align="center"
-                        side="top"
-                      >
-                        <DropdownMenuItem
-                          onClick={() => onDelete(selectedChatId, index)}
-
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Forward</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
                   <div className="whitespace-pre-wrap break-all">
                     <div className="bg-primary/70 text-primary-foreground  text-sm  py-2 px-3 rounded-2xl  flex-1  ">
                       {chatMessage}
@@ -128,10 +106,12 @@ const Messages = ({
               </div>
               <div className="flex-none self-end -translate-y-5">
                 <div className="h-8 w-8 rounded-full ">
-                  <Image
-                    src={profile?.avatar}
+                  <img
+                    src={sender?.avatar || `https://ui-avatars.com/api/?background=random&name=${sender?.firstName}`}
                     alt=""
                     className="block w-full h-full object-cover rounded-full"
+                    width={150}
+                    height={150}
                   />
                 </div>
               </div>
@@ -141,10 +121,12 @@ const Messages = ({
           <div className="flex space-x-2 items-start group rtl:space-x-reverse mb-4">
             <div className="flex-none self-end -translate-y-5">
               <div className="h-8 w-8 rounded-full">
-                <Image
-                  src={avatar}
+                <img
+                  src={receiver.avatar ? receiver.avatar : ` https://ui-avatars.com/api/?background=random&name=${receiver.firstName}`}
                   alt=""
                   className="block w-full h-full object-cover rounded-full"
+                  width={150}
+                    height={150}
                 />
               </div>
             </div>
@@ -162,44 +144,6 @@ const Messages = ({
                     <div className="bg-default-200  text-sm  py-2 px-3 rounded-2xl  flex-1  ">
                       {chatMessage}
                     </div>
-                  </div>
-                  <div className="opacity-0 invisible group-hover:opacity-100 group-hover:visible ">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <span className="w-7 h-7 rounded-full bg-default-200 flex items-center justify-center">
-                          <Icon
-                            icon="bi:three-dots-vertical"
-                            className="text-lg"
-                          />
-                        </span>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-20 p-0"
-                        align="center"
-                        side="top"
-                      >
-                        <DropdownMenuItem
-                          onClick={() => onDelete(selectedChatId, index)}
-                        >
-                          Remove
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleReply(chatMessage, contact)}
-                        >
-                          Reply
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handlePinMessageLocal(chatMessage)}
-                        >
-                          {isMessagePinned ? "Unpin" : "Pin"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleForward(chatMessage)}
-                        >
-                          Forward
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                 </div>
                 <span className="text-xs   text-default-500">

@@ -411,14 +411,14 @@ const CreateTaskDialog = () => {
                 <DialogTrigger asChild>
                     <Button>إنشاء مهمة</Button>
                 </DialogTrigger>
-                <DialogContent size="2xl">
+                <DialogContent size="3xl">
                     <DialogHeader>
                         <DialogTitle className="text-base font-medium ">
                             إنشاء مهمة جديدة
                         </DialogTitle>
                     </DialogHeader>
 
-                    <div className="text-sm text-default-500  space-y-4">
+                    <div className="text-sm text-default-500  h-[500px] space-y-4">
                         <CreateTaskForm/>
                     </div>
 

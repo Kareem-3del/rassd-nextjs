@@ -2,8 +2,10 @@ import { TaskStatusEnum } from "@/interfaces";
 
 // Establishment Detail-related types
 export interface EstablishmentDetail {
-    address: string;
-    
+    "address": string,
+    "district": string,
+    "city": string,
+    "region": string
 }
 
 // Client-related types
@@ -70,21 +72,41 @@ export interface Task {
     client: Client;
     establishmentDetail: EstablishmentDetail;
     department: Department;
+    created_at : Date,
+    updated_at : Date
 }
 
 // User-related types (assuming the User entity structure)
 export interface User {
-    id: number;
-    name: string;
+    avatar: string | null;
+    createdAt: string; // ISO date string
+    deletedAt: string | null; // ISO date string or null
     email: string;
-    // Add more fields if needed
+    online : boolean,
+    firstName: string;
+    googleId: string | null;
+    id: number;
+    isTFAEnabled: boolean;
+    lastName: string;
+    nationalId: string;
+    phoneNumber: string;
+    restoredAt: string | null; // ISO date string or null
+    role: string; // e.g., "inspector"
+    tasksCompleted: number;
+    tasksInProgress: number;
+    tasksRejected: number;
+    tfaSecret: string | null;
+    updated_at: string; // ISO date string
 }
+
 
 // TermsValues-related types
 export interface TermsValues {
     id: number;
     term: Term;
+    termId: number;
     value: string;
+    files: string[];
     task: Task;
 }
 

@@ -32,6 +32,15 @@ const nextConfig = {
 
     return config;
   },
+  reactStrictMode: true,
+  webp: {
+    preset: "default",
+    quality: 100,
+  },
+  svg: {
+    preset: "default",
+    quality: 100
+  },
   images: {
     remotePatterns: [
       {
@@ -44,7 +53,15 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "a0.muscache.com",
+        hostname: "ui-avatars.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ui-avatars.com",
+      },
+      {
+        protocol: "http",
+        hostname: "ui-avatars.com",
       },
       {
         protocol: "https",

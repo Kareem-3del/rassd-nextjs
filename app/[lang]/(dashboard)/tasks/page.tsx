@@ -1,10 +1,12 @@
-import CreateTaskForm from "./create-task.form";
+
+import CreateTaskForm, {TasksTable} from "./create-task.form";
 
 const TaskPage = async () => {
   return (
       <div>
-        <h1>My Tasks</h1>
-        <CreateTaskForm/>
+        <CreateTaskForm
+        />
+        <TasksTable/>
       </div>
   );
 };

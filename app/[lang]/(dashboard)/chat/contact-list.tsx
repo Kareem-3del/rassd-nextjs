@@ -4,13 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { cn, formatTime } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import { type Contact as ContactType, type Chat as ChatType } from "@/app/api/chat/data";
+import {User} from "@/rassd/types";
 
-const ContactList = ({ contact, openChat, selectedChatId }: {
-  contact: ContactType,
+const ContactList = ({ contact, openChat, selectedChatId  }: {
+  contact: User,
   openChat: (id: any) => void,
   selectedChatId: string
 }) => {
-  const { avatar, id, fullName, status, about, unreadmessage, date } =
+  const { avatar, id, firstName, lastName, role } =
     contact;
 
     console.log({
@@ -30,15 +31,15 @@ const ContactList = ({ contact, openChat, selectedChatId }: {
       <div className="flex-1 flex  gap-3 ">
         <div className="relative inline-block ">
           <Avatar>
-            <AvatarImage src={avatar.src} />
+            <AvatarImage src={avatar || ` https://ui-avatars.com/api/?background=random&name=${firstName}`} />
             <AvatarFallback className="uppercase">
-              {fullName.slice(0, 2)}
+              {[firstName,lastName].join(' ').slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <Badge
             className=" h-2 w-2  p-0 ring-1 ring-border ring-offset-[1px]   items-center justify-center absolute
              left-[calc(100%-8px)] top-[calc(100%-10px)]"
-            color={status === "online" ? "success" : "secondary"}
+            color={contact.online ? "success" : "secondary"}
           ></Badge>
         </div>
         <div className="block">
@@ -47,14 +48,19 @@ const ContactList = ({ contact, openChat, selectedChatId }: {
               "text-white": id === selectedChatId as any,
             })}>
               {" "}
-              {fullName}
+              {[
+                firstName,
+                lastName,
+              ].join(" ")}
             </span>
           </div>
           <div className="truncate  max-w-[120px]">
             <span className={cn("text-xs text-default-600 group-hover:text-gray-200", {
               "text-gray-200": id === selectedChatId as any,
             })}>
-              {about}
+              {
+                role
+              }
             </span>
           </div>
         </div>
@@ -63,9 +69,13 @@ const ContactList = ({ contact, openChat, selectedChatId }: {
         <span className={cn("text-xs text-default-600 text-end uppercase group-hover:text-gray-200", {
           "text-gray-200": id === selectedChatId as any,
         })}>
-          {date}
+          {
+
+            formatTime(new Date(contact.updated_at))
+          }
+
         </span>
-        <span
+       {/* <span
           className={cn(
             "h-[14px] w-[14px] flex items-center justify-center bg-default-400 rounded-full text-primary-foreground text-[10px] font-medium group-hover:text-primary group-hover:bg-white",
             {
@@ -79,7 +89,7 @@ const ContactList = ({ contact, openChat, selectedChatId }: {
           ) : (
             unreadmessage
           )}
-        </span>
+        </span>*/}
       </div>
     </div>
     </div>

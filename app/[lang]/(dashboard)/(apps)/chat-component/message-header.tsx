@@ -52,7 +52,7 @@ const MessageHeader = ({
             <span className="relative">{profile?.fullName}</span>
           </div>
           <span className="text-xs text-default-500">
-            {active ? "Active Now" : "Offline"}
+            {active ? "متصل الان" : "غير متصل"}
           </span>
         </div>
       </div>

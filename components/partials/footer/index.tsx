@@ -89,7 +89,7 @@ const FooterContent = () => {
 
           مركز الأعمال و الاستشارات الاقتصادية
       </p>
-      <p className="mb-0 text-xs md:text-sm">
+ {/*     <p className="mb-0 text-xs md:text-sm">
         Made by{" "}
         <a
           className="text-primary"
@@ -98,7 +98,7 @@ const FooterContent = () => {
         >
           TarmeezTech
         </a>
-      </p>
+      </p>*/}
     </div>
   );
 };

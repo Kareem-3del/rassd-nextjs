@@ -16,17 +16,18 @@ import {
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
+import {useUser} from "@/components/user-provider";
 
 const ProfileInfo = () => {
-  const { data: session } = useSession();
+const { user }= useUser()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className=" cursor-pointer">
         <div className=" flex items-center  ">
-          {session?.user?.image && (
+          {user?.avatar && (
             <Image
-              src={session?.user?.image}
-              alt={session?.user?.name ?? ""}
+              src={user?.avatar}
+              alt={user?.firstName ?? ""}
               width={36}
               height={36}
               className="rounded-full"
@@ -36,10 +37,10 @@ const ProfileInfo = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 p-0" align="end">
         <DropdownMenuLabel className="flex gap-2 items-center mb-1 p-3">
-          {session?.user?.image && (
+          {user?.avatar && (
             <Image
-              src={session?.user?.image}
-              alt={session?.user?.name ?? ""}
+              src={user?.avatar}
+              alt={user?.firstName ?? ""}
               width={36}
               height={36}
               className="rounded-full"
@@ -47,7 +48,7 @@ const ProfileInfo = () => {
           )}
           <div>
             <div className="text-sm font-medium text-default-800 capitalize ">
-              {session?.user?.name ?? "Mcc Callem"}
+              {user?.firstName ?? "Mcc Callem"}
             </div>
             <Link
               href="/dashboard"

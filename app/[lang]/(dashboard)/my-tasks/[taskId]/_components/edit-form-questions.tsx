@@ -100,7 +100,7 @@ export const EditFormsQesutions = ({
             <div className="space-y-2">
 
             {
-                questions.map(question => (
+                questions?.map(question => (
                     <EditFormQuestion question={question} onQuestionChanged={(changedQuestion) => {
                         const newQuestions = questions.map(q => {
                             if (q.id === changedQuestion.id) {
@@ -150,9 +150,10 @@ function EditFormQuestion({ question, onQuestionChanged }: EditFormQuestionProps
     return <div className="flex gap-2">
 
         <div className="flex-1">
+            {/*   @ts-ignore */}
             <TaskTerm {...question} onChekedChange={(value) => onQuestionChanged({
                 ...question,
-                value
+                value   
             })} />
             <div className="flex items-center gap-2 mt-1 flex-wrap">
                 {

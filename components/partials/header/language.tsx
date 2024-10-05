@@ -56,6 +56,7 @@ const Language = () => {
       router.push(`/${lang}/${pathname.split("/")[2]}`);
     }
   };
+  return null
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

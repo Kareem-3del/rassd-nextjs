@@ -37,16 +37,14 @@ const LockPage = () => {
 
                 <div className="text-4xl leading-[50px] 2xl:text-6xl 2xl:leading-[72px] font-semibold mt-2.5">
                   <span className="text-default-600 dark:text-default-300 ">
-                    Unlock <br />
-                    Your Project <br />
+                مرحبًا بك!.
                   </span>
                   <span className="text-default-900 dark:text-default-50">
-                    Performance
+                    منصة "رصد" هي تطبيق ميداني رقابي يستخدم لمتابعة إجراءات الرعاية الصحية المغطاة بالتأمين. يتيح للمستفيدين مراقبة الجودة والدقة في الفحص، ويقدم تقارير مخصصة يومية وأسبوعية وشهرية حول التقدم والزيارات الميدانية والسرية
                   </span>
                 </div>
                 <div className="mt-5 2xl:mt-8 text-default-900 dark:text-default-200  text-2xl font-medium">
-                  You will never know everything. <br />
-                  But you will know more...
+                  "جميع الحقوق محفوظة © [منصة رصد] [2024]."
                 </div>
               </div>
             </div>

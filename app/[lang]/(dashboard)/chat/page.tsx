@@ -37,6 +37,8 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { type Contact as ContactType } from "@/app/api/chat/data";
 import { Eye } from "lucide-react";
+import {User} from "@/rassd/types";
+import {socket} from "@/config/socket.config";
 const ChatPage = () => {
   const [selectedChatId, setSelectedChatId] = useState<any | null>(null);
   const [showContactSidebar, setShowContactSidebar] = useState<boolean>(false);
@@ -76,8 +78,42 @@ const ChatPage = () => {
   } = useQuery({
     queryKey: ["message", selectedChatId],
     queryFn: () => selectedChatId ? getMessagesCallback(selectedChatId) : Promise.resolve(null),
-
   });
+
+// State to hold the chat messages
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+
+// Handle socket message reception properly and ensure `selectedChatId` is defined
+  useEffect(() => {
+    socket.on('message', (message: any) => {
+      console.log(
+          "Message received:",
+          chats,
+          message.receiver.id,
+          message.sender.id,
+          message.receiver.id === selectedChatId,
+          message.sender.id === selectedChatId
+      );
+
+      // Ensure the message belongs to the current chat
+      if (selectedChatId && (+selectedChatId === +message.receiver.id || +selectedChatId === +message.sender.id)) {
+        // Update the chatMessages state with the new message
+        setChatMessages((prevMessages) => [...prevMessages, message]);
+      }
+    });
+
+    // Cleanup the socket event listener on component unmount or re-render
+    return () => {
+      socket.off('message');
+    };
+  }, [selectedChatId]);
+
+  useEffect(() => {
+    if (chats) {
+      setChatMessages(chats);
+    }
+  }, [chats]);
+
   const {
     isLoading: profileLoading,
     isError: profileIsError,
@@ -118,12 +154,17 @@ const ChatPage = () => {
   };
 
   const openChat = (chatId: any) => {
-    setSelectedChatId(chatId);
-    setReply(false);
+    if (!chatId) return;  // Ensure valid chatId is passed
+    setSelectedChatId(chatId);  // Update selectedChatId
+    setReply(false);  // Reset the reply state
     if (showContactSidebar) {
-      setShowContactSidebar(false);
+      setShowContactSidebar(false);  // Close contact sidebar if open
     }
+
+    // Refetch messages for the selected chat
+    refetchMessage();
   };
+
   const handleShowInfo = () => {
     setShowInfo(!showInfo);
   };
@@ -246,7 +287,7 @@ const ChatPage = () => {
               <div className="h-[30px] w-[30px] rounded-full bg-primary flex items-center justify-center">
                 <Eye className="text-white h-4 w-4" />
               </div>
-              <div className="text-primary text-sm font-extrabold">"الملاحظات"</div>
+              <div className="text-primary text-sm font-extrabold">"المحادثات"</div>
             </div>
           </CardHeader>
           <CardContent className="p-0 pb-1 lg:h-[calc(100%-170px)] h-[calc(100%-70px)] flex-1 overflow-hidden">
@@ -254,7 +295,7 @@ const ChatPage = () => {
               {isLoading ? (
                 <Loader />
               ) : (
-                contacts?.contacts?.map((contact: ContactType) => (
+                contacts?.map((contact: User) => (
                   <ContactList
                     key={contact.id}
                     contact={contact}
@@ -278,7 +319,9 @@ const ChatPage = () => {
                   <MessageHeader
                     showInfo={showInfo}
                     handleShowInfo={handleShowInfo}
-                    profile={profileData}
+                    profile={
+                      chats?.[0]?.receiver
+                    }
                     mblChatHandler={() =>
                       setShowContactSidebar(!showContactSidebar)
                     }
@@ -302,22 +345,26 @@ const ChatPage = () => {
                         {messageIsError ? (
                           <EmptyMessage />
                         ) : (
-                          chats?.chat?.chat?.map((message: any, i: number) => (
-                            <Messages
-                              key={`message-list-${i}`}
-                              message={message}
-                              contact={chats?.contact}
-                              profile={profileData}
-                              onDelete={onDelete}
-                              index={i}
-                              selectedChatId={selectedChatId}
-                              handleReply={handleReply}
-                              replayData={replayData}
-                              handleForward={handleForward}
-                              handlePinMessage={handlePinMessage}
-                              pinnedMessages={pinnedMessages}
-                            />
-                          ))
+                            chatMessages.map((message: {
+                              receiver : User,
+                              content: string,
+                              createdAt: Date,
+                            }, i: number) => (
+                              <Messages
+                                key={`message-list-${i}`}
+                                message={message}
+                                contact={chats?.receiver}
+                                profile={                      chats?.[0]?.receiver}
+                                onDelete={onDelete}
+                                index={i}
+                                selectedChatId={selectedChatId}
+                                handleReply={handleReply}
+                                replayData={replayData}
+                                handleForward={handleForward}
+                                handlePinMessage={handlePinMessage}
+                                pinnedMessages={pinnedMessages}
+                              />
+                            ))
                         )}
                       </>
                     )}

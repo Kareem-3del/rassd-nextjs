@@ -2132,6 +2132,11 @@ export const menusConfig = {
         href: "/my-tasks",
         child: [
           {
+            title: "كل المهمات",
+            href: "/my-tasks",
+            icon: Graph,
+          },
+          {
             title: "مهمات مكتملة",
             href: "/my-tasks/completed",
             icon: Graph,
@@ -2167,27 +2172,15 @@ export const menusConfig = {
         href: "/departments",
       },
       {
-        title: "المجموعات",
-        icon: UserPlus,
-        role : "admin",
-        href: "/groups",
-      },
-      {
-        title: "الاقسام",
-        icon: UserPlus,
-        role : "admin",
-        href: "/departments",
-      },
-      {
         isHeader: true,
-        title: "Application",
+        title: "اخري",
       },
       {
-        title: "chat",
+        title: "المحادثات",
         icon: Messages,
         href: "/chat",
       },
-      {
+     /* {
         title: "email",
         icon: Envelope,
         href: "/email",
@@ -3132,7 +3125,8 @@ export const menusConfig = {
           },
         ],
       },
-    ],
+    ],*/
+  ],
   },
 };
 

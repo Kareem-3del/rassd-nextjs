@@ -35,7 +35,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             }
 
         
-            setUser(response);
+            setUser(response.data);
             
         } catch (error) {
             console.error('Error fetching user:', error);

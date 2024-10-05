@@ -36,14 +36,14 @@ export const TaskTerms = ({
       <DialogContent size="4xl" className="max-h-[80vh] overflow-auto">
         <div>
           <FormVisitTypeBadge
-            type={department.group.type}
+            type={department?.group?.type}
             className="mx-auto"
           />
           <p className="text-base font-extrabold text-primary text-center mt-5">
             {title} - {id}
           </p>
           <div className="flex flex-wrap items-center gap-[10px] md:gap-4 pt-5 justify-center text-[#B1B1B1] text-xs font-extrabold mx-auto">
-            <div className="">{establishmentDetail.address}</div>
+            <div className="">{establishmentDetail?.address}</div>
             <DotSperator className="bg-[#D9D9D9]" />
             <div className="">
               {startDate?.toLocaleString("ar-EG", {
@@ -61,7 +61,7 @@ export const TaskTerms = ({
         <p className="text-base font-extrabold text-black text-center">
           قائمة الفحص (الأسئلة):
         </p>
-        {department.terms.map((term) => (
+        {department?.terms.map((term) => (
           <div key={term.id}>
             <TaskTerm {...term} disabled />
             {/* <div className="flex items-center gap-1 mt-1 flex-wrap">

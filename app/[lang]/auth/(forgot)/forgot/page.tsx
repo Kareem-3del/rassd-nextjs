@@ -37,7 +37,7 @@ const ForgotPage = () => {
 
                 <div className="text-4xl leading-[50px] 2xl:text-6xl 2xl:leading-[72px] font-semibold mt-2.5">
                   <span className="text-default-600 dark:text-default-300 ">
-                    Unlock <br />
+                    "جميع الحقوق محفوظة © [منصة رصد] [2024]." <br />
                     Your Project <br />
                   </span>
                   <span className="text-default-900 dark:text-default-50">
