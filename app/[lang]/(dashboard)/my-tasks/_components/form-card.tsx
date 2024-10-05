@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { AcceptFormButton } from "./accept-form-button";
 import { RejectFormButton } from "./reject-form-button";
-import { FormQuestions } from "@/components/task-form/task-terms";
+import { TaskTerms } from "@/components/task-form/task-terms";
 import Link from "next/link";
 
 interface FormCardProps extends FormCardEntries {
@@ -159,7 +159,7 @@ const FormActions = ({
 }: FormActionsProps) => {
     return (<div className="mt-[10px] flex flex-wrap lg:flex-nowrap gap-[10px]">
         <div className="flex flex-1 items-center gap-[10px]">
-            <FormQuestions formVisitType={formVisitType} resumeArea={resumeArea} resumeTime={resumeTime} resumeTitle={resumeTitle} resumeNumber={resumeNumber} questions={quesiotns} facilityOwnerSignature={facilityOwnerSignature}
+            <TaskTerms formVisitType={formVisitType} resumeArea={resumeArea} resumeTime={resumeTime} resumeTitle={resumeTitle} resumeNumber={resumeNumber} questions={quesiotns} facilityOwnerSignature={facilityOwnerSignature}
                 inspectorSignature={inspectorSignature} />
             <AcceptFormButton resumeNumber={resumeNumber} />
 
