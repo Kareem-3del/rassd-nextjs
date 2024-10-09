@@ -45,7 +45,8 @@ import {
   Mail,
 } from "@/components/svg";
 
-
+import { useEffect, useState } from 'react';
+import { api } from "./axios.config";
 export interface MenuItemProps {
   title: string;
   icon: any;
@@ -58,7 +59,42 @@ export interface MenuItemProps {
 
 
 }
+const TASK_API_ENDPOINTS = {
+  all: '/tasks',
+  completed: '/api/tasks/completed',
+  rejected: '/tasks-rejected',
+  underWork: '/tasks/under-work',
+};
+const [tasks, setTasks] = useState({
+  all: [],
+  completed: [],
+  rejected: [],
+  underWork: [],
+});
+useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      const [allTasksRes, completedTasksRes, rejectedTasksRes, underWorkTasksRes] = await Promise.all([
+        api.get(TASK_API_ENDPOINTS.all),
+        api.get(TASK_API_ENDPOINTS.completed),
+        api.get(TASK_API_ENDPOINTS.rejected),
+        api.get(TASK_API_ENDPOINTS.underWork),
+      ]);
 
+
+      setTasks({
+        all: allTasksRes.data,
+        completed: completedTasksRes.data,
+        rejected: rejectedTasksRes.data,
+        underWork: underWorkTasksRes.data,
+      });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
+  fetchTasks();
+}, []);
 export const menusConfig = {
   mainNav: [
     {

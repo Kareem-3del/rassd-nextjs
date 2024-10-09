@@ -5,7 +5,7 @@ import {Client, EstablishmentDetail, Task} from "@/rassd/types";
 // Base API URL (replace with your actual API endpoint)
 const API_URL = "/tasks";
 
-const useTasks = () => {
+const useTasks:any = () => {
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

@@ -577,7 +577,7 @@ export const TasksTable = () => {
     }, []);
 
     return <ul className="flex flex-col gap-5">
-        {tasks?.map(task => (
+        {tasks?.map((task:any) => (
             /* @ts-ignore */
             <FormCard user={{
                 name: task?.inspector?.firstName || "Unknown",
