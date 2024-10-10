@@ -21,7 +21,7 @@ export const TaskTerm = ({
   const { user } = useUser();
   
 
-  const isInspector = user?.role !== 'inspector';
+  const isInspector = user?.role === 'inspector';
 
   return (
     <div>
