@@ -61,7 +61,7 @@ const LogInForm = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`; // Add the correct endpoint
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`; 
   const router = useRouter();
   const locale = "ar";
   // Function to handle login form submission
@@ -98,87 +98,106 @@ const LogInForm = () => {
 
   };
   return (
-    <div className="w-full py-10">
-      <Link href="/dashboard" className="inline-block">
-        <SiteLogo width={120} className="h-64 w-64 2xl:w-34 2xl:h-24 text-primary" />
-      </Link>
-      <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-default-900">
+    <div className="w-full py-10 ">
+<div className="w-full flex items-center justify-center">
+  <div className="rounded-[18px] border-[2px] border-[#E6E6E6] px-[24px]  py-0">
+    <Link href="/dashboard">
+      <SiteLogo width={120} className="h-[48px] w-[48px] 2xl:w-34 2xl:h-24 text-primary" />
+    </Link>
+  </div>
+</div>
+
+    
+      <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-[#624098] text-center ">
+
         {
             locale === "ar" ? "مرحبًا بك مرة أخرى!" : "Welcome back!"
         }
       </div>
-      <div className="2xl:text-lg text-base text-default-600 2xl:mt-2 leading-6">
+      <div className="2xl:text-lg text-base  2xl:mt-2 leading-6 text-center text-[#624098]">
         {
             locale === "ar" ? "مرحبًا بك مرة أخرى! يرجى تسجيل الدخول إلى حسابك." : "Welcome back! Please sign in to your account."
         }
       </div>
+      <div className="2xl:text-lg text-base  2xl:mt-6 leading-6 text-center text-default-900">
+        {
+            locale === "ar" ? "من خلال التسجيل، ستتمكن من الوصول إلى لوحة التحكم لبدأ في عملية الفحص  ورصد المخالفات وتطوير الأداء..." : "Welcome back! Please sign in to your account."
+        }
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7">
-        <div>
-          <Label htmlFor="email" className="mb-2 font-medium text-default-600">
-            {
-                locale === "ar" ? "البريد الإلكتروني" : "Email"
-            }            {" "}
-          </Label>
-          <Input
-            disabled={isPending}
-            {...register("email")}
-            type="email"
-            id="email"
-            className={cn("", {
-              "border-destructive": errors.email,
-            })}
-            size={!isDesktop2xl ? "xl" : "lg"}
+      <div>
+    <Label htmlFor="email" className="mb-2 font-bold text-[#624098]">
+      {locale === "ar" ? (
+        <>
+          البريد الإلكتروني <span className="text-red-500">*</span>
+        </>
+      ) : (
+        <>
+          Email <span className="text-red-500">*</span>
+        </>
+      )}
+    </Label>
+    <Input
+      disabled={isPending}
+      {...register("email")}
+      type="email"
+      id="email"
+      className={cn("", {
+        "border-destructive": errors.email,
+      })}
+      size={!isDesktop2xl ? "xl" : "lg"}
+    />
+  </div>
+  {errors.email && (
+    <div className="text-destructive mt-2">{errors.email.message}</div>
+  )}
+
+  <div className="mt-3.5">
+    <Label htmlFor="password" className="mb-2 font-bold text-[#624098]">
+      {locale === "ar" ? (
+        <>
+          كلمة المرور <span className="text-red-500">*</span>
+        </>
+      ) : (
+        <>
+          Password <span className="text-red-500">*</span>
+        </>
+      )}
+    </Label>
+    <div className="relative">
+      <Input
+        disabled={isPending}
+        {...register("password")}
+        type={passwordType}
+        id="password"
+        className="peer"
+        size={!isDesktop2xl ? "xl" : "lg"}
+        placeholder=" "
+      />
+      <div
+        className="absolute top-1/2 -translate-y-1/2 rtl:left-4 cursor-pointer"
+        onClick={togglePasswordType}
+      >
+        {passwordType === "password" ? (
+          <Icon
+            icon="heroicons:eye"
+            className="w-5 h-5 text-default-400"
           />
-        </div>
-        {errors.email && (
-          <div className=" text-destructive mt-2">{errors.email.message}</div>
+        ) : (
+          <Icon
+            icon="heroicons:eye-slash"
+            className="w-5 h-5 text-default-400"
+          />
         )}
+      </div>
+    </div>
+  </div>
+  {errors.password && (
+    <div className="text-destructive mt-2">
+      {errors.password.message}
+    </div>
+  )}
 
-        <div className="mt-3.5">
-          <Label
-            htmlFor="password"
-            className="mb-2 font-medium text-default-600"
-          >
-            {
-                locale === "ar" ? "كلمة المرور" : "Password"
-            }
-
-            {" "}
-          </Label>
-          <div className="relative">
-            <Input
-              disabled={isPending}
-              {...register("password")}
-              type={passwordType}
-              id="password"
-              className="peer "
-              size={!isDesktop2xl ? "xl" : "lg"}
-              placeholder=" "
-            />
-
-            <div
-              className="absolute top-1/2 -translate-y-1/2  rtl:left-4 cursor-pointer"
-              onClick={togglePasswordType}
-            >
-              {passwordType === "password" ? (
-                <Icon
-                  icon="heroicons:eye"
-                  className="w-5 h-5 text-default-400"
-                />
-              ) : (
-                <Icon
-                  icon="heroicons:eye-slash"
-                  className="w-5 h-5 text-default-400"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-        {errors.password && (
-          <div className=" text-destructive mt-2">
-            {errors.password.message}
-          </div>
-        )}
 
         <div className="mt-5  mb-8 flex flex-wrap gap-2">
           <div className="flex-1 flex  items-center gap-1.5 ">

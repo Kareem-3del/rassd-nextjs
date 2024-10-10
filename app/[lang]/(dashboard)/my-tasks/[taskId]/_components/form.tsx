@@ -63,12 +63,15 @@ function Form({ taskId }: { taskId: number }) {
             body: updatedQuestions.map(({ label, value, files }) => [label, value, files]),
         });
     
+        // Save PDF to a Blob
         const pdfBlob = doc.output('blob');
     
+        // Create a FormData object to send the PDF
         const formData = new FormData();
         formData.append('pdf', pdfBlob, `task-${taskId}.pdf`);
-        formData.append('email', 'recipient@example.com'); 
+        formData.append('email', 'recipient@example.com'); // You might want to get this dynamically
     
+        // Send the PDF to the server
         const response = await fetch('/send-report', {
             method: 'POST',
             body: formData
@@ -80,6 +83,7 @@ function Form({ taskId }: { taskId: number }) {
             alert('Failed to share report.');
         }
     };
+    
     const shareReport = () => {
         const subject = `Report for Task ${taskId}`;
         const body = `Please find the attached report for task ${taskId}.`;

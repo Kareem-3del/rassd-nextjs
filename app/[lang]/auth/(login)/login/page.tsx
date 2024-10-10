@@ -7,45 +7,43 @@ import { X } from "lucide-react";
 import { Fragment, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import LogInForm from "@/components/auth/login-form";
-
+import SiteLogo from "@/components/logo/SiteLogo";
+import Link from "next/link";
 const LoginPage = () => {
   const [openVideo, setOpenVideo] = useState<boolean>(false);
   return (
     <Fragment>
-      <div dir="rtl" className="min-h-screen bg-background  flex items-center  overflow-hidden w-full">
+      <div dir="rtl" className="min-h-screen bg-background  flex items-center  overflow-hidden w-full bg-custom-gradient">
+   
         <div className="min-h-screen basis-full flex flex-wrap w-full  justify-center overflow-y-auto">
+  
           <div
-            className="basis-1/2 bg-primary w-full  relative hidden xl:flex justify-center items-center bg-gradient-to-br
-          from-primary-600 via-primary-400 to-primary-600
-         "
+            className="basis-1/2  w-full  relative hidden xl:flex justify-center items-center "
           >
-            <Image
-              src={background}
-              alt="image"
-              className="absolute top-0 left-0 w-full h-full "
-            />
-            <div className="relative z-10 backdrop-blur bg-primary-foreground/40 py-14 px-16 2xl:py-[84px] 2xl:pl-[50px] 2xl:pr-[136px] rounded max-w-[640px]">
+            <div className="relative z-10   py-14 px-16 2xl:py-[84px] 2xl:pl-[50px] 2xl:pr-[136px] rounded max-w-[640px]">
               <div>
-
-                <div className="text-4xl leading-[50px] 2xl:text-6xl 2xl:leading-[72px] font-semibold mt-2.5">
-                  <span className="text-default-600 dark:text-default-300  font-bolder mb-8">
+              <Link href="/dashboard" className=" block ">
+      <SiteLogo width={120} className="h-[300px] w-[300px] 2xl:w-34 2xl:h-24 text-white" />
+    </Link>
+                <div className="text-2xl text-white leading-[50px] 2xl:text-4xl 2xl:leading-[72px] font-bold mt-2.5">
+              
                     مرحبًا بك!.<br/>
-                  </span>
+               
 
                 </div>
-                <span className="text-default-900 leading-[30px] text-lg fon-bold mt-4 dark:text-default-50">
+                <span className="text-white leading-[30px] text-lg fon-bold mt-4 dark:text-default-50">
                                       منصة "رصد" هي تطبيق ميداني رقابي يستخدم لمتابعة إجراءات الرعاية الصحية المغطاة بالتأمين. يتيح للمستفيدين مراقبة الجودة والدقة في الفحص، ويقدم تقارير مخصصة يومية وأسبوعية وشهرية حول التقدم والزيارات الميدانية والسرية <br/>
 
                   </span>
-                <div className="mt-5 2xl:mt-8 text-default-900 dark:text-default-200  text-xs font-medium">
+                <div className="mt-5 2xl:mt-8 text-white dark:text-default-200  text-xs font-medium">
                   "جميع الحقوق محفوظة © [منصة رصد] [2024]."
                 </div>
               </div>
             </div>
           </div>
 
-          <div className=" min-h-screen basis-full md:basis-1/2 w-full px-4 py-5 flex justify-center items-center">
-            <div className="lg:w-[480px] ">
+          <div className=" min-h-screen basis-full md:basis-1/2 w-full px-4 py-5 flex justify-center items-center ">
+            <div className="lg:w-[600px] bg-white px-10 rounded-[24px] ">
               <LogInForm/>
             </div>
           </div>

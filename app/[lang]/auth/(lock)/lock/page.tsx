@@ -7,12 +7,15 @@ import { X } from "lucide-react";
 import { Fragment, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import LockForm from "./lock-form";
+
 const LockPage = () => {
   const [openVideo, setOpenVideo] = useState<boolean>(false);
   return (
     <Fragment>
       <div className="min-h-screen bg-background  flex items-center  overflow-hidden w-full">
+   
         <div className="min-h-screen basis-full flex flex-wrap w-full  justify-center overflow-y-auto">
+   
           <div
             className="basis-1/2 bg-primary w-full  relative hidden xl:flex justify-center items-center bg-gradient-to-br
           from-primary-600 via-primary-400 to-primary-600
