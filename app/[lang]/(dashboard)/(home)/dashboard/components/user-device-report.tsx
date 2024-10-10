@@ -8,6 +8,14 @@ import { themes } from "@/config/thems";
 import { api } from "@/config/axios.config";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+const roleMapping: { [key: string]: string } = {
+  inspector: "مفتش",
+  qualityObserver: "مراقب جودة",
+  reviewer: "مراجع",
+  admin: "مسؤول",  // Added admin role mapping
+  // Add more mappings as needed
+};
+
 const UserDeviceReport = ({ height = 250 }) => {
   const { theme: config, isRtl } = useThemeStore();
   const { theme: mode } = useTheme();
@@ -26,12 +34,14 @@ const UserDeviceReport = ({ height = 250 }) => {
 
         elements.forEach((element: any) => {
           const role = element.role;
+          const arabicRole = roleMapping[role] || role; // Fallback to original if not mapped
 
-          if (!roleCountMap[role]) {
-            roleCountMap[role] = 0;
+          if (!roleCountMap[arabicRole]) {
+            roleCountMap[arabicRole] = 0;
           }
-          roleCountMap[role] += 1;
+          roleCountMap[arabicRole] += 1;
         });
+
         const newLabels = Object.keys(roleCountMap);
         const newSeries = Object.values(roleCountMap);
 
@@ -51,7 +61,7 @@ const UserDeviceReport = ({ height = 250 }) => {
         show: false,
       },
     },
-    labels: labels.length ? labels : ["مفتش", "مراقب جودة", "مراجع"], // Fallback to default
+    labels: labels.length ? labels : ["مفتش", "مراقب جودة", "مراجع", "مسؤول"], // Fallback to default
     dataLabels: {
       enabled: false,
       fontFamily: "Cairo",
@@ -127,7 +137,7 @@ const UserDeviceReport = ({ height = 250 }) => {
   return (
     <Chart
       options={options}
-      series={series.length ? series : [2200, 800, 700]} 
+      series={series.length ? series : [2200, 800, 700, 300]} // Adjust default series if needed
       type="donut"
       height={height}
       width={"100%"}
