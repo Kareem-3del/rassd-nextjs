@@ -8,7 +8,7 @@ import { Term } from "@/rassd/types";
 import { useUser } from "@/components/user-provider";
 
 interface TaskTermProps extends Term {
-  onChekedChange?: (value: boolean) => void;
+  onCheckedChange?: (value: boolean) => void; // Corrected
   disabled?: boolean;
 }
 
@@ -16,7 +16,7 @@ export const TaskTerm = ({
   disabled,
   name,
   requiredFiles,
-  onChekedChange,
+  onCheckedChange,
 }: TaskTermProps) => {
   const { user } = useUser();
   
@@ -33,7 +33,7 @@ export const TaskTerm = ({
             size="lg"
             disabled={!isInspector || disabled}
             checked={requiredFiles}
-            onCheckedChange={onChekedChange}
+            onCheckedChange={onCheckedChange}
           />
           <Label className="text-sm font-extrabold text-[#1C274C]">لا</Label>
         </div>
