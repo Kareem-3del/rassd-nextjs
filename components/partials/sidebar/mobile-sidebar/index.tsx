@@ -11,8 +11,10 @@ import { usePathname } from "next/navigation";
 import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
+import { useUser } from "@/components/user-provider"; 
 const MobileSidebar = ({ className, trans }: { className?: string, trans: any }) => {
   const { sidebarBg, mobileMenu, setMobileMenu } = useSidebar();
+  const { user } = useUser(); 
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
   const [activeMultiMenu, setMultiMenu] = useState<number | null>(null);
   const menus = menusConfig?.sidebarNav?.classic || [];
@@ -33,6 +35,7 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
       setMultiMenu(subIndex);
     }
   };
+
   const locationName = usePathname();
 
   React.useEffect(() => {
@@ -61,6 +64,15 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
       setMobileMenu(false);
     }
   }, [locationName]);
+
+
+  const filteredMenus = user?.role === "admin"
+    ? menus 
+    : menus.filter(
+        (item) =>
+          item.title === "مهماتي" || item.title === "المحادثات" 
+      );
+
   return (
     <>
       <div
@@ -90,7 +102,7 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
               " space-y-2 text-center": collapsed,
             })}
           >
-            {menus.map((item, i) => (
+            {filteredMenus.map((item, i) => (
               <li key={`menu_key_${i}`}>
                 {/* single menu  */}
 
@@ -120,7 +132,10 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
                         activeMultiMenu={activeMultiMenu}
                         activeSubmenu={activeSubmenu}
                         item={item}
-                        index={i} title={""} trans={undefined} />
+                        index={i}
+                        title={item.title} 
+                        trans={trans}
+                      />
                     )}
                   </>
                 )}

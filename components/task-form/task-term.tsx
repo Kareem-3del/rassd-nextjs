@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Eye, X as RemoveIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Term } from "@/rassd/types";
+import { useUser } from "@/components/user-provider";
 
 interface TaskTermProps extends Term {
   onChekedChange?: (value: boolean) => void;
@@ -17,20 +18,26 @@ export const TaskTerm = ({
   requiredFiles,
   onChekedChange,
 }: TaskTermProps) => {
+  const { user } = useUser();
+  
+
+  const isInspector = user?.role !== 'inspector';
+
   return (
     <div>
       <div className="bg-primary/5 py-2 px-6 rounded-2xl flex items-center justify-between gap-2">
         <p className="text-sm font-extrabold text-[#1C274C]">{name}</p>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Label className="text-sm font-extrabold text-[#1C274C]">نعم</Label>
           <Switch
             size="lg"
-            disabled={disabled}
+            disabled={!isInspector || disabled}
             checked={requiredFiles}
             onCheckedChange={onChekedChange}
           />
           <Label className="text-sm font-extrabold text-[#1C274C]">لا</Label>
         </div>
+       
       </div>
     </div>
   );
