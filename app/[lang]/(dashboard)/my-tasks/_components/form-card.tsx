@@ -57,7 +57,8 @@ export const FormCard = ({
                         }</div>
                         <DotSperator className="bg-[#D9D9D9]" />
                         <div className="text-[#B1B1B1] text-xs font-extrabold">{
-                            formStatus === "in-review" ? "قيد المراجعة" : "قيد التنفيذ"
+                            formStatus === "UnderReview" ? "قيد المراجعة" :
+                            formStatus === "Completed" ? "مكتمل" : "قيد التنفيذ"
                         }</div>
                         {
                             items > 0 ?
@@ -76,7 +77,7 @@ export const FormCard = ({
                     <FormVisitTypeBadge type={formVisitType as any} className="mr-auto hidden md:flex" />
 
                     {
-                        formStatus === "in-review" &&
+                        formStatus === "UnderReview" &&
                         <FormActions 
                             formStatus={formStatus} 
                             formVisitType={formVisitType} 
@@ -89,7 +90,11 @@ export const FormCard = ({
                         />
                     }
                     {
-                        formStatus === "in-progress" && <FormProgress progress={progress} />
+                        <FormProgress progress={
+                            formStatus === "Completed" ? 100 :
+                            formStatus === "UnderReview" ?  80 :
+                                formStatus === "Pending" ? 10 : 0
+                        } />
                     }
                 </div>
 

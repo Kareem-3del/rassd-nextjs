@@ -40,7 +40,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
             console.error('Error fetching user:', error);
             setError(error instanceof Error ? error.message : 'An error occurred');
-            // router.push( '/auth/login');
+            router.push( '/auth/login');
         } finally {
             setIsLoading(false);
         }
@@ -71,8 +71,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
 export function useUser() {
     const context = useContext(UserContext);
-    if (context === undefined) {
+/*    if (context === undefined) {
         throw new Error('useUser must be used within a UserProvider');
-    }
-    return context;
+    }*/
+    return context as UserContextType;
 }

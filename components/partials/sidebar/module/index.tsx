@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { cn, isLocationMatch, getDynamicPath, translate } from "@/lib/utils";
-import { menusConfig, ModernNavType, } from "@/config/menus";
+import { menusConfig, } from "@/config/menus";
 import SingleIconMenu from "./single-icon-menu";
 import { useRouter, usePathname } from "next/navigation";
 import { useSidebar, useThemeStore } from "@/store";
@@ -16,6 +16,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import MenuOverlayPortal from "./MenuOverlayPortal";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {useUser} from "@/components/user-provider";
 
 const ModuleSidebar = ({ trans }: { trans: any }) => {
   const menus = menusConfig?.sidebarNav?.modern || [];
@@ -96,9 +97,17 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
     return "";
   };
 
+  const {user} = useUser()
   useEffect(() => {
     let isMenuMatched = false;
-    menus.forEach((item: any, i: number) => {
+    menus.filter(
+        (item: any) => {
+          if (item.role){
+            console.log("ITEM ROLE", item.role, "USER ROLE", user?.role)
+            return item.role.includes(user?.role)
+          }
+        }
+    ).forEach((item: any, i: number) => {
       if (item?.href) {
         if (isLocationMatch(item.href, locationName)) {
           isMenuMatched = true;

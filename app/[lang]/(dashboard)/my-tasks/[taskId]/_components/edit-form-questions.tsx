@@ -13,6 +13,8 @@ import { UploadFileButton } from "@/components/upload-file-button";
 interface EditFormsQesutionsProps extends Pick<FormCardEntries, "formVisitType" | "resumeTime" | "resumeNumber" | "resumeTitle" | "resumeArea" | "resumeArea"> {
     questions: Pick<Question, "id" | "value" | "label" | "files">[]
     facilityOwnerSignature: string
+    taskId: string
+    notes: string[],
     inspectorSignature: string
 }
 
@@ -59,6 +61,8 @@ const ArrowLeftIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const EditFormsQesutions = ({
     questions: formQuestion,
     formVisitType,
+    taskId,
+    notes,
     resumeTime,
     resumeNumber,
     resumeTitle,
@@ -151,7 +155,7 @@ function EditFormQuestion({ question, onQuestionChanged }: EditFormQuestionProps
 
         <div className="flex-1">
             {/*   @ts-ignore */}
-            <TaskTerm {...question} onChekedChange={(value) => onQuestionChanged({
+            <TaskTerm {...question} name={question.label} onChekedChange={(value) => onQuestionChanged({
                 ...question,
                 value   
             })} />

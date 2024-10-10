@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import useTasks from "@/hooks/useTasks";
 import { TaskStatusEnum } from "@/interfaces";
 import { GroupType } from "@/rassd/types";
+import {AuditDepartmentSendedForms} from "@/app/[lang]/(dashboard)/my-tasks/_components/audit-department-sended-forms";
 
 const CompletedFormsPage = () => {
   const [filter, setFilter] = useState({
@@ -13,25 +14,7 @@ const CompletedFormsPage = () => {
     "secret-visit": false,
   });
 
-  const { tasks, fetchComplitedTasks } = useTasks();
 
-  useEffect(() => {
-    fetchComplitedTasks();
-  }, []);
-
-  console.log(tasks);
-  const completedTasks = tasks?.filter((task) => {
-    return (
-      task.status === TaskStatusEnum.Completed &&
-      (filter["field-visit"]
-        ? task.department.group.type === GroupType.FIELD_VISIT
-        : true) &&
-      (filter["secret-visit"]
-        ? task.department.group.type === GroupType.SECRET_VISIT
-        : true)
-    );
-  });
-console.log(tasks)
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -40,11 +23,7 @@ console.log(tasks)
         </SectionHeader>
         <VisitsFilter onFilterChanged={setFilter} />
       </div>
-      {tasks?.length && tasks?.length > 0 ? (
-        <CompletedForms tasks={completedTasks} />
-      ) : (
-        <div className="text-center">لا توجد استمارات مكتملة</div>
-      )}
+      <AuditDepartmentSendedForms completed />
     </div>
   );
 };

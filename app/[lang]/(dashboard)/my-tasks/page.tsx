@@ -9,7 +9,6 @@ import { QualityDepartmentSendedForms } from "./_components/quality-department-s
 import Link from "next/link"
 import { ApprovedForms } from "./_components/approved-forms"
 import { VisitsFilter } from "@/components/visits-filter"
-import { CustomComponent } from "./custom-component"
 
 const IdCard = (props: React.SVGProps<SVGSVGElement>) => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" {...props}>
@@ -41,40 +40,12 @@ const WarringIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const TaskPage = async () => {
     return (
         <div>
-            <CustomComponent
-                title="تحديث بروتوكول الفحص الدوري"
-                description="أثناء زيارتنا الميدانية الأخيرة إلى مستشفى الرعاية المتقدمة، لاحظنا وجود بعض الاختلافات في تنفيذ بروتوكول الفحص الدوري. نوصي بإجراء التعديلات التالية لضمان الامتثال الكامل لمعايير الجودة الصحية:"
-                items={["التأكد من استخدام أدوات الفحص المعقمة لكل مريض.", "تدريب الفريق الطبي على الإجراءات المحدّثة.", "إجراء مراجعة دورية لكل الحالات المسجلة في النظام لضمان التوثيق الصحيح.", "يرجى مراجعة هذه الملاحظات واتخاذ الإجراءات المناسبة. نحن متاحون للمساعدة في أي استفسار."]}
-                messages={[
-                    {
-                        sendBy: "د. أحمد الكعبي",
-                        date: new Date(),
-                        image: "/images/avatar/avatar-2.jpg",
-                        role: "user",
-                        text: "شكرًا د. أحمد، سأقوم بتوجيه الفريق للبدء في تنفيذ هذه التعديلات."
-                    },
-                    {
-                        sendBy: "منصة رصد",
-                        date: new Date(),
-                        image: "/images/avatar/avatar-2.jpg",
-                        role: "admin",
-                        text: "على الرحب والسعة، لا تتردد في التواصل إذا كنت بحاجة إلى دعم إضافي."
-                    }
-                ]}
-                noteBy="صيدلية د/ احمد الكعبي"
-                sendBy={
-                    {
-                        name: "د. أحمد الكعبي",
-                        date: new Date(),
-                        image: "/images/avatar/avatar-2.jpg",
-                    }
-                }
-            />
+
             <div className="flex justify-between items-center">
                 <SectionHeader>
                     <SectionIcon Icon={IdCard} className="hidden md:block" />
                     <SectionTitle>
-                        "قائمة الاستمارات المرسلة من قسم المراجعة"
+                        "قائمة الاستمارات الحالية"
                     </SectionTitle>
                 </SectionHeader>
                 <Link href="#" className="text-black text-[10px] flex items-center gap-2 font-extrabold md:hidden">
@@ -88,7 +59,7 @@ const TaskPage = async () => {
                 <SectionHeader>
                     <SectionIcon Icon={WarringIcon} className="hidden md:block" />
                     <SectionTitle>
-                        "قائمة الاستمارات المرسلة لقسم الجودة..."
+                        "قائمة المرسلة ..."
                     </SectionTitle>
                 </SectionHeader>
                 <Link href="#" className="text-black text-[10px] flex items-center gap-2 font-extrabold md:hidden h-12 rounded-2xl">
@@ -96,7 +67,7 @@ const TaskPage = async () => {
                     <ArrowLeft className="h-3 w-3" />
                 </Link>
             </div>
-            <QualityDepartmentSendedForms />
+            <AuditDepartmentSendedForms done />
             <div className="flex justify-between items-center mt-7">
                 <SectionHeader>
                     <SectionIcon Icon={IdCard} className="hidden md:block" />
@@ -113,7 +84,7 @@ const TaskPage = async () => {
                     <ChevronDown className="w-[18px] h-[18px]" />
                 </Button>
             </div>
-            <ApprovedForms />
+            <AuditDepartmentSendedForms completed />
 
         </div>
     )

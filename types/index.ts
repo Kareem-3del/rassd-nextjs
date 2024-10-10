@@ -1,4 +1,4 @@
-export type FormStatus = "in-review" | "in-progress" | "rejected";
+export type FormStatus = "Completed" | "Pending" | "Rejected" | "UnderReview";
 export type FormVisitType = "field-visit" | "secret-visit";
 export type FormCardEntries = {
   id: string;

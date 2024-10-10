@@ -18,22 +18,19 @@ type Message = {
 
 interface CustomComponentProps {
     noteBy: string
+    noteDate: Date
     sendBy: {
         name: string
         date: Date
         image: string
     }
-    title: string
     messages: Message[]
-    description: string
-    items: string[]
-
 }
 
-export const CustomComponent = ({ sendBy, title, noteBy, description, items, messages }: CustomComponentProps) => {
+export const CustomComponent = ({ sendBy,noteDate, noteBy, messages }: CustomComponentProps) => {
     return <Dialog>
         <DialogTrigger asChild>
-            <Button>Press me</Button>
+            <Button>الملاحظات</Button>
         </DialogTrigger>
         <DialogContent size="2xl" className="max-h-[80vh] overflow-y-auto">
             <Button size="icon" className="rounded-xl mr-auto">
@@ -46,7 +43,7 @@ export const CustomComponent = ({ sendBy, title, noteBy, description, items, mes
                     </div>
                     <div className="text-sm text-primary font-extrabold">ملاحظات {noteBy}</div>
                 </div>
-                <div className="text-[#1C274C] text-xs font-bold">التاريخ: {formatDateToArabic(sendBy.date)}</div>
+                <div className="text-[#1C274C] text-xs font-bold">التاريخ: {formatDateToArabic(noteDate)}</div>
             </div>
             <Separator className="mt-5 mb-3" />
             <div className="flex items-center justify-between gap-row-10 gap-col-2 flex-wrap">
@@ -62,9 +59,6 @@ export const CustomComponent = ({ sendBy, title, noteBy, description, items, mes
                 </div>
                 <div className="text-[#6BACA1] text-xs font-bold">التاريخ: {formatDateToArabic(sendBy.date)}</div>
             </div>
-            <div className="text-sm md:text-base font-bold text-[#1C274C] text-center mt-4">العنوان: {title}</div>
-            <div className="text-xs md:text-sm font-bold text-[#1C274C] mt-6">{description}</div>
-            <RenderItems items={items} />
             <RenderMessages messages={messages} />
         </DialogContent>
     </Dialog >
@@ -113,14 +107,16 @@ function RenderMessages({ messages }: { messages: Message[] }) {
 
 
 function formatDateToArabic(date: Date) {
-
     if (!(date instanceof Date)) {
         throw new Error('Invalid Date object');
     }
 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
     const formattedDate = date.toLocaleDateString('ar-EG', options);
 
-    return formattedDate
+    return formattedDate;
 }
-

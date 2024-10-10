@@ -7,6 +7,7 @@ import {EditFormsQesutions} from "@/app/[lang]/(dashboard)/my-tasks/[taskId]/_co
 import {Task, TermsValues} from "@/rassd/types";
 import {Question} from "@/types";
 import useTasks from "@/hooks/useTasks";
+import {CustomComponent} from "@/app/[lang]/(dashboard)/my-tasks/custom-component";
 
 /**
  * export type Question = {
@@ -19,16 +20,16 @@ import useTasks from "@/hooks/useTasks";
  * };
  */
 
-function tasksToQuestions(task: Task , termsValues : TermsValues[] ) : Question[] {
+function tasksToQuestions(task: Task , termsValues : TermsValues[] , edit : boolean = false ) : Question[] {
     return task?.department?.terms?.map((term) => {
         const termValue = termsValues?.find((tv) => tv.termId === term.id);
         return {
             id: term.id.toString(),
             value: termValue?.value === "true",
-            label: term?.name,
+            label: term?.name ,
             isAcceptFiles: term?.requiredFiles,
             files: termValue?.files || [],
-            disabled: false,
+            disabled: edit,
         };
     });
 }
@@ -43,8 +44,37 @@ function Form({taskId } : {taskId : number}) {
             <div className="flex justify-between items-center">
                 <SectionHeader>
                     <SectionIcon Icon={EditIcon} className="hidden md:block"/>
+                    <CustomComponent
+                        messages={[
+                            {
+                                sendBy: "د. أحمد الكعبي",
+                                date: new Date(),
+                                image: "/images/avatar/avatar-2.jpg",
+                                role: "user",
+                                text: "شكرًا د. أحمد، سأقوم بتوجيه الفريق للبدء في تنفيذ هذه التعديلات."
+                            },
+                            {
+                                sendBy: "منصة رصد",
+                                date: new Date(),
+                                image: "/images/avatar/avatar-2.jpg",
+                                role: "admin",
+                                text: "على الرحب والسعة، لا تتردد في التواصل إذا كنت بحاجة إلى دعم إضافي."
+                            }
+                        ]}
+                        noteBy={task.title}
+                        noteDate={new Date(task.created_at)}
+                        sendBy={
+                            {
+                                name: "د. أحمد الكعبي",
+                                date: new Date(),
+                                image: "/images/avatar/avatar-2.jpg",
+                            }
+                        }
+                    />
                     <SectionTitle>
-                        "استمارة الفحص الميداني"
+                        "استمارة فحص {
+                        task?.department?.group?.type
+                    }"
                     </SectionTitle>
                 </SectionHeader>
                 <div className="hidden items-center gap-[10px] md:flex">
@@ -63,10 +93,13 @@ function Form({taskId } : {taskId : number}) {
             </div>
             <EditFormsQesutions
                 questions={tasksToQuestions(task, task.termsValues)}
+                notes={task.notes}
+                taskId={task.id}
                 formVisitType={task?.department?.group?.type === "سرية" ? "field-visit" : "secret-visit"}
                 resumeTime={new Date(task.created_at)}
                 resumeNumber={String(task.id ) || ""}
                 resumeTitle={task.title}
+
                 resumeArea={task.establishmentDetail.region + " - " + task.establishmentDetail.city + " - " + task.establishmentDetail.district}
                 facilityOwnerSignature={""}
                 inspectorSignature={""}
