@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import SectionHeader, { SectionIcon, SectionTitle } from "@/app/[lang]/(dashboard)/my-tasks/_components/section-header";
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ChevronLeft, EditIcon, Share2 } from "lucide-react";
 import { EditFormsQesutions } from "@/app/[lang]/(dashboard)/my-tasks/[taskId]/_components/edit-form-questions";
@@ -9,6 +6,8 @@ import { Task, TermsValues } from "@/rassd/types";
 import { Question } from "@/types";
 import useTasks from "@/hooks/useTasks";
 import { CustomComponent } from "@/app/[lang]/(dashboard)/my-tasks/custom-component";
+import SectionHeader, { SectionIcon, SectionTitle } from "@/app/[lang]/(dashboard)/my-tasks/_components/section-header";
+import html2pdf from 'html2pdf.js'; 
 
 function tasksToQuestions(task: Task, termsValues: TermsValues[], edit: boolean = false): Question[] {
     return task?.department?.terms?.map((term) => {
@@ -26,45 +25,36 @@ function tasksToQuestions(task: Task, termsValues: TermsValues[], edit: boolean 
 
 function Form({ taskId }: { taskId: number }) {
     const { task, fetchTask } = useTasks();
-    const [answers, setAnswers] = useState<{ [key: string]: boolean | string }>({}); // State to track answers
+    const [answers, setAnswers] = useState<{ [key: string]: boolean | string }>({});
+    const pdfRef = useRef<HTMLDivElement>(null); 
 
     useEffect(() => {
         fetchTask(taskId);
     }, [taskId]);
 
-    // Update answer state
     const handleInputChange = (id: string, value: boolean | string) => {
         setAnswers(prev => {
             const newAnswers = { ...prev, [id]: value };
-            console.log('Updated Answers:', newAnswers); // Debugging line
+            console.log('Updated Answers:', newAnswers);
             return newAnswers;
         });
     };
 
-    const downloadPdf = () => {
-        const doc = new jsPDF();
-    
-        // Adding title
-        doc.text( `استمارة فحص ${task?.department?.group?.type}`, 10, 10);
-    
-        // Prepare data for PDF using the answers state
-        const updatedQuestions = tasksToQuestions(task, task.termsValues).map((question:any) => {
-            const answer = answers[question.id] !== undefined ? answers[question.id] : question.value;
-            return {
-                label: question.label,
-                value: answer === true ? "Yes" : answer === false ? "No" : answer || "No Answer",
-                
-                files: question.files.length > 0 ? question.files.join(', ') : "No Files"
-            };
-        });
-    
-        doc.autoTable({
-            head: [['Question', 'Answer', 'Attached Files']],
-            body: updatedQuestions.map(({ label, value, files }) => [label, value, files]),
-        });
-    
-        // Save the PDF
-        doc.save(`task-${taskId}.pdf`);
+    const generatePdf = () => {
+        if (pdfRef.current) {
+            const element = pdfRef.current; 
+            html2pdf()
+                .set({
+                    margin: 1,
+                    filename: `task-${taskId}.pdf`,
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                })
+                .from(element)
+                .save();
+        } else {
+            console.error('pdfRef is null');
+        }
     };
 
     return (
@@ -92,31 +82,38 @@ function Form({ taskId }: { taskId: number }) {
                             مشاركة التقرير
                             <Share2 className="w-[18px] h-[18px]" />
                         </Button>
-                        <Button className="rounded-2xl gap-2" color="dark" onClick={downloadPdf}>
+
+                        {/* PDF Button */}
+                        <Button className="rounded-2xl gap-2" color="dark" onClick={generatePdf}>
                             تحميل التقرير - Pdf
                             <ArrowDownToLine className="w-[18px] h-[18px]" />
                         </Button>
+
                         <Button className="rounded-2xl aspect-square">
                             <ChevronLeft className="w-[18px] h-[18px]" />
                         </Button>
                     </div>
                 </div>
-                <EditFormsQesutions
-                    questions={tasksToQuestions(task, task.termsValues).map(question => ({
-                        ...question,
-                        onChange: (value: boolean | string) => handleInputChange(question.id, value), 
-                        answer: answers[question.id] !== undefined ? answers[question.id] : question.value 
-                    }))}
-                    notes={task.notes}
-                    taskId={task.id}
-                    formVisitType={task?.department?.group?.type === "سرية" ? "field-visit" : "secret-visit"}
-                    resumeTime={new Date(task.created_at)}
-                    resumeNumber={String(task.id) || ""}
-                    resumeTitle={task.title}
-                    resumeArea={task.establishmentDetail.region + " - " + task.establishmentDetail.city + " - " + task.establishmentDetail.district}
-                    facilityOwnerSignature={""}
-                    inspectorSignature={""}
-                />
+
+                {/* PDF content */}
+                <div ref={pdfRef}> {/* This section will be converted to PDF */}
+                    <EditFormsQesutions
+                        questions={tasksToQuestions(task, task.termsValues).map(question => ({
+                            ...question,
+                            onChange: (value: boolean | string) => handleInputChange(question.id, value),
+                            answer: answers[question.id] !== undefined ? answers[question.id] : question.value
+                        }))}
+                        notes={task.notes}
+                        taskId={task.id}
+                        formVisitType={task?.department?.group?.type === "سرية" ? "field-visit" : "secret-visit"}
+                        resumeTime={new Date(task.created_at)}
+                        resumeNumber={String(task.id) || ""}
+                        resumeTitle={task.title}
+                        resumeArea={task.establishmentDetail.region + " - " + task.establishmentDetail.city + " - " + task.establishmentDetail.district}
+                        facilityOwnerSignature={""}
+                        inspectorSignature={""}
+                    />
+                </div>
             </div>
         ) : (
             <div>Loading...</div>
