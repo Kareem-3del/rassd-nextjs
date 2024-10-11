@@ -15,7 +15,8 @@ interface EditFormsQesutionsProps extends Pick<FormCardEntries, "formVisitType" 
     facilityOwnerSignature: string
     taskId: string
     notes: string[],
-    inspectorSignature: string
+    inspectorSignature: string,
+    pdfRef?: React.Ref<HTMLDivElement>;
 }
 
 const SignatureIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -68,56 +69,63 @@ export const EditFormsQesutions = ({
     resumeTitle,
     resumeArea,
     facilityOwnerSignature,
-    inspectorSignature
-}: EditFormsQesutionsProps) => {
+    inspectorSignature,
+    pdfRef
+}: EditFormsQesutionsProps,ref:any) => {
     const [signatures, setSignatures] = useState({
         facilityOwnerSignature,
         inspectorSignature,
     })
     const [questions, setQuesitions] = useState(formQuestion)
     return <div className="rounded-[35px] p-5 bg-white md:bg-[#F5F5F5] mt-9">
-        <div className="bg-white md:p-4 md:rounded-[30px]">
-            <div>
-                {/* <FormVisitTypeBadge type={formVisitType} className="mx-auto" /> */}
-                <p className="text-base font-extrabold text-primary text-center mt-5">
-                    {resumeTitle} - {resumeNumber}
-                </p>
-                <div className="flex flex-wrap items-center gap-[10px] md:gap-4 pt-5 justify-center text-[#B1B1B1] text-xs font-extrabold mx-auto">
-                    <div className="">{
-                        resumeArea
-                    }</div>
-                    <DotSperator className="bg-[#D9D9D9]" />
-                    <div className="">{
-                        resumeTime.toLocaleString("ar-EG", {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true,
-                        })
-                    }</div>
-                </div>
-            </div>
-            <Separator className="my-7" />
-            <p className="text-base font-extrabold text-black text-center pb-5">قائمة الفحص (الأسئلة):</p>
-            <div className="space-y-2">
+        <div className="bg-white md:p-4 md:rounded-[30px]" >
 
-            {
-                questions?.map(question => (
-                    <EditFormQuestion question={question} onQuestionChanged={(changedQuestion) => {
-                        const newQuestions = questions.map(q => {
-                            if (q.id === changedQuestion.id) {
-                                return changedQuestion
-                            }
-                            return q
-                        })
-                        setQuesitions(newQuestions)
-                    }} />
-                ))
-            }
-            </div>
-            <div className="flex items-center justify-between flex-wrap gap-6 mt-4">
+    
+        
+      <div ref={pdfRef}>
+      <div>
+              
+              <p className="text-base font-extrabold text-primary text-center mt-5">
+                  {resumeTitle} - {resumeNumber}
+              </p>
+              <div className="flex flex-wrap items-center gap-[10px] md:gap-4 pt-5 justify-center text-[#B1B1B1] text-xs font-extrabold mx-auto">
+                  <div className="">{
+                      resumeArea
+                  }</div>
+                  <DotSperator className="bg-[#D9D9D9]" />
+                  <div className="">{
+                      resumeTime.toLocaleString("ar-EG", {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true,
+                      })
+                  }</div>
+              </div>
+          </div>
+          <Separator className="my-7" />
+          <p className="text-base font-extrabold text-black text-center pb-5">قائمة الفحص (الأسئلة):</p>
+          <div className="space-y-2" >
+
+          {
+              questions?.map(question => (
+                  <EditFormQuestion question={question} onQuestionChanged={(changedQuestion) => {
+                      const newQuestions = questions.map(q => {
+                          if (q.id === changedQuestion.id) {
+                              return changedQuestion
+                          }
+                          return q
+                      })
+                      setQuesitions(newQuestions)
+                  }} />
+              ))
+          }
+          </div>
+      </div>
+           
+            <div className="flex items-center justify-between flex-wrap gap-6 mt-4" >
                 <Button className="h-10 rounded-[10px] gap-[10px] bg-[#6BACA1]">
                     اضافة ملاحظات
                     <MinusCircle className="w-[18px] h-[18px]" />

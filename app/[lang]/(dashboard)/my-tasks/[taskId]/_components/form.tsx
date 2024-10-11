@@ -1,3 +1,4 @@
+// Form.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ChevronLeft, EditIcon, Share2 } from "lucide-react";
@@ -60,7 +61,7 @@ function Form({ taskId }: { taskId: number }) {
     return (
         task ? (
             <div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center"  >
                     <SectionHeader>
                         <SectionIcon Icon={EditIcon} className="hidden md:block" />
                         <CustomComponent
@@ -95,9 +96,10 @@ function Form({ taskId }: { taskId: number }) {
                     </div>
                 </div>
 
-                {/* PDF content */}
-                <div ref={pdfRef}> {/* This section will be converted to PDF */}
+              
+                <div > 
                     <EditFormsQesutions
+                        pdfRef={pdfRef} 
                         questions={tasksToQuestions(task, task.termsValues).map(question => ({
                             ...question,
                             onChange: (value: boolean | string) => handleInputChange(question.id, value),
