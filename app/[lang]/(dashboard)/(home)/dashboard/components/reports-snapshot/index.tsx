@@ -117,9 +117,9 @@ const ReportsSnapshot = () => {
               الاحصائيات العامة لجميع المهمات
             </span>
           </div>
-          <div className="flex-none">
+          {/* <div className="flex-none">
             <DashboardSelect />
-          </div>
+          </div> */}
         </div>
       </CardHeader>
       <CardContent className="p-1 md:p-5">

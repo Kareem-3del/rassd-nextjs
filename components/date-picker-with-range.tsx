@@ -21,7 +21,7 @@ export default function DatePickerWithRange({ className }: { className?: string 
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
-        <PopoverTrigger asChild>
+        {/* <PopoverTrigger asChild>
           <Button
             color={mode === "dark" ? "secondary" : "default"}
             className={cn(" font-normal", {
@@ -42,7 +42,7 @@ export default function DatePickerWithRange({ className }: { className?: string 
               <span>Pick a date</span>
             )}
           </Button>
-        </PopoverTrigger>
+        </PopoverTrigger> */}
         <PopoverContent className="w-auto p-0" align="end">
           <Calendar
             initialFocus

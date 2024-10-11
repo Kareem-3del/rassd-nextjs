@@ -9,7 +9,6 @@ import { Task, TermsValues } from "@/rassd/types";
 import { Question } from "@/types";
 import useTasks from "@/hooks/useTasks";
 import { CustomComponent } from "@/app/[lang]/(dashboard)/my-tasks/custom-component";
-import autoTable from 'jspdf-autotable';
 
 function tasksToQuestions(task: Task, termsValues: TermsValues[], edit: boolean = false): Question[] {
     return task?.department?.terms?.map((term) => {
@@ -25,10 +24,7 @@ function tasksToQuestions(task: Task, termsValues: TermsValues[], edit: boolean 
     });
 }
 
-
 function Form({ taskId }: { taskId: number }) {
-
-
     const { task, fetchTask } = useTasks();
     const [answers, setAnswers] = useState<{ [key: string]: boolean | string }>({}); // State to track answers
 
@@ -45,51 +41,30 @@ function Form({ taskId }: { taskId: number }) {
         });
     };
 
-    const downloadPdf = async () => {
+    const downloadPdf = () => {
         const doc = new jsPDF();
-        doc.text(`استمارة فحص ${task?.department?.group?.type}`, 10, 10);
     
+        // Adding title
+        doc.text( `استمارة فحص ${task?.department?.group?.type}`, 10, 10);
+    
+        // Prepare data for PDF using the answers state
         const updatedQuestions = tasksToQuestions(task, task.termsValues).map((question:any) => {
             const answer = answers[question.id] !== undefined ? answers[question.id] : question.value;
             return {
                 label: question.label,
                 value: answer === true ? "Yes" : answer === false ? "No" : answer || "No Answer",
+                
                 files: question.files.length > 0 ? question.files.join(', ') : "No Files"
             };
         });
     
-        autoTable(doc, {
+        doc.autoTable({
             head: [['Question', 'Answer', 'Attached Files']],
             body: updatedQuestions.map(({ label, value, files }) => [label, value, files]),
         });
     
-        // Save PDF to a Blob
-        const pdfBlob = doc.output('blob');
-    
-        // Create a FormData object to send the PDF
-        const formData = new FormData();
-        formData.append('pdf', pdfBlob, `task-${taskId}.pdf`);
-        formData.append('email', 'recipient@example.com'); // You might want to get this dynamically
-    
-        // Send the PDF to the server
-        const response = await fetch('/send-report', {
-            method: 'POST',
-            body: formData
-        });
-    
-        if (response.ok) {
-            alert('Report shared successfully!');
-        } else {
-            alert('Failed to share report.');
-        }
-    };
-    
-    const shareReport = () => {
-        const subject = `Report for Task ${taskId}`;
-        const body = `Please find the attached report for task ${taskId}.`;
-        const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-        window.location.href = mailtoLink; // Opens the email client
+        // Save the PDF
+        doc.save(`task-${taskId}.pdf`);
     };
 
     return (
@@ -113,7 +88,7 @@ function Form({ taskId }: { taskId: number }) {
                         </SectionTitle>
                     </SectionHeader>
                     <div className="hidden items-center gap-[10px] md:flex">
-                        <Button className="rounded-2xl gap-2" color="dark" variant={"outline"} onClick={shareReport}>
+                        <Button className="rounded-2xl gap-2" color="dark" variant={"outline"}>
                             مشاركة التقرير
                             <Share2 className="w-[18px] h-[18px]" />
                         </Button>

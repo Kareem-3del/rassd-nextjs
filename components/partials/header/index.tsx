@@ -24,7 +24,7 @@ const NavTools = ({ isDesktop, isMobile, sidebarType }: { isDesktop: boolean; is
       {isDesktop && <Language />}
       {isDesktop && <FullScreen />}
 
-      <ThemeButton />
+      {/* <ThemeButton /> */}
 {/*
       <Inbox />
 */}

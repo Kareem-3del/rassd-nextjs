@@ -54,7 +54,7 @@ const ProjectPageView = ({ trans }: ProjectPageViewProps) => {
             <Card>
               <CardHeader className="mb-0 border-none pt-6 pl-7 pb-0 flex-row flex-wrap items-center justify-between gap-4">
                 <CardTitle className="whitespace-nowrap">Report Chart</CardTitle>
-                <div className="w-[170px]">
+                {/* <div className="w-[170px]">
                   <Select>
                     <SelectTrigger className="text-default-500 bg-transparent dark:bg-transparent">
                       <Icon icon="heroicons:calendar-days" className="w-4 h-4" />
@@ -67,7 +67,7 @@ const ProjectPageView = ({ trans }: ProjectPageViewProps) => {
                       <SelectItem value="13">Jan 13,2024</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
               </CardHeader>
               <CardContent className="p-4 pt-0">
                 <ReportChart />
