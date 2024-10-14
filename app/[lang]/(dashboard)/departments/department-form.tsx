@@ -274,17 +274,23 @@ function TermItem({
     if (formType === "edit") {
       await deleteTerm?.(departmentId!, parseInt(item.id));
     }
+    
     const newItems = terms.filter((i) => i.id !== item.id);
-    setTerms(newItems);
+    setTerms(newItems);  // This should trigger a re-render
   };
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalItem((prevItem) => ({
-      ...prevItem,
-      name: e.target.value,
-    }));
-    setIsModified(true); // Mark the item as modified
+  
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    const updatedTerms = terms.map((term) => 
+      term.id === id ? { ...term, name: e.target.value } : term
+    );
+    setTerms(updatedTerms);
+    
+    // Update localItem to sync with the input field value
+    if (item.id === id) {
+      setLocalItem((prevItem) => ({ ...prevItem, name: e.target.value }));
+    }
   };
+  
 
   const handleCheckedChange = (value: boolean) => {
     setLocalItem((prevItem) => ({
@@ -305,10 +311,13 @@ function TermItem({
         },
       });
     }
+    
+    // Update the terms array with the modified term
     const updatedItems = terms.map((i) => (i.id === item.id ? localItem : i));
     setTerms(updatedItems);
-    setIsModified(false);
+    setIsModified(false); // Reset the modification state
   };
+  
 
   return (
     <div className="flex gap-2 items-center flex-wrap" key={item.id}>
@@ -331,13 +340,12 @@ function TermItem({
           <Trash className="h-4 w-4" />
         </Button>
       )}
-
-      <Input
-        type="text"
-        placeholder="بند"
-        value={localItem.name}
-        onChange={handleNameChange}
-      />
+<Input
+  type="text"
+  placeholder="بند"
+  value={localItem.name}
+  onChange={(e) => handleNameChange(e, item.id)}
+/>
 
       <div className="flex items-center gap-2">
         <Checkbox

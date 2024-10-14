@@ -50,19 +50,34 @@ const useTasks:any = () => {
       setLoading(false);
     }
   };
+  const fetchPendigTasks = async (query: any = {}): Promise<void> => {
+    setLoading(true);
+    try {
+      const response = await api.get("/tasks/under-work", query);
+      console.log({response});
+      setTasks(response.data.elements);
+    } catch (err) {
+      setError("An error occurred while fetching tasks.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch a single task by ID
   const fetchTask = async (id: number): Promise<void> => {
     setLoading(true);
     try {
-      const response = await api.get<Task>(`${API_URL}/${id}`);
-      setTask(response.data);
+        const response = await api.get<Task>(`${API_URL}/${id}`);
+        console.log('Fetched task:', response.data); // Log the fetched task
+        setTask(response.data);
     } catch (err) {
-      setError("An error occurred while fetching the task.");
+        setError("An error occurred while fetching the task.");
+        console.error(err); // Log the error for more details
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   interface CreateTask {
     title: string;
@@ -134,6 +149,7 @@ const useTasks:any = () => {
     createTask,
     updateTask,
     deleteTask,
+    fetchPendigTasks
   };
 };
 

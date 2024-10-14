@@ -25,16 +25,16 @@ function tasksToQuestions(task: Task, termsValues: TermsValues[], edit: boolean 
 }
 
 function Form({ taskId }: { taskId: number }) {
-    const { task, fetchTask } = useTasks();
+    const { task, fetchTask, loading, error,fetchPendigTasks } = useTasks(); // Ensure useTasks returns loading and error states
     const [answers, setAnswers] = useState<{ [key: string]: boolean | string }>({});
-    const pdfRef = useRef<HTMLDivElement>(null); 
+    const pdfRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetchTask(taskId);
     }, [taskId]);
 
     const handleInputChange = (id: string, value: boolean | string) => {
-        setAnswers(prev => {
+        setAnswers((prev) => {
             const newAnswers = { ...prev, [id]: value };
             console.log('Updated Answers:', newAnswers);
             return newAnswers;
@@ -43,7 +43,7 @@ function Form({ taskId }: { taskId: number }) {
 
     const generatePdf = () => {
         if (pdfRef.current) {
-            const element = pdfRef.current; 
+            const element = pdfRef.current;
             html2pdf()
                 .set({
                     margin: 1,
@@ -58,68 +58,68 @@ function Form({ taskId }: { taskId: number }) {
         }
     };
 
+    // Handle loading and error states
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading task: {error}</div>;
+    if (!task) return <div>No task found.</div>; // Handle case where task is not found
+
     return (
-        task ? (
-            <div>
-                <div className="flex justify-between items-center"  >
-                    <SectionHeader>
-                        <SectionIcon Icon={EditIcon} className="hidden md:block" />
-                        <CustomComponent
-                            messages={[ /* Your message data */ ]}
-                            noteBy={task.title}
-                            noteDate={new Date(task.created_at)}
-                            sendBy={{
-                                name: "د. أحمد الكعبي",
-                                date: new Date(),
-                                image: "/images/avatar/avatar-2.jpg",
-                            }}
-                        />
-                        <SectionTitle>
-                            {"استمارة فحص " + task?.department?.group?.type}
-                        </SectionTitle>
-                    </SectionHeader>
-                    <div className="hidden items-center gap-[10px] md:flex">
-                        <Button className="rounded-2xl gap-2" color="dark" variant={"outline"}>
-                            مشاركة التقرير
-                            <Share2 className="w-[18px] h-[18px]" />
-                        </Button>
-
-                        {/* PDF Button */}
-                        <Button className="rounded-2xl gap-2" color="dark" onClick={generatePdf}>
-                            تحميل التقرير - Pdf
-                            <ArrowDownToLine className="w-[18px] h-[18px]" />
-                        </Button>
-
-                        <Button className="rounded-2xl aspect-square">
-                            <ChevronLeft className="w-[18px] h-[18px]" />
-                        </Button>
-                    </div>
-                </div>
-
-              
-                <div > 
-                    <EditFormsQesutions
-                        pdfRef={pdfRef} 
-                        questions={tasksToQuestions(task, task.termsValues).map(question => ({
-                            ...question,
-                            onChange: (value: boolean | string) => handleInputChange(question.id, value),
-                            answer: answers[question.id] !== undefined ? answers[question.id] : question.value
-                        }))}
-                        notes={task.notes}
-                        taskId={task.id}
-                        formVisitType={task?.department?.group?.type === "سرية" ? "field-visit" : "secret-visit"}
-                        resumeTime={new Date(task.created_at)}
-                        resumeNumber={String(task.id) || ""}
-                        resumeTitle={task.title}
-                        resumeArea={task.establishmentDetail.region + " - " + task.establishmentDetail.city + " - " + task.establishmentDetail.district}
-                        facilityOwnerSignature={""}
-                        inspectorSignature={""}
+        <div>
+            <div className="flex justify-between items-center">
+                <SectionHeader>
+                    <SectionIcon Icon={EditIcon} className="hidden md:block" />
+                    <CustomComponent
+                        messages={[ /* Your message data */ ]}
+                        noteBy={task.title} // Now safe to access task.title
+                        noteDate={new Date(task.created_at)}
+                        sendBy={{
+                            name: "د. أحمد الكعبي",
+                            date: new Date(),
+                            image: "/images/avatar/avatar-2.jpg",
+                        }}
                     />
+                    <SectionTitle>
+                        {"استمارة فحص " + task?.department?.group?.type}
+                    </SectionTitle>
+                </SectionHeader>
+                <div className="hidden items-center gap-[10px] md:flex">
+                    <Button className="rounded-2xl gap-2" color="dark" variant={"outline"}>
+                        مشاركة التقرير
+                        <Share2 className="w-[18px] h-[18px]" />
+                    </Button>
+
+                    {/* PDF Button */}
+                    <Button className="rounded-2xl gap-2" color="dark" onClick={generatePdf}>
+                        تحميل التقرير - Pdf
+                        <ArrowDownToLine className="w-[18px] h-[18px]" />
+                    </Button>
+
+                    <Button className="rounded-2xl aspect-square">
+                        <ChevronLeft className="w-[18px] h-[18px]" />
+                    </Button>
                 </div>
             </div>
-        ) : (
-            <div>Loading...</div>
-        )
+
+            <div>
+                <EditFormsQesutions
+                    pdfRef={pdfRef}
+                    questions={tasksToQuestions(task, task.termsValues).map(question => ({
+                        ...question,
+                        onChange: (value: boolean | string) => handleInputChange(question.id, value),
+                        answer: answers[question.id] !== undefined ? answers[question.id] : question.value,
+                    }))}
+                    notes={task.notes}
+                    taskId={task.id}
+                    formVisitType={task?.department?.group?.type === "سرية" ? "field-visit" : "secret-visit"}
+                    resumeTime={new Date(task.created_at)}
+                    resumeNumber={String(task.id) || ""}
+                    resumeTitle={task.title}
+                    resumeArea={task.establishmentDetail.region + " - " + task.establishmentDetail.city + " - " + task.establishmentDetail.district}
+                    facilityOwnerSignature={""}
+                    inspectorSignature={""}
+                />
+            </div>
+        </div>
     );
 }
 

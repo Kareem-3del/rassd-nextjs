@@ -124,7 +124,7 @@ export const AuditDepartmentSendedForms = ({completed , done , rejected}:{
         fetchSendedForms();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div>Loadinffffg...</div>;
     if (error) return <div>{error}</div>;
 
     return (

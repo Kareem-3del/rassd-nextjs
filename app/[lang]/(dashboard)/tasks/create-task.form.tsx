@@ -64,21 +64,28 @@ const CreateTaskForm = ({
         city: "",
         district: "",
         address: "",
+          approvalNumber:""
     });
     const [stepTwo, setStepTwo] = React.useState({
         clientName: "",
         clientPhone: "",
         clientNationalId: "",
         clientEmail: "",
-        clientAddress: ""
+        clientAddress: "",
+      
     });
 
     const [stepThree, setStepThree] = React.useState<{
         inspectorId: number | null;
         departmentId: number | null;
+        totalHours: number | null | any;
+        confirmNumber: number | null | any;
     }>({
         inspectorId: null,
         departmentId: null,
+        totalHours:  null,
+        confirmNumber:  null,
+
     });
 
     const isStepOptional = (step: number) => {
@@ -249,286 +256,320 @@ const CreateTaskForm = ({
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    <form>
-                        <div className="grid grid-cols-12 gap-4">
-                            {activeStep === 0 && (
-                                <>
-                                    <div className="col-span-12 mb-4 mt-6">
-                                        <h4 className="text-sm font-medium text-default-600">
-                                            ادخل بيانات المنشأة
-                                        </h4>
-                                    </div>
-                                    <div className="col-span-12 gap-4">
-                                        <Input
-                                            type="text"
-                                            placeholder="الاسم"
-                                            value={stepOne.name}
-                                            onChange={(e) =>
-                                                setStepOne({...stepOne, name: e.target.value})
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="col-span-12 grid lg:grid-cols-2 gap-4">
-                                        <Select
-                                            className="react-select"
-                                            classNamePrefix="select"
-                                            placeholder={"اختار المنطقة"}
-                                            onChange={(value: any) => {
-                                                setStepOne({...stepOne, region: value.value});
-                                                setSelectedRegion(
-                                                    Saudi.RegionsSaudi.find(
-                                                        (region) => region.region_id === value.value
-                                                    ) || null
-                                                );
-                                                setSelectedCity(null);
-                                                setSelectedDistrict(null);
-                                            }}
-                                            value={
-                                                selectedRegion
-                                                    ? {
-                                                        value: selectedRegion.name_ar,
-                                                        label: selectedRegion.name_ar,
-                                                    }
-                                                    : null
-                                            }
-                                            isLoading={loading}
-                                            options={Saudi.RegionsSaudi.map((region) => ({
-                                                value: region.region_id,
+                <form>
+                    <div className="grid grid-cols-12 gap-4">
+                        {activeStep === 0 && (
+                            <>
+                                <div className="col-span-12 mb-4 mt-6">
+                                    <h4 className="text-sm font-medium text-default-600">
+                                        ادخل بيانات المنشأة
+                                    </h4>
+                                </div>
+                                <div className="col-span-12 gap-4">
+                                    <Input
+                                        type="text"
+                                        placeholder="الاسم"
+                                        value={stepOne.name}
+                                        onChange={(e) =>
+                                            setStepOne({ ...stepOne, name: e.target.value })
+                                        }
+                                    />
+                                </div>
+            
+                                {/* New field for رقم الاعتماد */}
+                                <div className="col-span-12 gap-4">
+                                    <Input
+                                        type="text"
+                                        placeholder="رقم الاعتماد"
+                                        value={stepOne.approvalNumber}
+                                        onChange={(e) =>
+                                            setStepOne({ ...stepOne, approvalNumber: e.target.value })
+                                        }
+                                    />
+                                </div>
+            
+                                <div className="col-span-12 grid lg:grid-cols-2 gap-4">
+                                    <Select
+                                        className="react-select"
+                                        classNamePrefix="select"
+                                        placeholder={"اختار المنطقة"}
+                                        onChange={(value: any) => {
+                                            setStepOne({ ...stepOne, region: value.value });
+                                            setSelectedRegion(
+                                                Saudi.RegionsSaudi.find(
+                                                    (region) => region.region_id === value.value
+                                                ) || null
+                                            );
+                                            setSelectedCity(null);
+                                            setSelectedDistrict(null);
+                                        }}
+                                        value={
+                                            selectedRegion
+                                                ? {
+                                                      value: selectedRegion.name_ar,
+                                                      label: selectedRegion.name_ar,
+                                                  }
+                                                : null
+                                        }
+                                        isLoading={loading}
+                                        options={Saudi.RegionsSaudi.map((region) => ({
+                                            value: region.region_id,
+                                            label: region.name_ar,
+                                        }))}
+                                    />
+                                    <Select
+                                        className="react-select"
+                                        classNamePrefix="select"
+                                        value={
+                                            selectedCity
+                                                ? {
+                                                      value: selectedCity.city_id,
+                                                      label: selectedCity.name_ar,
+                                                  }
+                                                : null
+                                        }
+                                        placeholder={"اختار المدينة"}
+                                        isLoading={loading}
+                                        onChange={(value: any) => {
+                                            setStepOne({ ...stepOne, city: value.value });
+                                            setSelectedCity(
+                                                cities.find((city) => city.city_id === value.value) ||
+                                                null
+                                            );
+                                            setSelectedDistrict(null);
+                                        }}
+                                        onInputChange={(value) => setSearchTerm(value)}
+                                        options={cities
+                                            .filter((city) => {
+                                                if (selectedRegion) {
+                                                    return city.region_id === selectedRegion.region_id;
+                                                }
+                                                return true;
+                                            })
+                                            .map((region) => ({
+                                                value: region.city_id,
                                                 label: region.name_ar,
                                             }))}
-                                        />
-                                        <Select
-                                            className="react-select"
-                                            classNamePrefix="select"
-                                            value={
-                                                selectedCity
-                                                    ? {
-                                                        value: selectedCity.city_id,
-                                                        label: selectedCity.name_ar,
-                                                    }
-                                                    : null
-                                            }
-                                            placeholder={"اختار المدينة"}
-                                            isLoading={loading}
-                                            onChange={(value: any) => {
-                                                setStepOne({...stepOne, city: value.value});
-                                                setSelectedCity(
-                                                    cities.find((city) => city.city_id === value.value) ||
-                                                    null
-                                                );
-                                                setSelectedDistrict(null);
-                                            }}
-                                            onInputChange={(value) => setSearchTerm(value)}
-                                            options={cities
-                                                .filter((city) => {
-                                                    if (selectedRegion) {
-                                                        return city.region_id === selectedRegion.region_id;
-                                                    }
-                                                    return true;
-                                                })
-                                                .map((region) => ({
-                                                    value: region.city_id,
-                                                    label: region.name_ar,
-                                                }))}
-                                        />
-                                    </div>
-                                    <div className="col-span-12 grid grid-cols-2 gap-4">
-                                        <Select
-                                            className="react-select"
-                                            classNamePrefix="select"
-                                            value={
-                                                selectedDistrict
-                                                    ? {
-                                                        value: selectedDistrict.district_id,
-                                                        label: selectedDistrict.name_ar,
-                                                    }
-                                                    : null
-                                            }
-                                            placeholder={"اختار الحي"}
-                                            isLoading={loading}
-                                            onChange={(value: any) => {
-                                                setStepOne({...stepOne, district: value.value});
-                                                setSelectedDistrict(
-                                                    districts.find(
-                                                        (district) => district.district_id === value.value
-                                                    ) || null
-                                                );
-                                            }}
-                                            onInputChange={(value) => setSearchTerm(value)}
-                                            options={districts
-                                                .filter((city) => {
-                                                    if (selectedCity) {
-                                                        return city.city_id === selectedCity.city_id;
-                                                    } else if (selectedRegion) {
-                                                        return city.region_id === selectedRegion.region_id;
-                                                    }
-                                                    return true;
-                                                })
-                                                .map((region) => ({
-                                                    value: region.district_id,
-                                                    label: region.name_ar,
-                                                }))}
-                                        />
-                                    </div>
-                                    <div className="col-span-12">
-                                        <Textarea
-                                            placeholder="العنوان"
-                                            value={stepOne.address}
-                                            onChange={(e) => {
-                                                setStepOne({...stepOne, address: e.target.value});
-                                            }}
-                                        />
-                                    </div>
-                                </>
-                            )}
-                            {activeStep === 1 && (
-                                <>
-                                    <div className="col-span-12 mt-6 mb-4">
-                                        <h4 className="text-sm font-medium text-default-600">
-                                            ادخل بيانات العميل
-                                        </h4>
-                                        <p className="text-xs text-default-600 mt-1">
-                                            إملأ الحقول بالبيانات الصحيحة
-                                        </p>
-                                    </div>
-                                    <div className="col-span-12 lg:col-span-6">
-                                        <Input
-                                            placeholder="إدخل اسم صاحب المنشاءة"
-                                            value={stepTwo.clientName}
-                                            onChange={(e) => {
-                                                setStepTwo({...stepTwo, clientName: e.target.value});
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="col-span-12 lg:col-span-6">
-                                        <Input
-                                            placeholder="رقم الهاتف"
-                                            value={stepTwo.clientPhone}
-                                            onChange={(e) => {
-                                                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                                                setStepTwo({
-                                                    ...stepTwo,
-                                                    clientPhone: e.target.value,
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="col-span-12 lg:col-span-6">
-                                        <Input
-                                            placeholder="رقم الهوية"
-                                            value={stepTwo.clientNationalId}
-                                            onChange={(e) => {
-                                                if (e.target.value.length > 7) {
-                                                    return;
+                                    />
+                                </div>
+                                <div className="col-span-12 grid grid-cols-2 gap-4">
+                                    <Select
+                                        className="react-select"
+                                        classNamePrefix="select"
+                                        value={
+                                            selectedDistrict
+                                                ? {
+                                                      value: selectedDistrict.district_id,
+                                                      label: selectedDistrict.name_ar,
+                                                  }
+                                                : null
+                                        }
+                                        placeholder={"اختار الحي"}
+                                        isLoading={loading}
+                                        onChange={(value: any) => {
+                                            setStepOne({ ...stepOne, district: value.value });
+                                            setSelectedDistrict(
+                                                districts.find(
+                                                    (district) => district.district_id === value.value
+                                                ) || null
+                                            );
+                                        }}
+                                        onInputChange={(value) => setSearchTerm(value)}
+                                        options={districts
+                                            .filter((city) => {
+                                                if (selectedCity) {
+                                                    return city.city_id === selectedCity.city_id;
+                                                } else if (selectedRegion) {
+                                                    return city.region_id === selectedRegion.region_id;
                                                 }
-                                                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                                                setStepTwo({
-                                                    ...stepTwo,
-                                                    clientNationalId: e.target.value,
-                                                });
-                                            }}
-                                        />
-                                    </div>
-
-                                    <div className="col-span-12 lg:col-span-6 gap-2 flex flex-col">
-                                        <Input
-                                            placeholder="العنوان"
-                                            value={stepTwo.clientAddress}
-                                            onChange={(e) => {
-                                                setStepTwo({
-                                                    ...stepTwo,
-                                                    clientAddress: e.target.value,
-                                                });
-                                            }}
-                                        />
-                                    </div>
-
-                                    <div className="col-span-12 lg:col-span-6">
-                                        <Input
-                                            type="email"
-                                            placeholder="البريد الالكتروني"
-                                            value={stepTwo.clientEmail}
-                                            onChange={(e) => {
-                                                setStepTwo({...stepTwo, clientEmail: e.target.value});
-                                            }}
-                                        />
-                                    </div>
-                                </>
-                            )}
-                            {activeStep === 2 && (
-                                <>
-                                    <div className="col-span-12 mt-6 mb-4">
-                                        <h4 className="text-sm font-medium text-default-600">
-                                            انشاء مهمة
-                                        </h4>
-                                        <p className="text-xs text-default-600 mt-1">
-                                            إملأ الحقول بالبيانات الصحيحة
-                                        </p>
-                                    </div>
-                                    <div className="col-span-12">
-                                        <IncpectorSelector
-                                            // value={String(stepThree.inspectorId)}
-                                            onChange={(value: any) => {
-                                                console.log(value);
-                                                setStepThree({...stepThree, inspectorId: parseInt(value)});
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="col-span-12">
-                                        <DepartmentSelector
-                                            // value={String(stepThree.departmentId)}
-                                            onChange={(value: any) => {
-                                                console.log(value);
-                                                setStepThree({...stepThree, departmentId: parseInt(value)});
-                                            }}
-                                        />
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </form>
-
-                    <div className="flex pt-2 ">
-                        <Button
-                            size="xs"
-                            variant="outline"
-                            color="secondary"
-                            className={cn("cursor-pointer", {
-                                hidden: activeStep === 0,
-                            })}
-                            onClick={handleBack}
-                        >
-                            رجوع
-                        </Button>
-                        <div className="flex-1	gap-4 "/>
-                        <div className="flex	gap-2 ">
-                            {activeStep === steps.length - 1 ? (
-                                <Button
-                                    size="xs"
-                                    variant="outline"
-                                    color="success"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                        handleSubmit();
-                                    }}
-                                >
-                                    تاكيد
-                                </Button>
-                            ) : (
-                                <Button
-                                    size="xs"
-                                    variant="outline"
-                                    color="secondary"
-                                    className="cursor-pointer"
-                                    onClick={handleNext}
-                                >
-                                    التالي
-                                </Button>
-                            )}
-                        </div>
+                                                return true;
+                                            })
+                                            .map((region) => ({
+                                                value: region.district_id,
+                                                label: region.name_ar,
+                                            }))}
+                                    />
+                                </div>
+                                <div className="col-span-12">
+                                    <Textarea
+                                        placeholder="العنوان"
+                                        value={stepOne.address}
+                                        onChange={(e) => {
+                                            setStepOne({ ...stepOne, address: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
+                        {activeStep === 1 && (
+                            <>
+                                <div className="col-span-12 mt-6 mb-4">
+                                    <h4 className="text-sm font-medium text-default-600">
+                                        ادخل بيانات العميل
+                                    </h4>
+                                    <p className="text-xs text-default-600 mt-1">
+                                        إملأ الحقول بالبيانات الصحيحة
+                                    </p>
+                                </div>
+                                <div className="col-span-12 lg:col-span-6">
+                                    <Input
+                                        placeholder="إدخل اسم صاحب المنشأة"
+                                        value={stepTwo.clientName}
+                                        onChange={(e) => {
+                                            setStepTwo({ ...stepTwo, clientName: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-span-12 lg:col-span-6">
+                                    <Input
+                                        placeholder="رقم الهاتف"
+                                        value={stepTwo.clientPhone}
+                                        onChange={(e) => {
+                                            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                            setStepTwo({
+                                                ...stepTwo,
+                                                clientPhone: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-span-12 lg:col-span-6">
+                                    <Input
+                                        placeholder="رقم الهوية"
+                                        value={stepTwo.clientNationalId}
+                                        onChange={(e) => {
+                                            if (e.target.value.length > 7) {
+                                                return;
+                                            }
+                                            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                            setStepTwo({
+                                                ...stepTwo,
+                                                clientNationalId: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </div>
+            
+                                <div className="col-span-12 lg:col-span-6 gap-2 flex flex-col">
+                                    <Input
+                                        placeholder="العنوان"
+                                        value={stepTwo.clientAddress}
+                                        onChange={(e) => {
+                                            setStepTwo({
+                                                ...stepTwo,
+                                                clientAddress: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </div>
+            
+                                <div className="col-span-12 lg:col-span-6">
+                                    <Input
+                                        type="email"
+                                        placeholder="البريد الالكتروني"
+                                        value={stepTwo.clientEmail}
+                                        onChange={(e) => {
+                                            setStepTwo({ ...stepTwo, clientEmail: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
+                        {activeStep === 2 && (
+                            <>
+                                <div className="col-span-12 mt-6 mb-4">
+                                    <h4 className="text-sm font-medium text-default-600">
+                                        انشاء مهمة
+                                    </h4>
+                                    <p className="text-xs text-default-600 mt-1">
+                                        إملأ الحقول بالبيانات الصحيحة
+                                    </p>
+                                </div>
+                                <div className="col-span-12">
+                                    <IncpectorSelector
+                                        // value={String(stepThree.inspectorId)}
+                                        onChange={(value: any) => {
+                                            console.log(value);
+                                            setStepThree({ ...stepThree, inspectorId: parseInt(value) });
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-span-12">
+                                    <DepartmentSelector
+                                        // value={String(stepThree.departmentId)}
+                                        onChange={(value: any) => {
+                                            console.log(value);
+                                            setStepThree({ ...stepThree, departmentId: parseInt(value) });
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-span-12">
+                                    <Input
+                                        type="number"
+                                        placeholder="عدد الساعات"
+                                        value={stepThree.totalHours}
+                                        onChange={(e) => {
+                                            setStepThree({ ...stepThree, totalHours: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-span-12">
+                                    <Input
+                                        type="text"
+                                        placeholder="رقم التأكيد"
+                                        value={stepThree.confirmNumber}
+                                        onChange={(e) => {
+                                            setStepThree({ ...stepThree, confirmNumber: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
-                </React.Fragment>
+                </form>
+            
+                <div className="flex pt-2 ">
+                    <Button
+                        size="xs"
+                        variant="outline"
+                        color="secondary"
+                        className={cn("cursor-pointer", {
+                            hidden: activeStep === 0,
+                        })}
+                        onClick={handleBack}
+                    >
+                        رجوع
+                    </Button>
+                    <div className="flex-1 gap-4 " />
+                    <div className="flex gap-2 ">
+                        {activeStep === steps.length - 1 ? (
+                            <Button
+                                size="xs"
+                                variant="outline"
+                                color="success"
+                                className="cursor-pointer"
+                                onClick={() => {
+                                    handleSubmit();
+                                }}
+                            >
+                                تاكيد
+                            </Button>
+                        ) : (
+                            <Button
+                                size="xs"
+                                variant="outline"
+                                color="secondary"
+                                className="cursor-pointer"
+                                onClick={handleNext}
+                            >
+                                التالي
+                            </Button>
+                        )}
+                    </div>
+                </div>
+            </React.Fragment>
+            
+            
             )}
         </div>
     );
