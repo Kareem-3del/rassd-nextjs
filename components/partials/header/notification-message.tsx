@@ -13,10 +13,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+/*
 import { notifications } from "./notification-data";
+*/
 import shortImage from "@/public/images/all-img/short-image-2.png";
-
 const NotificationMessage = () => {
+  const notifications : any = []
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,7 +32,7 @@ const NotificationMessage = () => {
         >
           <Bell className="h-5 w-5 " />
           <Badge className=" w-4 h-4 p-0 text-xs  font-medium  items-center justify-center absolute left-[calc(100%-18px)] bottom-[calc(100%-16px)] ring-2 ring-primary-foreground">
-            5
+            0
           </Badge>
         </Button>
       </DropdownMenuTrigger>
@@ -42,14 +45,15 @@ const NotificationMessage = () => {
           className="w-full h-full bg-cover bg-no-repeat p-4 flex items-center"
         >
           <span className="text-base font-semibold text-white flex-1">
-            Notification
+            الاشعارات
           </span>
           <span className="text-xs font-medium text-white flex-0 cursor-pointer hover:underline hover:decoration-default-100 dark:decoration-default-900">
-            Mark all as read{" "}
+            تحديد الكل كمقروء
           </span>
         </DropdownMenuLabel>
         <div className="h-[300px] xl:h-[350px]">
           <ScrollArea className="h-full">
+            {/* @ts-ignore */}
             {notifications.map((item, index) => (
               <DropdownMenuItem
                 key={`inbox-${index}`}
@@ -87,14 +91,16 @@ const NotificationMessage = () => {
                 ></div>
               </DropdownMenuItem>
             ))}
+            {
+                notifications.length === 0 && (
+                    <div className="flex items-center mt-4 justify-center h-full">
+                    <span className="text-default-500">لا يوجد اشعارات</span>
+                    </div>
+                )
+            }
           </ScrollArea>
         </div>
         <DropdownMenuSeparator />
-        <div className="m-4 mt-5">
-          <Button asChild className="w-full">
-            <Link href="/dashboard">View All</Link>
-          </Button>
-        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

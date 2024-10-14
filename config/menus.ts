@@ -28,7 +28,7 @@ import {
   PretentionChartLine,
   PretentionChartLine2,
   Google,
-    UserPlus,
+  UserPlus,
   Pointer,
   Map2,
   MenuBar,
@@ -44,8 +44,7 @@ import {
   CustomIcon,
   Mail,
 } from "@/components/svg";
-
-
+import useTasks from "@/hooks/useTasks";
 export interface MenuItemProps {
   title: string;
   icon: any;
@@ -56,7 +55,6 @@ export interface MenuItemProps {
   nested?: MenuItemProps[]
   onClick: () => void;
 
-  
 }
 
 export const menusConfig = {
@@ -83,42 +81,42 @@ export const menusConfig = {
       ],
     },
     {
-        title: "Application",
-        icon: Application,
-        child: [
-            {
-            title: "chat",
-            icon: Messages,
-            href: "/chat",
-            },
-            {
-            title: "email",
-            icon: Envelope,
-            href: "/email",
-            },
-            {
-            title: "kanban",
-            icon: Monitor,
-            href: "/kanban",
-            },
-            {
-            title: "task",
-            icon: ListFill,
-            href: "/task",
-            },
-            {
-            title: "calendar",
-            icon: Calendar,
-            href: "/calendar",
-            },
-
-            {
-            title: "project",
-            icon: ClipBoard,
-            href: "/projects",
-            },
-        ],
+      title: "Application",
+      icon: Application,
+      child: [
+        {
+          title: "chat",
+          icon: Messages,
+          href: "/chat",
         },
+        {
+          title: "email",
+          icon: Envelope,
+          href: "/email",
+        },
+        {
+          title: "kanban",
+          icon: Monitor,
+          href: "/kanban",
+        },
+        {
+          title: "task",
+          icon: ListFill,
+          href: "/task",
+        },
+        {
+          title: "calendar",
+          icon: Calendar,
+          href: "/calendar",
+        },
+
+        {
+          title: "project",
+          icon: ClipBoard,
+          href: "/projects",
+        },
+      ],
+    },
     {
       title: "المفتش",
       role : "inspector",
@@ -2100,8 +2098,8 @@ export const menusConfig = {
         title: "Dashboard",
         icon: DashBoard,
         href: "/dashboard",
-       
-        
+
+
         child: [
           {
             title: "Analytics",
@@ -2109,29 +2107,64 @@ export const menusConfig = {
             icon: Graph,
           },
           {
-            title: "Ecommerce",
-            href: "/ecommerce",
+            title: "الاقسام",
+            href: "/departments",
             icon: Cart,
           },
           {
-            title: "Project ",
-            href: "/project",
+            title: "المجموعات",
+            href: "/groups",
+            icon: ClipBoard,
+          },
+          {
+            title: "المهمات",
+            href: "/tasks",
             icon: ClipBoard,
           },
         ],
       },
+
+
+
+
+
+
+      // *************************************************
+      // *************************************************
       {
         title: "مهماتي",
         icon: ListFill,
         role : ["inspector","reviewer"],
         href: "/my-tasks",
+        child: [
+          {
+            title: "كل المهمات",
+            href: "/my-tasks",
+            icon: Graph,
+          },
+          {
+            title: "مهمات مكتملة",
+            href: "/my-tasks/completed",
+            icon: Graph,
+          },
+          {
+            title: "مهمات تحت التنفيذ",
+            href: "/my-tasks/pending",
+            icon: Cart,
+          },
+          {
+            title: "مهمات مرفوضة",
+            href: "/my-tasks/rejected",
+            icon: ClipBoard,
+          },
+        ],
       },
       {
         title: "المستخدمين",
         icon: UserPlus,
         role : "admin",
         href: "/users",
-        },
+      },
       {
         title: "المجموعات",
         icon: UserPlus,
@@ -2146,14 +2179,14 @@ export const menusConfig = {
       },
       {
         isHeader: true,
-        title: "Application",
+        title: "اخري",
       },
       {
-        title: "chat",
+        title: "المحادثات",
         icon: Messages,
         href: "/chat",
       },
-      {
+     /* {
         title: "email",
         icon: Envelope,
         href: "/email",
@@ -2314,7 +2347,7 @@ export const menusConfig = {
         title: "Utility",
         icon: Diamond,
         href: "#",
-        
+
         child: [
           {
             title: "Blank Page",
@@ -2334,7 +2367,7 @@ export const menusConfig = {
         title: "Invoice",
         icon: Files,
         href: "#",
-        
+
         child: [
           {
             title: "Create Invoice",
@@ -2355,7 +2388,7 @@ export const menusConfig = {
         title: "Error",
         icon: Error,
         href: "#",
-        
+
         child: [
           {
             title: "Error 401",
@@ -3098,7 +3131,8 @@ export const menusConfig = {
           },
         ],
       },
-    ],
+    ],*/
+  ],
   },
 };
 

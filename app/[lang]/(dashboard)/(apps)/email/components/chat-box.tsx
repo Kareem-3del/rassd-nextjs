@@ -17,6 +17,7 @@ import avatar2 from "@/public/images/avatar/avatar-2.jpg";
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import {useUser} from "@/components/user-provider";
 
 const ChatBox = ({ onClose }: { onClose: () => void }) => {
   const [minimize, setMinimize] = useState(false);
@@ -26,7 +27,7 @@ const ChatBox = ({ onClose }: { onClose: () => void }) => {
     e.target.style.height = "auto";
     e.target.style.height = `${e.target.scrollHeight - 15}px`;
   };
-
+  const {user} = useUser()
   return (
     <Card className="fixed z-[9999] bottom-0 ltr:right-4 rtl:left-4 w-[200px] md:[250px] lg:w-[360px]  rounded-t-md rounded-b-none dark:border dark:border-default-200 dark:border-t-0">
       <CardHeader className={cn("bg-primary  rounded-t-md flex-row items-center py-2", {
@@ -35,8 +36,12 @@ const ChatBox = ({ onClose }: { onClose: () => void }) => {
         <div className="flex-1 flex  items-center gap-3">
           <div className="relative inline-block">
             <Avatar className="h-9 w-9 ring-1 ring-secondary">
-              <AvatarImage src={avatar1.src} />
-              <AvatarFallback>SN</AvatarFallback>
+              <AvatarImage src={
+                user?.avatar || ""
+              } />
+              <AvatarFallback>
+                {user?.firstName.slice(0, 2)}
+              </AvatarFallback>
             </Avatar>
             <Badge
               color="success"
@@ -44,7 +49,9 @@ const ChatBox = ({ onClose }: { onClose: () => void }) => {
             ></Badge>
           </div>
           <div className="text-base font-medium text-primary-foreground relative truncate w-[50px] md:w-fit">
-            Jenifer Jenny
+            {
+                user?.firstName + " " + user?.lastName
+            }
             <ChevronDown className="h-3.5 w-3.5 text-primary-foreground absolute rtl:-left-4 ltr:-right-4 top-1" />
           </div>
         </div>

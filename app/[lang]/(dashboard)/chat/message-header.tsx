@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Menu } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import {User} from "@/rassd/types";
 
 const MessageHeader = ({
   showInfo,
@@ -22,7 +23,7 @@ const MessageHeader = ({
 }: {
   showInfo: boolean;
   handleShowInfo: () => void;
-  profile: any;
+  profile: User;
   mblChatHandler: () => void;
 }) => {
   let active = true;
@@ -39,20 +40,26 @@ const MessageHeader = ({
         )}
         <div className="relative inline-block">
           <Avatar>
-            <AvatarImage src={profile?.avatar?.src} alt="" />
-            <AvatarFallback>{profile?.fullName?.slice(0, 2)}</AvatarFallback>
+            <AvatarImage src={profile?.avatar || ""} alt="" />
+            <AvatarFallback>{profile?.firstName?.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <Badge
             className=" h-3 w-3  p-0 ring-1 ring-border ring-offset-[1px]   items-center justify-center absolute left-[calc(100%-12px)] top-[calc(100%-12px)]"
-            color={active ? "success" : "secondary"}
+            color={profile?.online ? "success" : "secondary"}
           ></Badge>
         </div>
         <div className="hidden lg:block">
           <div className="text-sm font-medium text-default-900 ">
-            <span className="relative">{profile?.fullName}</span>
+            <span className="relative capitalize">{
+              [
+                profile?.firstName,
+                profile?.lastName
+              ].filter(Boolean).join(" ")
+
+            }</span>
           </div>
           <span className="text-xs text-default-500">
-            {active ? "Active Now" : "Offline"}
+            {profile?.online ? "متصل الان" : "غير متصل"}
           </span>
         </div>
       </div>

@@ -12,6 +12,7 @@ import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
 import AddBlock from "../common/add-block";
+import {useUser} from "@/components/user-provider";
 const ClassicSidebar = ({ trans }: { trans: string }) => {
   const { sidebarBg } = useSidebar();
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
@@ -39,11 +40,20 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
 
   const pathname = usePathname();
   const locationName = getDynamicPath(pathname);
-
+  const { user } = useUser();
   React.useEffect(() => {
     let subMenuIndex = null;
     let multiMenuIndex = null;
-    menus?.map((item: any, i: number) => {
+    menus.filter(
+        (item: any) => {
+          console.log("ITEM ROLE", item.role, "USER ROLE", user?.role)
+
+          if (item.role){
+            console.log("ITEM ROLE", item.role, "USER ROLE", user?.role)
+            return item.role.includes(user?.role)
+          }
+        }
+    )?.map((item: any, i: number) => {
       if (item?.child) {
         item.child.map((childItem: any, j: number) => {
           if (isLocationMatch(childItem.href, locationName)) {

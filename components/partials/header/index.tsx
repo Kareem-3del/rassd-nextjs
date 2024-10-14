@@ -15,25 +15,44 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import MobileMenuHandler from "./mobile-menu-handler";
 import ClassicHeader from "./layout/classic-header";
 import FullScreen from "./full-screen";
+import {useUser} from "@/components/user-provider";
 
 const NavTools = ({ isDesktop, isMobile, sidebarType }: { isDesktop: boolean; isMobile: boolean; sidebarType: string }) => {
+    const { user } = useUser()
   return (
     <div className="nav-tools flex items-center  gap-2">
       {isDesktop && <Language />}
       {isDesktop && <FullScreen />}
 
-      <ThemeButton />
+      {/* <ThemeButton /> */}
+{/*
       <Inbox />
+*/}
       <NotificationMessage />
 
-      <div className="ltr:pl-2 rtl:pr-2">
-        <ProfileInfo />
-      </div>
-      {!isDesktop && sidebarType !== "module" && <MobileMenuHandler />}
+        <div className="flex justify-center items-center">
+            <div>
+                <p className="text-default-900 font-semibold text-sm">{user?.firstName + " " + user?.lastName}</p>
+                <p className="text-default-500 text-xs text-left capitalize">{
+                    user?.role
+                }</p>
+            </div>
+            <img
+                className={`w-10 h-10 rounded-full mr-2`}
+                src={user?.avatar ? user?.avatar : ` https://ui-avatars.com/api/?background=random&name=${user?.firstName}`}
+
+                alt=""/>
+
+        </div>
+
+        <div className="ltr:pl-2 rtl:pr-2">
+            <ProfileInfo/>
+        </div>
+        {!isDesktop && sidebarType !== "module" && <MobileMenuHandler/>}
     </div>
   );
 };
-const Header = ({ handleOpenSearch, trans }: { handleOpenSearch: () => void; trans: string }) => {
+const Header = ({handleOpenSearch, trans }: { handleOpenSearch: () => void; trans: string }) => {
   const { collapsed, sidebarType, setCollapsed, subMenu, setSidebarType } =
     useSidebar();
   const { layout, navbarType, setLayout } = useThemeStore();
@@ -59,7 +78,9 @@ const Header = ({ handleOpenSearch, trans }: { handleOpenSearch: () => void; tra
       >
         <div className="w-full bg-card/90 backdrop-blur-lg md:px-6 px-[15px] py-3 border-b">
           <div className="flex justify-between items-center h-full">
+{/*
             <HorizontalHeader handleOpenSearch={handleOpenSearch} />
+*/}
             <NavTools
               isDesktop={isDesktop}
               isMobile={isMobile}

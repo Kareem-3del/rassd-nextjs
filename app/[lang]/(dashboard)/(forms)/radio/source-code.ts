@@ -568,7 +568,7 @@ const customStyledRadio = () => {
 
               })}></span>
               {
-                selected === "csr_1" ? <span className="text-xs text-success">Active Now</span> : <span className="text-xs text-default-600">Inactive</span>
+                selected === "csr_1" ? <span className="text-xs text-success">متصل الان</span> : <span className="text-xs text-default-600">Inactive</span>
             }
           </button>
         </Label>
@@ -599,7 +599,7 @@ const customStyledRadio = () => {
 
               })}></span>
               {
-                selected === "csr_2" ? <span className="text-xs text-success">Active Now</span> : <span className="text-xs text-default-600">Inactive</span>
+                selected === "csr_2" ? <span className="text-xs text-success">متصل الان</span> : <span className="text-xs text-default-600">Inactive</span>
             }
           </button>
         </Label>

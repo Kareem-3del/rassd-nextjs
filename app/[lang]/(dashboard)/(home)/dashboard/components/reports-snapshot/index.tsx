@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReportsChart from "./reports-chart";
 import { useThemeStore } from "@/store";
@@ -8,28 +9,8 @@ import { themes } from "@/config/thems";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import DashboardSelect from "@/components/dasboard-select";
 import { cn } from "@/lib/utils";
+import { api } from "@/config/axios.config"; // Import your API config
 
-
-const allUsersSeries = [
-  {
-    data: [90, 70, 85, 60, 80, 70, 90, 75, 60, 80],
-  },
-];
-const conversationSeries = [
-  {
-    data: [80, 70, 65, 40, 40, 100, 100, 75, 60, 80],
-  },
-];
-const eventCountSeries = [
-  {
-    data: [20, 70, 65, 60, 40, 60, 90, 75, 60, 40],
-  },
-];
-const newUserSeries = [
-  {
-    data: [20, 70, 65, 40, 100, 60, 100, 75, 60, 80],
-  },
-];
 const ReportsSnapshot = () => {
   const { theme: config, setTheme: setConfig } = useThemeStore();
   const { theme: mode } = useTheme();
@@ -39,71 +20,106 @@ const ReportsSnapshot = () => {
   const warning = `hsl(${theme?.cssVars[mode === "dark" ? "dark" : "light"].warning})`;
   const success = `hsl(${theme?.cssVars[mode === "dark" ? "dark" : "light"].success})`;
   const info = `hsl(${theme?.cssVars[mode === "dark" ? "dark" : "light"].info})`;
+
+  const [taskCounts, setTaskCounts] = useState({
+    all: 0,
+    rejected: 0,
+    accepted: 0,
+    pending: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/tasks"); 
+        const data = response.data.elements;
+
+
+        const totalTasks = data.length;
+        const declinedTasks = data.filter((task:any) => task.status === "Rejected").length;
+        const acceptedTasks = data.filter((task:any) => task.status === "Completed").length;
+        const pendingTasks = data.filter((task:any) => task.status === "Pending").length;
+
+        setTaskCounts({
+          all: totalTasks,
+          rejected: declinedTasks,
+          accepted: acceptedTasks,
+          pending: pendingTasks,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const tabsTrigger = [
     {
       value: "all_task",
       text: "كل العينات",
-      total: "10,234",
+      total: taskCounts.all.toLocaleString(),
       color: "primary",
     },
     {
       value: "declined_task",
       text: "العينات المرفوضة",
-      total: "536",
+      total: taskCounts.rejected.toLocaleString(),
       color: "warning",
     },
     {
       value: "accepted_task",
       text: "العينات المقبولة",
-      total: "21",
+      total: taskCounts.accepted.toLocaleString(),
       color: "success",
     },
     {
       value: "under_work_task",
       text: "العينات قيد العمل",
-      total: "3321",
+      total: taskCounts.pending.toLocaleString(),
       color: "info",
     },
   ];
+
   const tabsContentData = [
     {
       value: "all",
-      series: allUsersSeries,
+      series: [{ data: [] }], // Placeholder for all tasks chart data
       color: primary,
     },
     {
       value: "event",
-      series: eventCountSeries,
+      series: [{ data: [] }], // Placeholder for events chart data
       color: warning,
     },
     {
       value: "conversation",
-      series: conversationSeries,
+      series: [{ data: [] }], // Placeholder for conversations chart data
       color: success,
     },
     {
       value: "newuser",
-      series: newUserSeries,
+      series: [{ data: [] }], // Placeholder for new users chart data
       color: info,
     },
   ];
+
   return (
     <Card>
       <CardHeader className="border-none pb-0">
-        <div className="flex items-center gap-2 flex-wrap ">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex-1">
             <div className="text-xl font-semibold text-default-900 whitespace-nowrap">
-                  الاحصائيات
+              الاحصائيات
             </div>
             <span className="text-xs text-default-600">
-                {" "}
-                الاحصائيات العامة لجميع المهمات
-
+              {" "}
+              الاحصائيات العامة لجميع المهمات
             </span>
           </div>
-          <div className="flex-none">
+          {/* <div className="flex-none">
             <DashboardSelect />
-          </div>
+          </div> */}
         </div>
       </CardHeader>
       <CardContent className="p-1 md:p-5">
@@ -114,7 +130,7 @@ const ReportsSnapshot = () => {
                 key={`report-trigger-${index}`}
                 value={item.value}
                 className={cn(
-                  "flex flex-col gap-1.5 p-4 overflow-hidden   items-start  relative before:absolute before:left-1/2 before:-translate-x-1/2 before:bottom-1 before:h-[2px] before:w-9 before:bg-primary/50 dark:before:bg-primary-foreground before:hidden data-[state=active]:shadow-none data-[state=active]:before:block",
+                  "flex flex-col gap-1.5 p-4 overflow-hidden items-start relative before:absolute before:left-1/2 before:-translate-x-1/2 before:bottom-1 before:h-[2px] before:w-9 before:bg-primary/50 dark:before:bg-primary-foreground before:hidden data-[state=active]:shadow-none data-[state=active]:before:block",
                   {
                     "bg-primary/30 data-[state=active]:bg-primary/30 dark:bg-primary/70": item.color === "primary",
                     "bg-orange-50 data-[state=active]:bg-orange-50 dark:bg-orange-500": item.color === "warning",

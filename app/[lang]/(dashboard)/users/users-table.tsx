@@ -41,47 +41,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-const UsersTable = () => {
+import { useUsers } from "@/hooks/useUsers";
+import { useEffect } from "react";
+import { User } from "@/interfaces";
+import UpdateUserDialog from "./update-user";
+interface UsersTableProps extends ReturnType<typeof useUsers> {}
+const UsersTable = ({ fetchUsers, users, updateUser,deleteUser }: UsersTableProps) => {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="font-semibold">
-            المستخدم
-          </TableHead>
-          <TableHead>
-           العنوان الوظيفي
-          </TableHead>
-          <TableHead>
-            البريد الإلكتروني
-          </TableHead>
-          <TableHead>
-            الوظيفة
-          </TableHead>
-          <TableHead>
-            المهام المكتملة
-          </TableHead>
-          <TableHead>
-            الاجراءات
-          </TableHead>
+          <TableHead className="font-semibold">المستخدم</TableHead>
+          <TableHead>البريد الإلكتروني</TableHead>
+          <TableHead>الوظيفة</TableHead>
+          <TableHead>المهام المكتملة</TableHead>
+          <TableHead>الاجراءات</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((item: DataRows) => (
+        {users?.map((item: User) => (
           <TableRow key={item.email}>
             <TableCell className=" font-medium  text-card-foreground/80">
               <div className="flex gap-3 items-center">
                 <Avatar className="rounded-full">
                   <AvatarImage src={item.avatar} />
-                  <AvatarFallback>AB</AvatarFallback>
+                  <AvatarFallback>
+                    {item.firstName?.charAt(0)} {item.lastName?.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
                 <span className=" text-sm   text-card-foreground">
-                  {item.name}
+                  {item.firstName} {item.lastName}
                 </span>
               </div>
             </TableCell>
 
-            <TableCell>{item.title}</TableCell>
             <TableCell>{item.email}</TableCell>
             <TableCell>
               <Badge
@@ -90,19 +87,18 @@ const UsersTable = () => {
                   (item.role === "admin" && "default") ||
                   (item.role === "member" && "success") ||
                   (item.role === "owner" && "info") ||
-                  (item.role === "editor" && "warning") || "default"
+                  (item.role === "editor" && "warning") ||
+                  "default"
                 }
                 className=" capitalize"
               >
                 {item.role}
               </Badge>
             </TableCell>
-            <TableCell>
-              {item.completed_tasks}
-            </TableCell>
+            <TableCell>{item.tasksCompleted}</TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog />
+                <EditingDialog updateUser={updateUser} user={item}/>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -116,18 +112,20 @@ const UsersTable = () => {
                   </AlertDialogTrigger>
                   <AlertDialogContent dir="ltr">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        هل أنت متأكد تمامًا؟
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>هل أنت متأكد تمامًا؟</AlertDialogTitle>
                       <AlertDialogDescription>
-                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا وإزالة بياناته من خوادمنا.
+                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا
+                        وإزالة بياناته من خوادمنا.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80">
+                      <AlertDialogAction
+                        className="bg-destructive hover:bg-destructive/80"
+                        onClick={() => deleteUser(item.id)}
+                      >
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -144,67 +142,12 @@ const UsersTable = () => {
 
 export default UsersTable;
 
-const EditingDialog = () => {
+interface EditingDialogProps {
+  updateUser: ReturnType<typeof useUsers>["updateUser"];
+  user: User;
+}
+const EditingDialog = ({ updateUser, user }: EditingDialogProps) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          color="secondary"
-          className=" h-7 w-7"
-        >
-          <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            تعديل المستخدم
-          </DialogTitle>
-          <form action="#" className=" space-y-5 pt-4">
-            <div>
-              <Label className="mb-2">Name</Label>
-              <Input placeholder="Name" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Title</Label>
-              <Input placeholder="Title" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Input placeholder="Email" type="email" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Admin</SelectItem>
-                  <SelectItem value="dark">Owner</SelectItem>
-                  <SelectItem value="system">Member</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {/* end single */}
-            <div className="flex justify-end space-x-3">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" color="destructive">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button color="success">Save</Button>
-              </DialogClose>
-            </div>
-          </form>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+    <UpdateUserDialog updateUser={updateUser} {...user}/>
   );
 };

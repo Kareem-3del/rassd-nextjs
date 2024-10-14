@@ -1,3 +1,4 @@
+import { TaskStatusEnum } from "@/interfaces";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge";
 
@@ -171,3 +172,22 @@ export const translate = (title: string, trans: Translations): string => {
   return title;
 };
 
+export const isImageFileUrl = (url: string): boolean => {
+  const imageFileExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+
+  const fileExtension = url.split(".").pop();
+  console.log()
+  if (!fileExtension) {
+    return false;
+  }
+
+  return imageFileExtensions.includes(fileExtension);
+};
+
+export const getTaskStautsWord = (status: TaskStatusEnum) =>  {
+  if (status === TaskStatusEnum.Completed) {
+     return "مكتملة"
+  }
+
+  return "قيد التنفيذ"
+}

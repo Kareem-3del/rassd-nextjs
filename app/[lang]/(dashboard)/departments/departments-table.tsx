@@ -38,32 +38,49 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-const DepartmentsTable = () => {
+import { useEffect, useState } from "react";
+import { useDepartments } from "@/rassd/hooks/useDepartments";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import DepartmentFormDialog from "./department-form";
+import DepartmentForm from "./department-form";
+import { Term } from "@/types";
+const DepartmentsTable = ({
+  deleteDepartment,
+  updateDepartment,
+  updateTerm,
+  departments,
+  deleteTerm,
+  addTerm
+}: ReturnType<typeof useDepartments>) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="font-semibold">
-            اسم القسم
-          </TableHead>
-          <TableHead>
-            البنود
-          </TableHead>
-          <TableHead>
-            الاجراءات
-          </TableHead>
+          <TableHead className="font-semibold">اسم القسم</TableHead>
+          <TableHead>البنود</TableHead>
+          <TableHead>الاجراءات</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((item: DataRows) => (
-          <TableRow key={item.email}>
-            <TableCell>{item.title}</TableCell>
-            <TableCell>
-              {item.completed_tasks}
-            </TableCell>
+        {departments.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.terms.length}</TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog />
+                <EditingDialog
+                  name={item.name}
+                  groupId={item.groupId}
+                  id={item.id}
+                  terms={item.terms}
+                  groupType={item.groupType}
+                  updateDepartment={updateDepartment}
+                  addTerm={addTerm}
+                  updateTerm={updateTerm}
+                  deleteTerm={deleteTerm}
+                />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -77,18 +94,20 @@ const DepartmentsTable = () => {
                   </AlertDialogTrigger>
                   <AlertDialogContent dir="ltr">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        هل أنت متأكد تمامًا؟
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>هل أنت متأكد تمامًا؟</AlertDialogTitle>
                       <AlertDialogDescription>
-                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا وإزالة بياناته من خوادمنا.
+                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحساب نهائيًا
+                        وإزالة بياناته من خوادمنا.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel className=" bg-secondary">
                         إلغاء
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80">
+                      <AlertDialogAction
+                        className="bg-destructive hover:bg-destructive/80"
+                        onClick={() => deleteDepartment(item.id)}
+                      >
                         تأكيد الحذف
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -105,9 +124,47 @@ const DepartmentsTable = () => {
 
 export default DepartmentsTable;
 
-const EditingDialog = () => {
+interface EditingDialogProps {
+  id: number;
+  name: string;
+  groupId: number;
+  groupType: string;
+  terms: Term[];
+  updateDepartment: ReturnType<typeof useDepartments>["updateDepartment"];
+  addTerm: ReturnType<typeof useDepartments>["addTerm"];
+  updateTerm: ReturnType<typeof useDepartments>["updateTerm"];
+  deleteTerm: ReturnType<typeof useDepartments>["deleteTerm"];
+}
+const EditingDialog = ({
+  id,
+  updateDepartment,
+  groupId,
+  name,
+  terms,
+  groupType,
+  addTerm,
+  deleteTerm,
+  updateTerm,
+}: EditingDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: any) => {
+      await updateDepartment({
+        id,
+        departmentData: {
+          name: data.departmentData.name,
+          groupId: data.departmentData.groupId,
+        },
+      });
+    },
+    onSuccess: () => {
+      setOpen(false);
+      toast.success("تم تعديل القسم");
+    },
+  });
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           size="icon"
@@ -118,53 +175,46 @@ const EditingDialog = () => {
           <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            تعديل المستخدم
+      <DialogContent size="2xl" className="max-h-[80vh] overflow-y-auto">
+        <DialogHeader className="p-0">
+          <DialogTitle className="text-base font-medium text-default-700 ">
+            تعديل القسم
           </DialogTitle>
-          <form action="#" className=" space-y-5 pt-4">
-            <div>
-              <Label className="mb-2">Name</Label>
-              <Input placeholder="Name" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Title</Label>
-              <Input placeholder="Title" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Input placeholder="Email" type="email" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Admin</SelectItem>
-                  <SelectItem value="dark">Owner</SelectItem>
-                  <SelectItem value="system">Member</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {/* end single */}
-            <div className="flex justify-end space-x-3">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" color="destructive">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button color="success">Save</Button>
-              </DialogClose>
-            </div>
-          </form>
         </DialogHeader>
+        <DepartmentForm
+        departmentId={id}
+          groupId={groupId}
+          title={name}
+          terms={terms}
+          groupType={groupType}
+          type="edit"
+          addTerm={addTerm}
+          updateTerm={updateTerm}
+          deleteTerm={deleteTerm}
+          onSubmit={(data) => {
+            console.log(data);
+            mutate({
+              departmentData: {
+                name: data.title,
+                group: data.groupId,
+                terms: data.terms.map((term) => ({
+                  name: term.name,
+                  requiredFiles: term.requiredFiles,
+                })),
+              },
+              id,
+            });
+          }}
+        >
+          <div className=" flex justify-center gap-3 mt-4">
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                إلغاء
+              </Button>
+            </DialogClose>
+            <Button disabled={isPending}>تعديل القسم</Button>
+          </div>
+        </DepartmentForm>
       </DialogContent>
     </Dialog>
   );

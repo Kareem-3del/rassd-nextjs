@@ -10,13 +10,14 @@ const TaskPage = async () => {
   return (
       <div className="flex flex-col gap-4">
           <Card className="p-4 flex justify-between items-center">
+              {/* @ts-ignore */}
               <CreateUserDialog/>
               <p className="w-full text-center">
                     هذه الصفحة تستخدم لإدارة المستخدمين والمهام
               </p>
           </Card>
           <Card title="المستخدمين">
-
+              {/* @ts-ignore */}
           <UsersTable/>
           </Card>
       </div>

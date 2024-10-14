@@ -4,7 +4,7 @@
 export const siteConfig = {
   name: "رصد",
   description: "منصى رصد",
-  theme: "violet",
+  theme: "purple",
   layout: "vertical",
   // semi-box, horizontal, vertical
   hideSideBar: false,

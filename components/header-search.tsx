@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 const HeaderSearch = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
+  return null;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent size="xl" className="p-0 " hiddenCloseIcon>

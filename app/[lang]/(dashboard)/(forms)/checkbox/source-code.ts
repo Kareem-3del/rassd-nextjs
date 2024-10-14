@@ -754,7 +754,7 @@ const CustomImplementation = () => {
                   })}
                 ></span>
                 {
-                  isSelected ? "Active Now" : "Inactive"
+                  isSelected ? "متصل الان" : "Inactive"
                 }
               </Badge>
             </div>
@@ -799,7 +799,7 @@ const CustomImplementation = () => {
                   })}
                 ></span>
                 {
-                  isSelected1 ? "Active Now" : "Inactive"
+                  isSelected1 ? "متصل الان" : "Inactive"
                 }
               </Badge>
             </div>
@@ -982,7 +982,7 @@ const CustomStyledCheckbox = () => {
 
           })}></span>
           {
-            checked1 ? <span className="text-xs text-success">Active Now</span> : <span className="text-xs text-default-600">Inactive</span>
+            checked1 ? <span className="text-xs text-success">متصل الان</span> : <span className="text-xs text-default-600">Inactive</span>
           }
         </button>
       </Label>
@@ -1014,7 +1014,7 @@ const CustomStyledCheckbox = () => {
 
           })}></span>
           {
-            checked2 ? <span className="text-xs text-success">Active Now</span> : <span className="text-xs text-default-600">Inactive</span>
+            checked2 ? <span className="text-xs text-success">متصل الان</span> : <span className="text-xs text-default-600">Inactive</span>
           }
         </button>
       </Label>

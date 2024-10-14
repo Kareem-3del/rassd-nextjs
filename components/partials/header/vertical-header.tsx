@@ -3,9 +3,9 @@ import { useSidebar, useThemeStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import { Search } from "lucide-react";
-import { SiteLogo } from "@/components/svg";
 import Link from "next/link";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import SiteLogo from "@/components/logo/SiteLogo";
 
 const MenuBar = ({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (value: boolean) => void; }) => {
   return (
@@ -73,7 +73,7 @@ const VerticalHeader: React.FC<VerticalHeaderProps> = ({ handleOpenSearch }) => 
   );
   const SearchButton = (
     <div>
-      <button
+{/*      <button
         type="button"
         className=" inline-flex  gap-2 items-center text-default-600 text-sm"
         onClick={handleOpenSearch}
@@ -82,7 +82,7 @@ const VerticalHeader: React.FC<VerticalHeaderProps> = ({ handleOpenSearch }) => 
           <Search className=" h-4 w-4" />
         </span>
         <span className=" md:block hidden"> Search...</span>
-      </button>
+      </button>*/}
     </div>
   );
   if (layout === "semibox" && !isDesktop) {

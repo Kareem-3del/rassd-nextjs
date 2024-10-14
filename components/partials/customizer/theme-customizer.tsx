@@ -36,7 +36,7 @@ const ThemeCustomize = ({
   ),
 }) => {
   const { isRtl } = useThemeStore();
-
+  return null;
   return (
     <Sheet>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
